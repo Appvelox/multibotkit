@@ -1,5 +1,6 @@
 import sentry_sdk
 
+from multibotkit.config import settings
 from multibotkit.schemas.telegram.incoming import Update
 
 
@@ -11,7 +12,9 @@ class TelegramDispatcher:
         self.__handlers = []
         self.__default_handler = None
         sentry_sdk.init(
-            dsn=""
+            dsn=settings.SENTRY_DSN,
+            environment=settings.SENTRY_ENVIRONMENT,
+            server_name=settings.SENTRY_SERVER,
         )
 
 
