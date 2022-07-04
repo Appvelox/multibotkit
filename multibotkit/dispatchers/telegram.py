@@ -1,3 +1,5 @@
+import sentry_sdk
+
 from multibotkit.schemas.telegram.incoming import Update
 
 
@@ -8,6 +10,10 @@ class TelegramDispatcher:
     def __init__(self):
         self.__handlers = []
         self.__default_handler = None
+        sentry_sdk.init(
+            dsn=""
+        )
+
 
     def handler(
         self,
@@ -25,11 +31,13 @@ class TelegramDispatcher:
 
         return wrapper
 
+
     def default_handler(self):
         def wrapper(f):
             self.__default_handler = f
 
         return wrapper
+
 
     async def process_event(self, event: Update, state_data: dict):
         for (

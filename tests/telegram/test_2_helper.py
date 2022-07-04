@@ -31,7 +31,7 @@ def test_helper_get_webhook_info(httpx_mock: HTTPXMock):
 
     httpx_mock.add_callback(webhook_info_response)
 
-    r = tg_helper.getWebhookInfo()
+    r = tg_helper.syncGetWebhookInfo()
     
     assert r == WebhookInfo.parse_obj({
                 "url": "https://test_url/api/bot/telegram",
@@ -58,7 +58,7 @@ def test_helper_set_webhook(httpx_mock: HTTPXMock):
     
     httpx_mock.add_callback(set_webhook_response)
 
-    r = tg_helper.setWebhook(domain="test_url")
+    r = tg_helper.syncSetWebhook(domain="test_url")
 
     assert r.json() == {
         'ok': True, 
@@ -99,7 +99,7 @@ def test_helper_set_tg_webhook(httpx_mock: HTTPXMock):
     httpx_mock.add_callback(webhook_info_response)
     httpx_mock.add_callback(set_tg_webhook_response)
 
-    r = tg_helper.set_tg_webhook(domain="test_url")
+    r = tg_helper.syncSetTGWebhook(domain="test_url")
 
     assert r.json() == {
         'ok': True, 
@@ -120,7 +120,7 @@ def test_helper_answer_callback_query(httpx_mock: HTTPXMock):
     
     httpx_mock.add_callback(answer_callback_response)
 
-    r = tg_helper.answer_callback_query(callback_query_id="callback_query_id")
+    r = tg_helper.syncAnswerCallbackQuery(callback_query_id="callback_query_id")
 
     assert r.json() == {
                 'ok': True, 
@@ -140,7 +140,7 @@ def test_helper_edit_message_text(httpx_mock: HTTPXMock):
 
     httpx_mock.add_callback(edit_message_text_response)
 
-    r = tg_helper.edit_message_text(chat_id=1234, message_id=1111, text="new text")
+    r = tg_helper.syncEditMessageText(chat_id=1234, message_id=1111, text="new text")
 
     assert r.json() == {
                 'ok': True, 
@@ -160,7 +160,7 @@ def test_helper_edit_message_caption(httpx_mock: HTTPXMock):
 
     httpx_mock.add_callback(edit_message_caption_response)
 
-    r = tg_helper.edit_message_caption(chat_id=1234, message_id=1111, caption="New caption")
+    r = tg_helper.syncEditMessageCaption(chat_id=1234, message_id=1111, caption="New caption")
 
     assert r.json() == {
                 'ok': True, 
@@ -192,7 +192,7 @@ def test_helper_edit_message_reply_markup(httpx_mock: HTTPXMock):
         one_time_keyboard=False
     )
 
-    r = tg_helper.edit_message_reply_markup(chat_id=1234, message_id=1111, reply_markup=reply_keyboard_markup)
+    r = tg_helper.syncEditMessageReplyMarkup(chat_id=1234, message_id=1111, reply_markup=reply_keyboard_markup)
 
     assert r.json() == {
                 'ok': True, 
@@ -222,7 +222,7 @@ async def test_helper_async_get_webhook_info(httpx_mock: HTTPXMock):
 
     httpx_mock.add_callback(webhook_info_response)
 
-    r = await tg_helper.async_getWebhookInfo()
+    r = await tg_helper.asyncGetWebhookInfo()
     
     assert r == WebhookInfo.parse_obj({
                 "url": "https://test_url/api/bot/telegram",
@@ -250,7 +250,7 @@ async def test_helper_async_set_webhook(httpx_mock: HTTPXMock):
     
     httpx_mock.add_callback(set_webhook_response)
 
-    r = await tg_helper.async_setWebhook(domain="test_url")
+    r = await tg_helper.asyncSetWebhook(domain="test_url")
 
     assert r.json() == {
         'ok': True, 
@@ -292,7 +292,7 @@ async def test_helper_async_set_tg_webhook(httpx_mock: HTTPXMock):
     httpx_mock.add_callback(webhook_info_response)
     httpx_mock.add_callback(set_tg_webhook_response)
 
-    r = await tg_helper.async_set_tg_webhook(domain="test_url")
+    r = await tg_helper.asyncSetTGWebhook(domain="test_url")
 
     assert r.json() == {
         'ok': True, 
@@ -314,7 +314,7 @@ async def test_helper_answer_callback_query(httpx_mock: HTTPXMock):
     
     httpx_mock.add_callback(answer_callback_response)
 
-    r = await tg_helper.async_answer_callback_query(callback_query_id="callback_query_id")
+    r = await tg_helper.asyncAnswerCallbackQuery(callback_query_id="callback_query_id")
 
     assert r.json() == {
                 'ok': True, 
@@ -335,7 +335,7 @@ async def test_helper_edit_message_text(httpx_mock: HTTPXMock):
 
     httpx_mock.add_callback(edit_message_text_response)
 
-    r = await tg_helper.async_edit_message_text(chat_id=1234, message_id=1111, text="new text")
+    r = await tg_helper.asyncEditMessageText(chat_id=1234, message_id=1111, text="new text")
 
     assert r.json() == {
                 'ok': True, 
@@ -356,7 +356,7 @@ async def test_helper_edit_message_caption(httpx_mock: HTTPXMock):
 
     httpx_mock.add_callback(edit_message_caption_response)
 
-    r = await tg_helper.async_edit_message_caption(chat_id=1234, message_id=1111, caption="New caption")
+    r = await tg_helper.asyncEditMessageCaption(chat_id=1234, message_id=1111, caption="New caption")
 
     assert r.json() == {
                 'ok': True, 
@@ -389,7 +389,7 @@ async def test_helper_edit_message_reply_markup(httpx_mock: HTTPXMock):
         one_time_keyboard=False
     )
 
-    r = await tg_helper.async_edit_message_reply_markup(chat_id=1234, message_id=1111, reply_markup=reply_keyboard_markup)
+    r = await tg_helper.asyncEditMessageReplyMarkup(chat_id=1234, message_id=1111, reply_markup=reply_keyboard_markup)
 
     assert r.json() == {
                 'ok': True, 
