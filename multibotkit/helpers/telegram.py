@@ -32,7 +32,7 @@ class TelegramHelper:
     @retry(
         retry=retry_if_exception_type(httpx.HTTPError)|retry_if_exception_type(JSONDecodeError), 
         reraise=True, 
-        stop=stop_after_attempt(3), 
+        stop=stop_after_attempt(5), 
         wait=wait_exponential(multiplier=1, min=4, max=10)
     )
     def _perform_sync_request(self, url:str, data:dict=None):
@@ -42,7 +42,7 @@ class TelegramHelper:
     @retry(
         retry=retry_if_exception_type(httpx.HTTPError)|retry_if_exception_type(JSONDecodeError),
         reraise=True, 
-        stop=stop_after_attempt(3), 
+        stop=stop_after_attempt(5), 
         wait=wait_exponential(multiplier=1, min=4, max=10)
     )
     async def _perform_async_request(self, url:str, data:dict=None):
