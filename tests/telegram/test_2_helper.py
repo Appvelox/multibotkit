@@ -58,53 +58,12 @@ def test_helper_set_webhook(httpx_mock: HTTPXMock):
     
     httpx_mock.add_callback(set_webhook_response)
 
-    r = tg_helper.syncSetWebhook(domain="test_url")
+    r = tg_helper.syncSetWebhook(webhook_url="https://test_url/api/bot")
 
-    assert r.json() == {
+    assert r == {
         'ok': True, 
                 'result': True, 
                 'description': 'Webhook was set'
-    }
-
-
-def test_helper_set_tg_webhook(httpx_mock: HTTPXMock):
-    def webhook_info_response(request: httpx.Request):
-        return httpx.Response(
-            status_code=200,
-            json={
-                "ok": True,
-                "result": {
-                    "url": "https://another_test_url/api/bot/telegram",
-                    "has_custom_certificate": False,
-                    "pending_update_count": 2,
-                    "ip_address": "111.111.111.111",
-                    "last_error_date": 1656425873,
-                    "last_error_message": "error message",
-                    "max_connections": 10,
-                    "allowed_updates": ["message", "edited_channel_post", "callback_query"]
-                }
-            }
-        )
-    
-    def set_tg_webhook_response(request: httpx.Request):
-        return httpx.Response(
-            status_code=200,
-            json={
-                'ok': True, 
-                'result': True, 
-                'description': 'Webhook was set'
-            }
-        )
-    
-    httpx_mock.add_callback(webhook_info_response)
-    httpx_mock.add_callback(set_tg_webhook_response)
-
-    r = tg_helper.syncSetTGWebhook(domain="test_url")
-
-    assert r.json() == {
-        'ok': True, 
-        'result': True, 
-        'description': 'Webhook was set'
     }
 
 
@@ -122,7 +81,7 @@ def test_helper_answer_callback_query(httpx_mock: HTTPXMock):
 
     r = tg_helper.syncAnswerCallbackQuery(callback_query_id="callback_query_id")
 
-    assert r.json() == {
+    assert r == {
                 'ok': True, 
                 'result': True
             }
@@ -142,7 +101,7 @@ def test_helper_edit_message_text(httpx_mock: HTTPXMock):
 
     r = tg_helper.syncEditMessageText(chat_id=1234, message_id=1111, text="new text")
 
-    assert r.json() == {
+    assert r == {
                 'ok': True, 
                 'result': True
             }
@@ -162,7 +121,7 @@ def test_helper_edit_message_caption(httpx_mock: HTTPXMock):
 
     r = tg_helper.syncEditMessageCaption(chat_id=1234, message_id=1111, caption="New caption")
 
-    assert r.json() == {
+    assert r == {
                 'ok': True, 
                 'result': True
             }
@@ -194,7 +153,7 @@ def test_helper_edit_message_reply_markup(httpx_mock: HTTPXMock):
 
     r = tg_helper.syncEditMessageReplyMarkup(chat_id=1234, message_id=1111, reply_markup=reply_keyboard_markup)
 
-    assert r.json() == {
+    assert r == {
                 'ok': True, 
                 'result': True
             }
@@ -250,51 +209,9 @@ async def test_helper_async_set_webhook(httpx_mock: HTTPXMock):
     
     httpx_mock.add_callback(set_webhook_response)
 
-    r = await tg_helper.asyncSetWebhook(domain="test_url")
+    r = await tg_helper.asyncSetWebhook(webhook_url="https://test_url/api/bot")
 
-    assert r.json() == {
-        'ok': True, 
-        'result': True, 
-        'description': 'Webhook was set'
-    }
-
-
-@pytest.mark.asyncio
-async def test_helper_async_set_tg_webhook(httpx_mock: HTTPXMock):
-    def webhook_info_response(request: httpx.Request):
-        return httpx.Response(
-            status_code=200,
-            json={
-                "ok": True,
-                "result": {
-                    "url": "https://another_test_url/api/bot/telegram",
-                    "has_custom_certificate": False,
-                    "pending_update_count": 2,
-                    "ip_address": "111.111.111.111",
-                    "last_error_date": 1656425873,
-                    "last_error_message": "error message",
-                    "max_connections": 10,
-                    "allowed_updates": ["message", "edited_channel_post", "callback_query"]
-                }
-            }
-        )
-    
-    def set_tg_webhook_response(request: httpx.Request):
-        return httpx.Response(
-            status_code=200,
-            json={
-                'ok': True, 
-                'result': True, 
-                'description': 'Webhook was set'
-            }
-        )
-    
-    httpx_mock.add_callback(webhook_info_response)
-    httpx_mock.add_callback(set_tg_webhook_response)
-
-    r = await tg_helper.asyncSetTGWebhook(domain="test_url")
-
-    assert r.json() == {
+    assert r == {
         'ok': True, 
         'result': True, 
         'description': 'Webhook was set'
@@ -316,7 +233,7 @@ async def test_helper_answer_callback_query(httpx_mock: HTTPXMock):
 
     r = await tg_helper.asyncAnswerCallbackQuery(callback_query_id="callback_query_id")
 
-    assert r.json() == {
+    assert r == {
                 'ok': True, 
                 'result': True
             }
@@ -337,7 +254,7 @@ async def test_helper_edit_message_text(httpx_mock: HTTPXMock):
 
     r = await tg_helper.asyncEditMessageText(chat_id=1234, message_id=1111, text="new text")
 
-    assert r.json() == {
+    assert r == {
                 'ok': True, 
                 'result': True
             }
@@ -358,7 +275,7 @@ async def test_helper_edit_message_caption(httpx_mock: HTTPXMock):
 
     r = await tg_helper.asyncEditMessageCaption(chat_id=1234, message_id=1111, caption="New caption")
 
-    assert r.json() == {
+    assert r == {
                 'ok': True, 
                 'result': True
             }
@@ -391,7 +308,7 @@ async def test_helper_edit_message_reply_markup(httpx_mock: HTTPXMock):
 
     r = await tg_helper.asyncEditMessageReplyMarkup(chat_id=1234, message_id=1111, reply_markup=reply_keyboard_markup)
 
-    assert r.json() == {
+    assert r == {
                 'ok': True, 
                 'result': True
             }
