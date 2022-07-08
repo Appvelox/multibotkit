@@ -1,6 +1,4 @@
-import httpx
 import pytest
-from pytest_httpx import HTTPXMock
 
 from multibotkit.dispatchers.telegram import TelegramDispatcher
 from multibotkit.schemas.telegram.incoming import Message, Update
