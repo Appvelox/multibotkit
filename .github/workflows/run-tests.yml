@@ -1,9 +1,7 @@
 name: Code testing
 
 on:
-  push
-  pull_request:
-    branches: [ assigned, opened, edited ]
+  [ push, pull_request ]
 
 jobs:
   build:
