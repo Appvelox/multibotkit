@@ -17,6 +17,24 @@ from tests.config import settings
 vk_helper = VKHelper(access_token=settings.VK_TOKEN, api_version=settings.VK_API_VERSION)
 
 
+def test_button_code_and_command():
+    json_payload = '{"button":"button code", "command":"command"}'
+    
+    button_code = vk_helper.button_code(json_payload)
+    assert button_code == "button code"
+
+    command = vk_helper.command(json_payload)
+    assert command == "command"
+
+    json_payload = None
+
+    button_code = vk_helper.button_code(json_payload)
+    assert button_code == ""
+
+    command = vk_helper.command(json_payload)
+    assert command == ""
+
+
 def test_syncSendMessage(httpx_mock: HTTPXMock):
     def send_message_response(request: httpx.Request):
         return httpx.Response(
