@@ -3,7 +3,7 @@ name: Code testing
 on:
   push
   pull_request:
-    branches: [ develop ]
+    branches: [ assigned, opened, edited ]
 
 jobs:
   build:
