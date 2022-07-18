@@ -16,5 +16,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+      - name: Run bandit
+        run: bandit
+      - name: Run pylama
+        run: pylama
       - name: Run tests
         run: py.test
