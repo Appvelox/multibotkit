@@ -5,7 +5,7 @@ import pytest
 from pytest_httpx import HTTPXMock
 
 from multibotkit.helpers.fb import FBHelper
-from multibotkit.schemas.fb.outgoing_messages import Message
+from multibotkit.schemas.fb.outgoing import Message, PersistentMenu
 from tests.config import settings
 
 
@@ -103,7 +103,7 @@ def test_sync_send_greeting(httpx_mock: HTTPXMock):
 
     httpx_mock.add_callback(send_greeting_response)
 
-    r = fb_helper.sync_send_get_started()
+    r = fb_helper.sync_send_greeting(text="text")
 
     assert r == {"result": "success"}
 
@@ -114,7 +114,31 @@ def test_sync_send_persistent_menu(httpx_mock: HTTPXMock):
 
     httpx_mock.add_callback(send_persistent_menu_response)
 
-    r = fb_helper.sync_send_get_started()
+    menu_item_dict = {
+        "type": "type",
+        "title": "title",
+        "url": "url",
+        "payload": "payload",
+        "webview_height_ratio": "webview height ratio",
+        "messenger_extensions": False,
+        "fallback_url": "fallback url",
+        "webview_share_button": "webview share button"
+    }
+
+    persistent_menu_element_dict = {
+        "locale": "locale",
+        "composer_input_disabled": False,
+        "disabled_surfaces": ["disabled surface"],
+        "call_to_actions": [menu_item_dict]
+    }
+
+    persistent_menu_dict = {
+        "persistent_menu": [persistent_menu_element_dict]
+    }
+
+    persistent_menu = PersistentMenu.parse_obj(persistent_menu_dict)
+
+    r = fb_helper.sync_send_persistent_menu(persistent_menu)
 
     assert r == {"result": "success"}
 
@@ -209,7 +233,7 @@ async def test_async_send_greeting(httpx_mock: HTTPXMock):
 
     httpx_mock.add_callback(send_greeting_response)
 
-    r = await fb_helper.async_send_get_started()
+    r = await fb_helper.async_send_greeting(text="text")
 
     assert r == {"result": "success"}
 
@@ -221,6 +245,30 @@ async def test_async_send_persistent_menu(httpx_mock: HTTPXMock):
 
     httpx_mock.add_callback(send_persistent_menu_response)
 
-    r = await fb_helper.async_send_get_started()
+    menu_item_dict = {
+        "type": "type",
+        "title": "title",
+        "url": "url",
+        "payload": "payload",
+        "webview_height_ratio": "webview height ratio",
+        "messenger_extensions": False,
+        "fallback_url": "fallback url",
+        "webview_share_button": "webview share button"
+    }
+
+    persistent_menu_element_dict = {
+        "locale": "locale",
+        "composer_input_disabled": False,
+        "disabled_surfaces": ["disabled surface"],
+        "call_to_actions": [menu_item_dict]
+    }
+
+    persistent_menu_dict = {
+        "persistent_menu": [persistent_menu_element_dict]
+    }
+
+    persistent_menu = PersistentMenu.parse_obj(persistent_menu_dict)
+
+    r = await fb_helper.async_send_persistent_menu(persistent_menu)
 
     assert r == {"result": "success"}

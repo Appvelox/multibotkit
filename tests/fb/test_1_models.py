@@ -1,6 +1,6 @@
 import json
 
-from multibotkit.schemas.fb.incoming_messages import (
+from multibotkit.schemas.fb.incoming import (
     EventEntryMessageRecipient,
     EventEntryMessageSender,
     MessageAttachmentPayload,
@@ -12,7 +12,7 @@ from multibotkit.schemas.fb.incoming_messages import (
     EventEntry,
     IncomingEvent,
 )
-from multibotkit.schemas.fb.outgoing_messages import (
+from multibotkit.schemas.fb.outgoing import (
     GenericTemplateButton,
     GenericTemplateElement,
     QuickReply,
@@ -21,6 +21,9 @@ from multibotkit.schemas.fb.outgoing_messages import (
     MessageData,
     MessageRecipient,
     Message,
+    MenuItem,
+    PersistentMenuElement,
+    PersistentMenu
 )
 
 
@@ -357,4 +360,83 @@ def test_outgoing_models():
         recipient=message_recipient,
         messaging_type="messaging type",
         message=message_data,
+    )
+
+    menu_item = MenuItem(
+        type="type",
+        title="title",
+        url="url",
+        payload="payload",
+        webview_height_ratio="webview height ratio",
+        messenger_extensions=False,
+        fallback_url="fallback url",
+        webview_share_button="webview share button"
+    )
+
+    menu_item_dict = json.loads(menu_item.json())
+
+    assert menu_item_dict == {
+        "type": "type",
+        "title": "title",
+        "url": "url",
+        "payload": "payload",
+        "webview_height_ratio": "webview height ratio",
+        "messenger_extensions": False,
+        "fallback_url": "fallback url",
+        "webview_share_button": "webview share button"
+    }
+
+    menu_item = MenuItem.parse_obj(menu_item_dict)
+
+    assert menu_item == MenuItem(
+        type="type",
+        title="title",
+        url="url",
+        payload="payload",
+        webview_height_ratio="webview height ratio",
+        messenger_extensions=False,
+        fallback_url="fallback url",
+        webview_share_button="webview share button"
+    )
+
+
+    persistent_menu_element = PersistentMenuElement(
+        locale="locale",
+        composer_input_disabled=False,
+        disabled_surfaces=["disabled surface"],
+        call_to_actions=[menu_item]
+    )
+
+    persistent_menu_element_dict = json.loads(persistent_menu_element.json())
+
+    assert persistent_menu_element_dict == {
+        "locale": "locale",
+        "composer_input_disabled": False,
+        "disabled_surfaces": ["disabled surface"],
+        "call_to_actions": [menu_item_dict]
+    }
+
+    persistent_menu_element = PersistentMenuElement.parse_obj(persistent_menu_element_dict)
+
+    assert persistent_menu_element == PersistentMenuElement(
+        locale="locale",
+        composer_input_disabled=False,
+        disabled_surfaces=["disabled surface"],
+        call_to_actions=[menu_item]
+    )
+
+    persistent_menu = PersistentMenu(
+        persistent_menu=[persistent_menu_element]
+    )
+
+    persistent_menu_dict = json.loads(persistent_menu.json())
+
+    assert persistent_menu_dict == {
+        "persistent_menu": [persistent_menu_element_dict]
+    }
+
+    persistent_menu = PersistentMenu.parse_obj(persistent_menu_dict)
+
+    assert persistent_menu == PersistentMenu(
+        persistent_menu=[persistent_menu_element]
     )

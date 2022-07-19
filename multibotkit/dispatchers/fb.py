@@ -1,4 +1,4 @@
-from multibotkit.schemas.fb.incoming_messages import IncomingEvent
+from multibotkit.schemas.fb.incoming import IncomingEvent
 
 
 class FacebookDispatcher:

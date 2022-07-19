@@ -1,7 +1,7 @@
 import pytest
 
 from multibotkit.dispatchers.fb import FacebookDispatcher
-from multibotkit.schemas.fb.incoming_messages import IncomingEvent
+from multibotkit.schemas.fb.incoming import IncomingEvent
 
 
 @pytest.mark.asyncio
