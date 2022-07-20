@@ -4,9 +4,22 @@ from pydantic import BaseModel, Field
 
 
 class KeyboardAction(BaseModel):
-    type: str = Field(...)
-    label: Optional[str] = Field(None)
-    payload: str = Field(...)
+    type: str = Field(
+        "text",
+        title="Action type",
+        description="for the text button the value is text"
+    )
+    label: Optional[str] = Field(
+        None,
+        title="Button text",
+        description="It is sent by the user to the chat after pressing"
+    )
+    payload: str = Field(
+        ...,
+        title="Additional information",
+        description="It is returned in the messages_new event inside \
+            the payload property"
+    )
 
 
 class KeyboardButton(BaseModel):
@@ -74,15 +87,40 @@ class Message(BaseModel):
         title="(Required if message is not set.) \
             List of objects attached to the message, separated by commas",
     )
-    template: Optional[dict] = Field(None)
+    template: Optional[dict] = Field(
+        None,
+        title="Bots can send special messages using templates.",
+        description="Such messages differ from regular ones both visually \
+            and functionally. Currently, the carousel is the only template \
+            available."
+    )
 
 
 class Element(BaseModel):
-    title: str = Field(None)
-    description: str = Field(None)
-    photo_id: str = Field(None)
-    buttons: List[KeyboardButton] = Field(None)
-    action: dict = Field({"type": "open_photo"})
+    title: str = Field(None, title="Title", description="maximum 80 characters")
+    description: str = Field(None, title="Subtitle", description="maximum 80 characters")
+    photo_id: str = Field(
+        None,
+        title="ID of an image that needs to be attached",
+        description="Image ratio: 13/8\n\
+                Minimum dimensions: 221x136\n\
+                Image upload for the carousel is the same as image \
+                    upload in messages by bots"
+    )
+    buttons: List[KeyboardButton] = Field(
+        None,
+        title="Array with buttons",
+        description="Can pass any button that is described here. \
+            One carousel element can contain up to 3 buttons."
+    )
+    action: dict = Field(
+        {"type": "open_photo"},
+        title="An object describing the action that needs to happen \
+            after a carousel element is clicked",
+        description="The following two actions are supported:\n\
+                open_link - opens a link from the 'link' field.\n\
+                open_photo - opens an image from the current carousel \
+                    element.")
 
 
 class Template(BaseModel):
