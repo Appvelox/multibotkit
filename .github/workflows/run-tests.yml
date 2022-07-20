@@ -22,4 +22,4 @@ jobs:
       - name: Run pylama
         run: pylama
       - name: Run tests
-        run: tox -vvv
+        run: tox
