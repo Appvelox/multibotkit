@@ -21,7 +21,7 @@ jobs:
           pip install -r requirements.txt
           pip install tox tox-gh-actions
       - name: Run bandit
-        run: bandit ./multibotkit
+        run: bandit -r ./multibotkit
       - name: Run pylama
         run: pylama
       - name: Run tests
