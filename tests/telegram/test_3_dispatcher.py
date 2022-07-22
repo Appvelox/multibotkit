@@ -10,7 +10,7 @@ async def test_telegram_dispatcher():
     dp = TelegramDispatcher()
 
     state_data = {"state": "state"}
-    
+
     user_dict = {
         "id": 1234,
         "is_bot": False,
@@ -20,7 +20,7 @@ async def test_telegram_dispatcher():
         "language_code": "ru",
         "can_join_groups": True,
         "can_read_all_group_messages": True,
-        "supports_inline_queries": True
+        "supports_inline_queries": True,
     }
 
     chat_dict = {
@@ -29,7 +29,7 @@ async def test_telegram_dispatcher():
         "title": "title",
         "first_name": "Name",
         "last_name": "Surname",
-        "username": "username"
+        "username": "username",
     }
 
     message_dict = {
@@ -38,13 +38,10 @@ async def test_telegram_dispatcher():
         "from": user_dict,
         "chat": chat_dict,
         "text": "text",
-        "caption": "Caption"
+        "caption": "Caption",
     }
 
-    update = Update(
-        update_id=1234,
-        message=Message.parse_obj(message_dict)
-    )
+    update = Update(update_id=1234, message=Message.parse_obj(message_dict))
 
     @dp.handler(
         func=lambda update: update.message.text.startswith("text"),
@@ -52,5 +49,5 @@ async def test_telegram_dispatcher():
     )
     async def test_handler(update: Update, state_data: dict):
         assert True
-    
+
     await dp.process_event(update, state_data)

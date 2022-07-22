@@ -1,4 +1,3 @@
-from email import message
 import pytest
 
 from multibotkit.dispatchers.vk import VkontakteDispatcher
@@ -14,19 +13,16 @@ async def test_dispatcher():
         "carousel": False,
         "inline_keyboard": False,
         "keyboard": False,
-        "lang_id": 1234
+        "lang_id": 1234,
     }
-    
-    coordinates_object_dict = {
-        "longitude": 59.769595, 
-        "latitude": 30.796399
-    }
-    
+
+    coordinates_object_dict = {"longitude": 59.769595, "latitude": 30.796399}
+
     geo_object_dict = {
         "type": "geo object type",
-        "coordinates": coordinates_object_dict
+        "coordinates": coordinates_object_dict,
     }
-    
+
     message_object_dict = {
         "attachments": [],
         "conversation_message_id": 1234,
@@ -42,25 +38,23 @@ async def test_dispatcher():
         "is_hidden": False,
         "text": "text",
         "payload": "payload",
-        "geo": geo_object_dict
+        "geo": geo_object_dict,
     }
-    
+
     event_object_dict = {
         "client_info": client_info_dict,
-        "message": message_object_dict
+        "message": message_object_dict,
     }
-    
+
     incoming_event_dict = {
         "type": "event type",
         "group_id": 1234,
-        "object": event_object_dict
+        "object": event_object_dict,
     }
 
     incoming_event = IncomingEvent.parse_obj(incoming_event_dict)
 
-    state_data = {
-        "state": "state"
-    }
+    state_data = {"state": "state"}
 
     @dp.register_handler(
         func=lambda event: event.object.message.text.startswith("text"),
@@ -68,5 +62,5 @@ async def test_dispatcher():
     )
     async def test_handler(event: IncomingEvent, state_data: dict):
         assert True
-    
+
     await dp.process_event(incoming_event, state_data)
