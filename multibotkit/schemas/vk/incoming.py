@@ -39,7 +39,7 @@ class MessageObject(BaseModel):
     random_id: int = Field(
         ...,
         title="Parameter used while sending the message \
-            to avoid double sending"
+to avoid double sending"
     )
     fwd_messages: List[dict] = Field(
         ...,
@@ -50,7 +50,7 @@ class MessageObject(BaseModel):
     out: int = Field(
         ...,
         title="Message type. 0 — received, 1 — sent. \
-            (Not returned for forwarded messages.)",
+(Not returned for forwarded messages.)",
     )
     important: bool = Field(
         ...,

@@ -16,7 +16,7 @@ class MessageAttachmentPayload(BaseModel):
         ...,
         title="URL of the attachment type.",
         description="Applicable to attachment type: \
-            audio, file, image, video, fallback",
+audio, file, image, video, fallback",
     )
 
 
@@ -30,15 +30,15 @@ class ReferralData(BaseModel):
         ...,
         title="The optional ref attribute set in the referrer.",
         description="Only alphanumeric characters as well \
-            as -, _, and = are supported.",
+as -, _, and = are supported.",
     )
     source: str = Field(
         ...,
         title="The source of the referral.",
         description="Supported values:\n\
-            1. ADS\n\
-            2. SHORTLINK\n\
-            3. CUSTOMER_CHAT_PLUGIN",
+    1. ADS\n\
+    2. SHORTLINK\n\
+    3. CUSTOMER_CHAT_PLUGIN",
     )
     type: str = Field(
         ..., title="The referral type", description="Currently supports OPEN_THREAD."
@@ -50,14 +50,14 @@ class MessagePostback(BaseModel):
         ...,
         title="Title for the CTA that was clicked on.",
         description="This is sent to all apps subscribed to the page. \
-            For apps other than the original CTA sender, \
-            the postback event will be delivered via the standby channel.",
+For apps other than the original CTA sender, \
+the postback event will be delivered via the standby channel.",
     )
     payload: str = Field(
         ...,
         title="payload parameter that was defined with the button.",
         description="This is only visible to the app that send \
-            the original template message.",
+the original template message.",
     )
     referral: Optional[ReferralData] = Field(
         None, title="Referral information for how the user got into the thread."
@@ -92,7 +92,7 @@ class EventEntry(BaseModel):
         ...,
         title="Array containing one messaging object.",
         description="Note that even though this is an array, \
-            it will only contain one messaging object.",
+it will only contain one messaging object.",
     )
 
 

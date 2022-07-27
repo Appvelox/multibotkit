@@ -23,12 +23,12 @@ class FileBasedObject(BaseModel):
     file_id: str = Field(
         ...,
         title="Identifier for this file, which can be used to download \
-            or reuse the file",
+or reuse the file",
     )
     file_unique_id: str = Field(
         ...,
         title="Unique identifier for this file, which is supposed to be \
-            the same over time and for different bots",
+the same over time and for different bots",
     )
     file_size: Optional[int] = Field(None, title="File size, if known")
 
@@ -39,12 +39,12 @@ class Location(BaseModel):
     horizontal_accuracy: Optional[float] = Field(
         None,
         title="The radius of uncertainty for the location, \
-            measured in meters; 0-1500",
+measured in meters; 0-1500",
     )
     live_period: Optional[int] = Field(
         None,
         title="Time relative to the message sending date, \
-            during which the location can be updated, in seconds",
+during which the location can be updated, in seconds",
     )
     heading: Optional[int] = Field(
         None,
@@ -53,7 +53,7 @@ class Location(BaseModel):
     proximity_alert_radius: Optional[int] = Field(
         None,
         title="Maximum distance for proximity alerts about approaching \
-            another chat member, in meters",
+another chat member, in meters",
     )
 
 
@@ -91,17 +91,17 @@ class MaskPosition(BaseModel):
     point: MaskPositionPoint = Field(
         ...,
         title="The part of the face relative to which the mask should be \
-            placed. One of “forehead”, “eyes”, “mouth”, or “chin”",
+placed. One of “forehead”, “eyes”, “mouth”, or “chin”",
     )
     x_shift: float = Field(
         ...,
         title="Shift by X-axis measured in widths of the mask scaled \
-            to the face size, from left to right",
+to the face size, from left to right",
     )
     y_shift: float = Field(
         ...,
         title="Shift by Y-axis measured in heights of the mask scaled \
-            to the face size, from top to bottom",
+to the face size, from top to bottom",
     )
     scale: float = Field(..., title="Mask scaling coefficient")
 
@@ -127,7 +127,7 @@ class Sticker(FileBasedObject):
     mask_position: Optional[MaskPosition] = Field(
         None,
         title="For mask stickers, the position where the mask \
-            should be placed"
+should be placed"
     )
 
 
@@ -135,7 +135,7 @@ class VideoNote(FileBasedObject):
     length: int = Field(
         ...,
         title="Video width and height (diameter of the video message) \
-            as defined by sender",
+as defined by sender",
     )
     duration: int = Field(
         ...,
@@ -182,7 +182,7 @@ class Audio(FileBasedObject):
     performer: Optional[str] = Field(
         None,
         title="Performer of the audio as defined by sender or by \
-            audio tags"
+audio tags"
     )
     title: Optional[str] = Field(
         None,
@@ -199,7 +199,7 @@ class Audio(FileBasedObject):
     thumb: Optional[Photo] = Field(
         None,
         title="Thumbnail of the album cover to which the music file \
-            belongs"
+belongs"
     )
 
 
@@ -208,7 +208,7 @@ class Chat(BaseModel):
     type: ChatType = Field(
         ...,
         title="Type of chat, can be either “private”, “group”, \
-            “supergroup” or “channel”",
+“supergroup” or “channel”",
     )
     title: Optional[str] = Field(
         None,
@@ -225,7 +225,7 @@ class Chat(BaseModel):
     username: Optional[str] = Field(
         None,
         title="Username, for private chats, supergroups and channels \
-            if available"
+if available"
     )
 
 
@@ -284,7 +284,7 @@ class Message(BaseModel):
     caption: Optional[str] = Field(
         None,
         title="Caption for the animation, audio, document, photo, \
-            video or voice"
+video or voice"
     )
     audio: Optional[Audio] = Field(
         None,
@@ -309,7 +309,7 @@ class Message(BaseModel):
     video_note: Optional[VideoNote] = Field(
         None,
         title="Message is a video note, information about the \
-            video message"
+video message"
     )
     voice: Optional[Voice] = Field(
         None,
@@ -322,7 +322,7 @@ class Message(BaseModel):
     location: Optional[Location] = Field(
         None,
         title="Message is a shared location, information about \
-            the location"
+the location"
     )
 
     class Config:
@@ -338,13 +338,13 @@ class CallbackQuery(BaseModel):
     )
     inline_message_id: Optional[int] = Field(
         None,
-        title="Identifier of the message sent via the bot in inline mode,\
-             that originated the query",
+        title="Identifier of the message sent via the bot in inline mode, \
+that originated the query",
     )
     chat_instance: Optional[str] = Field(
         None,
         title="Global identifier, uniquely corresponding to the chat to \
-            which the message with the callback button was sent",
+which the message with the callback button was sent",
     )
     data: Optional[str] = Field(
         None,
@@ -353,7 +353,7 @@ class CallbackQuery(BaseModel):
     game_short_name: Optional[str] = Field(
         None,
         title="Short name of a Game to be returned, serves as the \
-            unique identifier for the game",
+unique identifier for the game",
     )
 
     class Config:

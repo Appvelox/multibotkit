@@ -42,10 +42,10 @@ class QuickReply(BaseModel):
         "text",
         title="Must be one of the following:",
         description="1. text: Sends a text button\n\
-            2. user_phone_number: Sends a button allowing recipient \
-                to send the phone number associated with their account\n\
-            3. user_email: Sends a button allowing recipient \
-                to send the email associated with their account.",
+2. user_phone_number: Sends a button allowing recipient \
+    to send the phone number associated with their account\n\
+3. user_email: Sends a button allowing recipient \
+    to send the email associated with their account.",
     )
     title: str = Field(
         ...,
@@ -55,15 +55,15 @@ class QuickReply(BaseModel):
     payload: str = Field(
         ...,
         title="Custom data that will be sent back to you \
-            via the messaging_postbacks webhook event.",
+via the messaging_postbacks webhook event.",
         description="Required if content_type is 'text'. 1000 character limit.",
     )
     image_url: Optional[str] = Field(
         None,
         title="URL of image to display on the quick reply button for text quick replies.",
         description="Image should be a minimum of 24px x 24px. \
-            Larger images will be automatically cropped and resized. \
-            Required if title is an empty string.",
+Larger images will be automatically cropped and resized. \
+Required if title is an empty string.",
     )
 
 
@@ -89,7 +89,7 @@ class MessageDataAttachment(BaseModel):
         ...,
         title="Type of attachment",
         description="May be image, audio, video, file or template. \
-            For assets, max file size is 25MB.",
+For assets, max file size is 25MB.",
     )
     payload: MessageDataAttachmentPayload = Field(
         ...,
@@ -103,15 +103,15 @@ class MessageData(BaseModel):
         None,
         title="Message text",
         description="Previews will not be shown for the URLs in this field. \
-            Use attachment instead. Must be UTF-8 and has a 2000 character limit. \
-            text or attachment must be set.",
+Use attachment instead. Must be UTF-8 and has a 2000 character limit. \
+text or attachment must be set.",
     )
     attachment: Optional[MessageDataAttachment] = Field(
         None,
         title="Attachment object",
         description="Previews the URL. \
-            Used to send messages with media or Structured Messages. \
-            text or attachment must be set.",
+Used to send messages with media or Structured Messages. \
+text or attachment must be set.",
     )
     quick_replies: Optional[List[QuickReply]] = Field(
         None, title="Array of quick_reply to be sent with messages"
@@ -123,10 +123,10 @@ class MessageRecipient(BaseModel):
         None,
         title="Page Scoped User ID (PSID) of the message recipient.",
         description="The user needs to have interacted with any \
-            of the Messenger entry points in order to opt-in into messaging \
-            with the Page. \
-            Note that Facebook Login integrations return user IDs \
-            are app-scoped and will not work with the Messenger platform.",
+of the Messenger entry points in order to opt-in into messaging \
+with the Page. \
+Note that Facebook Login integrations return user IDs \
+are app-scoped and will not work with the Messenger platform.",
     )
     email: Optional[str] = Field(None, title="Recipient e-mail")
 
@@ -137,7 +137,7 @@ class Message(BaseModel):
         "RESPONSE",
         title="The messaging type of the message being sent.",
         description="For supported types and more information, \
-            see Sending Messages - Messaging Types",
+see Sending Messages - Messaging Types",
     )
     message: MessageData = Field(..., title="Message object")
 
@@ -147,8 +147,8 @@ class MenuItem(BaseModel):
         ...,
         title="The type of menu item.",
         description="Supported values are:\n\
-            web_url: Specifes the item is a URL button.\n\
-            postback: Specifies the item is a postback button."
+    web_url: Specifes the item is a URL button.\n\
+    postback: Specifies the item is a postback button."
     )
     title: str = Field(
         ...,
@@ -163,7 +163,7 @@ class MenuItem(BaseModel):
     payload: str = Field(
         ...,
         title="Data that will be sent back to your webhook as a \
-            messaging_postbacks event.",
+messaging_postbacks event.",
         description="Required if type is postback. 1000 character limit."
     )
     webview_height_ratio: Optional[str] = Field(
@@ -174,20 +174,20 @@ class MenuItem(BaseModel):
     messenger_extensions: Optional[bool] = Field(
         None,
         title="Must be true if the item type is web_url and \
-            the Messenger Extensions SDK will be used in the webview."
+the Messenger Extensions SDK will be used in the webview."
     )
     fallback_url: Optional[str] = Field(
         None,
         title="URL to open in the webview for clients that do not \
-            support the Messenger Extensions SDK.",
+support the Messenger Extensions SDK.",
         description="If this is not defined, the url will be used \
-            as the fallback. It may only be specified if \
-            'messenger_extensions': true."
+as the fallback. It may only be specified if \
+'messenger_extensions': true."
     )
     webview_share_button: Optional[str] = Field(
         None,
         title="Set to hide to disable sharing in the webview \
-            (for sensitive info)."
+(for sensitive info)."
     )
 
 
@@ -195,17 +195,17 @@ class PersistentMenuElement(BaseModel):
     locale: str = Field(
         "default",
         title="The menu with a locale property that matches the person's \
-            locale will be displayed.",
+locale will be displayed.",
         description="At least one object in the persistent_menu array \
-            must specify 'locale': 'default'. This is the menu we will \
-            fall back to if no object has a locale property that matches \
-            the users locale."
+must specify 'locale': 'default'. This is the menu we will \
+fall back to if no object has a locale property that matches \
+the users locale."
     )
     composer_input_disabled: bool = Field(
         False,
         title="Disables the Messenger composer field if set to true.",
         description="This means your bot can only be interacted with \
-            via the persistent menu, postbacks, buttons, and webviews."
+via the persistent menu, postbacks, buttons, and webviews."
     )
     disabled_surfaces: Optional[List[str]] = Field(
         None,
@@ -216,7 +216,7 @@ class PersistentMenuElement(BaseModel):
         None,
         title="An array of top-level menu items for the persistent menu.",
         description="A maximum of 3 items is allowed.\
-            Required if 'composer_input_disabled': true."
+Required if 'composer_input_disabled': true."
     )
 
 
@@ -224,7 +224,7 @@ class PersistentMenu(BaseModel):
     persistent_menu: List[PersistentMenuElement] = Field(
         ...,
         title="An array of objects that define the persistent menu \
-            for different locales.",
+for different locales.",
         description="The menu with a locale property that matches \
-            the person's locale will be displayed."
+the person's locale will be displayed."
     )

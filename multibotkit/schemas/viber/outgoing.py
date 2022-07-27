@@ -21,8 +21,8 @@ class Button(BaseModel):
         None,
         title="Text to be displayed on the button",
         description="Free text. Valid and allowed HTML tags \
-            Max 250 characters. If the text is too long to display \
-                on the button it will be cropped and ended with “…”",
+Max 250 characters. If the text is too long to display \
+on the button it will be cropped and ended with “…”",
     )
     TextSize: str = Field(
         "regular",
@@ -39,19 +39,19 @@ class Button(BaseModel):
     ActionType: str = Field(
         "reply",
         title="Type of action pressing the button will perform. \
-            Reply - will send a reply to the bot. open-url - will "
-        "open the specified URL and send the URL as reply to the bot. \
-            location-picker and share-phone are not "
-        "supported on desktop, and require adding any text in the \
-            ActionBody parameter",
+Reply - will send a reply to the bot. open-url - will "
+"open the specified URL and send the URL as reply to the bot. \
+location-picker and share-phone are not "
+"supported on desktop, and require adding any text in the \
+ActionBody parameter",
         description="reply / open-url / location-picker / \
-            share-phone / none",
+share-phone / none",
     )
     ActionBody: str = Field(
         ...,
         title="Text for reply and none. ActionType or URL for open-url",
         description="For ActionType reply - text \
-            For ActionType open-url - Valid URL.",
+For ActionType open-url - Valid URL.",
     )
     BgColor: Optional[str] = Field(
         None,
@@ -62,10 +62,10 @@ class Button(BaseModel):
         None,
         title="URL of image to place on top of background",
         description="Can be a partially transparent image \
-            that will allow showing some of the background. \
-            Will be placed with aspect to fill logic. \
-            Valid URL. JPEG and PNG files are supported. \
-            Max size: 500 kb",
+that will allow showing some of the background. \
+Will be placed with aspect to fill logic. \
+Valid URL. JPEG and PNG files are supported. \
+Max size: 500 kb",
     )
 
 
@@ -74,9 +74,9 @@ class Keyboard(BaseModel):
     DefaultHeight: bool = Field(
         False,
         title="When true - the keyboard will always be displayed \
-            with the same height as the native keyboard.When "
-        "false - short keyboards will be displayed with \
-            the minimal possible height",
+with the same height as the native keyboard.When "
+"false - short keyboards will be displayed with \
+the minimal possible height",
     )
     BgColor: Optional[str] = Field(
         None, title="Background color of the keyboard"
@@ -94,7 +94,7 @@ class SetWebhook(BaseModel):
     event_types: Optional[List[str]] = Field(
         None,
         title="Indicates the types of Viber events that \
-            the account owner would like to be notified about",
+the account owner would like to be notified about",
     )
     send_name: bool = Field(
         False,
@@ -116,7 +116,7 @@ class Sender(BaseModel):
         None,
         title="The sender’s avatar URL",
         description="Avatar size should be no more than 100 kb. \
-            Recommended 720x720",
+Recommended 720x720",
     )
 
 
@@ -147,16 +147,16 @@ class BaseMessage(BaseModel):
     min_api_version: int = Field(
         7,
         title="Minimal API version required by clients \
-            for this message (default 1)",
+for this message (default 1)",
         description="optional. client version support the API version. \
-            Certain features may not work as expected \
-            if set to a number that’s below their requirements.",
+Certain features may not work as expected \
+if set to a number that’s below their requirements.",
     )
     sender: Sender = Field(None, title="Sender object")
     tracking_data: Optional[str] = Field(
         None,
         title="Allow the account to track messages and user’s replies. \
-            Sent tracking_data value will be passed back with user’s reply",
+Sent tracking_data value will be passed back with user’s reply",
         description="max 4000 characters",
     )
     keyboard: Keyboard = Field(None)
@@ -184,18 +184,18 @@ class PictureMessage(BaseMessage):
     text: str = Field(
         ...,
         title="Description of the photo. \
-            Can be an empty string if irrelevant",
+Can be an empty string if irrelevant",
         description="Max 512 characters",
     )
     media: str = Field(
         ...,
         title="URL of the image (JPEG, PNG, non-animated GIF)",
         description="The URL must have a resource \
-            with a .jpeg, .png or .gif file extension as the \
-            last path segment. \
-            Example: http://www.example.com/path/image.jpeg. \
-            Animated GIFs can be sent as URL messages or file messages. \
-            Max image size: 1MB on iOS, 3MB on Android.",
+with a .jpeg, .png or .gif file extension as the \
+last path segment. \
+Example: http://www.example.com/path/image.jpeg. \
+Animated GIFs can be sent as URL messages or file messages. \
+Max image size: 1MB on iOS, 3MB on Android.",
     )
     thumbnail: Optional[str] = Field(
         None,
@@ -210,21 +210,21 @@ class VideoMessage(BaseMessage):
         ...,
         title="URL of the video (MP4, H264)",
         description="Max size 26 MB. Only MP4 and H264 are supported. \
-            The URL must have a resource with a .mp4 file extension \
-            as the last path segment. \
-            Example: http://www.example.com/path/video.mp4",
+The URL must have a resource with a .mp4 file extension \
+as the last path segment. \
+Example: http://www.example.com/path/video.mp4",
     )
     thumbnail: Optional[str] = Field(
         None,
         title="URL of a reduced size video (JPEG, PNG, GIF)",
         description="Max size 100 kb. Recommended: 400x400. \
-            Only JPEG format is supported",
+Only JPEG format is supported",
     )
     size: int = Field(..., title="Size of the video in bytes")
     duration: Optional[int] = Field(
         None,
         title="Video duration in seconds; will be displayed \
-            to the receiver",
+to the receiver",
         description="Max 180 seconds",
     )
 
@@ -235,16 +235,16 @@ class FileMessage(BaseMessage):
         ...,
         title="URL of the file",
         description="Max size 50 MB. \
-            See forbidden file formats for unsupported file types",
+See forbidden file formats for unsupported file types",
     )
     size: int = Field(..., title="Size of the file in bytes")
     file_name: str = Field(
         ...,
         title="Name of the file",
         description=" File name should include extension. \
-            Max 256 characters (including file extension). \
-            Sending a file without extension or with the wrong extension \
-            might cause the client to be unable to open the file",
+Max 256 characters (including file extension). \
+Sending a file without extension or with the wrong extension \
+might cause the client to be unable to open the file",
     )
 
 

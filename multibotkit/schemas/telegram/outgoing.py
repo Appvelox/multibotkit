@@ -9,26 +9,26 @@ class SetWebhookParams(BaseModel):
     ip_address: Optional[str] = Field(
         None,
         title="The fixed IP address which will be used to send webhook \
-                requests instead of the IP address resolved through DNS",
+requests instead of the IP address resolved through DNS",
     )
     max_connections: Optional[int] = Field(
         None,
         title="Maximum allowed number of simultaneous HTTPS connections \
-                to the webhook for update delivery, 1-100",
+to the webhook for update delivery, 1-100",
     )
     allowed_updates: Optional[List[str]] = Field(
         None,
         title="A JSON-serialized list of the update types you want your \
                 bot to receive",
         description="For example, specify [“message”, \
-            “edited_channel_post”, “callback_query”] to only receive \
-            updates of these types. See Update for a complete list of \
-            available update types. Specify an empty list to receive \
-            all update types except chat_member (default). \
-            If not specified, the previous setting will be used.\
-            Please note that this parameter doesn't affect updates \
-            created before the call to the setWebhook, so unwanted \
-            updates may be received for a short period of time.",
+“edited_channel_post”, “callback_query”] to only receive \
+updates of these types. See Update for a complete list of \
+available update types. Specify an empty list to receive \
+all update types except chat_member (default). \
+If not specified, the previous setting will be used.\
+Please note that this parameter doesn't affect updates \
+created before the call to the setWebhook, so unwanted \
+updates may be received for a short period of time.",
     )
 
 
@@ -40,7 +40,7 @@ class WebhookInfo(BaseModel):
     has_custom_certificate: Optional[bool] = Field(
         None,
         title="True, if a custom certificate was provided for webhook \
-                certificate checks",
+certificate checks",
     )
     pending_update_count: Optional[int] = Field(
         None,
@@ -53,18 +53,18 @@ class WebhookInfo(BaseModel):
     last_error_date: Optional[int] = Field(
         None,
         title="Unix time for the most recent error that happened when \
-                trying to deliver an update via webhook",
+trying to deliver an update via webhook",
     )
     last_error_message: Optional[str] = Field(
         None,
         title="Error message in human-readable format for the most \
-                recent error that happened when trying to deliver \
-                an update via webhook",
+recent error that happened when trying to deliver \
+an update via webhook",
     )
     max_connections: Optional[int] = Field(
         None,
         title="Maximum allowed number of simultaneous HTTPS connections \
-                to the webhook for update delivery",
+to the webhook for update delivery",
     )
     allowed_updates: Optional[List[str]] = Field(
         None,
@@ -81,7 +81,7 @@ class InlineKeyboardButton(BaseModel):
     callback_data: Optional[str] = Field(
         None,
         title=" Data to be sent in a callback query to the bot \
-                when button is pressed, 1-64 bytes",
+when button is pressed, 1-64 bytes",
     )
 
 
@@ -89,7 +89,7 @@ class InlineKeyboardMarkup(BaseModel):
     inline_keyboard: List[List[InlineKeyboardButton]] = Field(
         ...,
         title="Array of button rows, each represented by an \
-                Array of InlineKeyboardButton objects",
+Array of InlineKeyboardButton objects",
     )
 
 
@@ -98,12 +98,12 @@ class KeyboardButton(BaseModel):
     request_contact: Optional[bool] = Field(
         None,
         title=" If True, the user's phone number will be sent as a \
-                contact when the button is pressed",
+contact when the button is pressed",
     )
     request_location: Optional[bool] = Field(
         None,
         title="If True, the user's current location will be sent \
-                when the button is pressed",
+when the button is pressed",
     )
 
 
@@ -111,17 +111,17 @@ class ReplyKeyboardMarkup(BaseModel):
     keyboard: List[List[KeyboardButton]] = Field(
         ...,
         title="Array of button rows, each represented by an \
-                Array of KeyboardButton objects",
+Array of KeyboardButton objects",
     )
     resize_keyboard: Optional[bool] = Field(
         None,
         title="Requests clients to resize the keyboard vertically \
-                for optimal fit"
+for optimal fit"
     )
     one_time_keyboard: Optional[bool] = Field(
         None,
         title="Requests clients to hide the keyboard as soon as \
-                it's been used"
+it's been used"
     )
 
 
