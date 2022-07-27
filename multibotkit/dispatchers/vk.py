@@ -21,5 +21,3 @@ class VkontakteDispatcher(BaseDispatcher):
                     func_result = False
         
         return func_result
-
-
