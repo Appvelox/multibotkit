@@ -39,10 +39,10 @@ on the button it will be cropped and ended with “…”",
     ActionType: str = Field(
         "reply",
         title="Type of action pressing the button will perform. \
-Reply - will send a reply to the bot. open-url - will "
-"open the specified URL and send the URL as reply to the bot. \
-location-picker and share-phone are not "
-"supported on desktop, and require adding any text in the \
+Reply - will send a reply to the bot. open-url - will \
+open the specified URL and send the URL as reply to the bot. \
+location-picker and share-phone are not \
+supported on desktop, and require adding any text in the \
 ActionBody parameter",
         description="reply / open-url / location-picker / \
 share-phone / none",
@@ -74,8 +74,8 @@ class Keyboard(BaseModel):
     DefaultHeight: bool = Field(
         False,
         title="When true - the keyboard will always be displayed \
-with the same height as the native keyboard.When "
-"false - short keyboards will be displayed with \
+with the same height as the native keyboard.When \
+false - short keyboards will be displayed with \
 the minimal possible height",
     )
     BgColor: Optional[str] = Field(
