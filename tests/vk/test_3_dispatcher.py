@@ -56,7 +56,7 @@ async def test_dispatcher():
 
     state_data = {"state": "state"}
 
-    @dp.register_handler(
+    @dp.handler(
         func=lambda event: event.object.message.text.startswith("text"),
         state_data_func=lambda state_data: state_data["state"] == "state",
     )

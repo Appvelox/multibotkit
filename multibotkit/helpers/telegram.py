@@ -1,14 +1,6 @@
-from json import JSONDecodeError
 from typing import Optional
 
-import httpx
-from tenacity import (
-    retry,
-    retry_if_exception_type,
-    stop_after_attempt,
-    wait_exponential,
-)
-
+from multibotkit.helpers.base_helper import BaseHelper
 from multibotkit.schemas.telegram.outgoing import (
     InlineKeyboardMarkup,
     Message,
@@ -17,7 +9,7 @@ from multibotkit.schemas.telegram.outgoing import (
 )
 
 
-class TelegramHelper:
+class TelegramHelper(BaseHelper):
     """
     Sync and async functions for Telegram Bot API
     """
@@ -26,28 +18,6 @@ class TelegramHelper:
         self.token = token
         self.tg_base_url = f"https://api.telegram.org/bot{self.token}/"
 
-    @retry(
-        retry=retry_if_exception_type(httpx.HTTPError)
-        | retry_if_exception_type(JSONDecodeError),
-        reraise=True,
-        stop=stop_after_attempt(5),
-        wait=wait_exponential(multiplier=1, min=4, max=10),
-    )
-    def _perform_sync_request(self, url: str, data: dict = None):
-        r = httpx.post(url=url, json=data)
-        return r.json()
-
-    @retry(
-        retry=retry_if_exception_type(httpx.HTTPError)
-        | retry_if_exception_type(JSONDecodeError),
-        reraise=True,
-        stop=stop_after_attempt(5),
-        wait=wait_exponential(multiplier=1, min=4, max=10),
-    )
-    async def _perform_async_request(self, url: str, data: dict = None):
-        async with httpx.AsyncClient() as client:
-            r = await client.post(url, data=data)
-            return r.json()
 
     def syncGetWebhookInfo(self) -> Optional[WebhookInfo]:
         url = self.tg_base_url + "getWebhookInfo"

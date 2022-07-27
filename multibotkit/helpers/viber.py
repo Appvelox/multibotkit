@@ -9,6 +9,7 @@ from tenacity import (
     wait_exponential,
 )
 
+from multibotkit.helpers.base_helper import BaseHelper
 from multibotkit.schemas.viber.outgoing import (
     SetWebhook,
     StickerMessage,
@@ -22,35 +23,12 @@ from multibotkit.schemas.viber.outgoing import (
 )
 
 
-class ViberHelper:
+class ViberHelper(BaseHelper):
 
     VIBER_BASE_URL = "https://chatapi.viber.com/pa/"
 
     def __init__(self, token):
         self.token = token
-
-    @retry(
-        retry=retry_if_exception_type(httpx.HTTPError)
-        | retry_if_exception_type(JSONDecodeError),
-        reraise=True,
-        stop=stop_after_attempt(5),
-        wait=wait_exponential(multiplier=1, min=4, max=10),
-    )
-    def _perform_sync_request(self, url: str, data: dict = None):
-        r = httpx.post(url=url, json=data)
-        return r.json()
-
-    @retry(
-        retry=retry_if_exception_type(httpx.HTTPError)
-        | retry_if_exception_type(JSONDecodeError),
-        reraise=True,
-        stop=stop_after_attempt(5),
-        wait=wait_exponential(multiplier=1, min=4, max=10),
-    )
-    async def _perform_async_request(self, url: str, data: dict = None):
-        async with httpx.AsyncClient() as client:
-            r = await client.post(url, json=data)
-            return r.json()
 
     def sync_set_webhook(self, webhook_data: SetWebhook):
         url = self.VIBER_BASE_URL + "set_webhook"
