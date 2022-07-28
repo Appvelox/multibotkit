@@ -5,7 +5,7 @@ import pytest
 from pytest_httpx import HTTPXMock
 
 from multibotkit.helpers.fb import FBHelper
-from multibotkit.schemas.fb.outgoing import Message, PersistentMenu
+from multibotkit.schemas.fb.outgoing import Message, MessageDataAttachment, PersistentMenu, QuickReply
 from tests.config import settings
 
 
@@ -50,6 +50,8 @@ def test_sync_send_message(httpx_mock: HTTPXMock):
         "image_url": "image url",
     }
 
+    quick_reply = QuickReply.parse_obj(quick_reply_dict)
+
     message_data_attachment_payload_dict = {
         "template_type": "template type",
         "text": "text",
@@ -62,28 +64,31 @@ def test_sync_send_message(httpx_mock: HTTPXMock):
         "payload": message_data_attachment_payload_dict,
     }
 
-    message_data_dict = {
-        "text": "text",
-        "attachment": message_data_attachment_dict,
-        "quick_replies": [quick_reply_dict],
-    }
+    message_data_attachment = MessageDataAttachment.parse_obj(
+        message_data_attachment_dict
+    )
 
-    message_recipient_dict = {"id": "id", "email": "e-mail"}
-
-    message_dict = {
-        "recipient": message_recipient_dict,
-        "messaging_type": "messaging type",
-        "message": message_data_dict,
-    }
-
-    message = Message.parse_obj(message_dict)
-
-    r = fb_helper.sync_send_message(message=message)
+    r = fb_helper.sync_send_message(
+        recipient_id="id",
+        text="text",
+        attachment=message_data_attachment,
+        quick_replies=[quick_reply],
+    )
 
     assert r == {
         "recipient_id": "id",
         "message_id": "AG5Hz2Uq7tuwNEhXfYYKj8mJEM_QPpz5jdCK48PnKAjSdjfipqxqMvK8ma6AC8fplwlqLP_5cgXIbu7I3rBN0P",
     }
+
+
+def test_sync_send_message_arguments_error(): 
+    try:
+        r = fb_helper.sync_send_message(
+            recipient_id="id"
+        )
+        assert False
+    except fb_helper._SendMessageArgumentsError:
+        assert True
 
 
 def test_sync_send_get_started(httpx_mock: HTTPXMock):
@@ -178,6 +183,8 @@ async def test_async_send_message(httpx_mock: HTTPXMock):
         "image_url": "image url",
     }
 
+    quick_reply = QuickReply.parse_obj(quick_reply_dict)
+
     message_data_attachment_payload_dict = {
         "template_type": "template type",
         "text": "text",
@@ -190,23 +197,16 @@ async def test_async_send_message(httpx_mock: HTTPXMock):
         "payload": message_data_attachment_payload_dict,
     }
 
-    message_data_dict = {
-        "text": "text",
-        "attachment": message_data_attachment_dict,
-        "quick_replies": [quick_reply_dict],
-    }
+    message_data_attachment = MessageDataAttachment.parse_obj(
+        message_data_attachment_dict
+    )
 
-    message_recipient_dict = {"id": "id", "email": "e-mail"}
-
-    message_dict = {
-        "recipient": message_recipient_dict,
-        "messaging_type": "messaging type",
-        "message": message_data_dict,
-    }
-
-    message = Message.parse_obj(message_dict)
-
-    r = await fb_helper.async_send_message(message=message)
+    r = await fb_helper.async_send_message(
+        recipient_id="id",
+        text="text",
+        attachment=message_data_attachment,
+        quick_replies=[quick_reply],
+    )
 
     assert r == {
         "recipient_id": "id",

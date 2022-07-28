@@ -1,3 +1,4 @@
+from email import message
 import json
 from json import JSONDecodeError
 from io import BytesIO
@@ -12,7 +13,7 @@ from tenacity import (
 )
 
 from multibotkit.helpers.base_helper import BaseHelper
-from multibotkit.schemas.vk.outgoing import Message
+from multibotkit.schemas.vk.outgoing import Keyboard, Message
 
 
 class VKHelper(BaseHelper):
@@ -23,6 +24,10 @@ class VKHelper(BaseHelper):
     )
     SAVE_MESSAGES_PHOTO_URL = "https://api.vk.com/method/photos.saveMessagesPhoto"
     UPLOAD_PHOTO_URL = "https://api.vk.com/method/photos.getMessagesUploadServer"
+
+
+    class _SendMessageArgumentsError(Exception):
+        pass
 
 
     def __init__(self, access_token: str, api_version: str):
@@ -40,7 +45,33 @@ class VKHelper(BaseHelper):
             return ""
         return json.loads(json_payload).get("button")
 
-    def syncSendMessage(self, message: Message):
+
+    def syncSendMessage(
+        self,
+        user_id: int,
+        text: Optional[str] = None,
+        keyboard: Optional[Keyboard] = None,
+        lat: Optional[float] = None,
+        long: Optional[float] = None,
+        attachment: Optional[str] = None,
+        template: Optional[dict] = None
+        ):
+        
+        if (text is None) and (attachment is None):
+            raise self._SendMessageArgumentsError(
+                "One of the arguments text and attachment is required"
+            )
+        
+        message = Message(
+            user_id=user_id,
+            message=text,
+            keyboard=keyboard,
+            lat=lat,
+            long=long,
+            attachment=attachment,
+            template=template
+        )
+
         data = message.dict(exclude_none=True)
         if data.get("keyboard"):
             data["keyboard"] = json.dumps(data["keyboard"], ensure_ascii=False)
@@ -50,7 +81,31 @@ class VKHelper(BaseHelper):
         r = self._perform_sync_request(url=self.MESSAGES_URL, data=data)
         return r
 
-    async def asyncSendMessage(self, message: Message):
+    async def asyncSendMessage(
+        self,
+        user_id: int,
+        text: Optional[str] = None,
+        keyboard: Optional[Keyboard] = None,
+        lat: Optional[float] = None,
+        long: Optional[float] = None,
+        attachment: Optional[str] = None,
+        template: Optional[dict] = None
+        ):
+        if (text is None) and (attachment is None):
+            raise self.__SendMessageArgumentsError(
+                "One of the arguments text and attachment is required, \
+but not both"
+            )
+        
+        message = Message(
+            user_id=user_id,
+            message=message,
+            keyboard=keyboard,
+            lat=lat,
+            long=long,
+            attachment=attachment,
+            template=template
+        )
         data = message.dict(exclude_none=True)
         if data.get("keyboard"):
             data["keyboard"] = json.dumps(data["keyboard"], ensure_ascii=False)
@@ -59,6 +114,7 @@ class VKHelper(BaseHelper):
 
         r = await self._perform_async_request(url=self.MESSAGES_URL, data=data)
         return r
+
 
     @retry(
         retry=retry_if_exception_type(httpx.HTTPError)
@@ -85,6 +141,7 @@ class VKHelper(BaseHelper):
             r = await client.post(server_url, files=files)
         return r.json()
 
+
     def syncSavePhoto(self, uploaded_photo: dict):
         r = self._perform_sync_request(
             url=self.SAVE_MESSAGES_PHOTO_URL, data={**uploaded_photo}
@@ -96,6 +153,7 @@ class VKHelper(BaseHelper):
             url=self.SAVE_MESSAGES_PHOTO_URL, data={**uploaded_photo}
         )
         return r["response"][0]
+
 
     def syncGetPhotoAttachment(self, photo, file_name):
         r = self._perform_sync_request(self.UPLOAD_PHOTO_URL, data={})

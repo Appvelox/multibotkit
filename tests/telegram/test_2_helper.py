@@ -1,9 +1,11 @@
 import httpx
+import json
 import pytest
 from pytest_httpx import HTTPXMock
 
 from multibotkit.helpers.telegram import TelegramHelper
 from multibotkit.schemas.telegram.outgoing import (
+    Message,
     ReplyKeyboardMarkup,
     KeyboardButton,
     WebhookInfo,
@@ -67,6 +69,55 @@ def test_sync_helper_set_webhook(httpx_mock: HTTPXMock):
     r = tg_helper.syncSetWebhook(webhook_url="https://test_url/api/bot")
 
     assert r == {"ok": True, "result": True, "description": "Webhook was set"}
+
+
+def test_sync_send_message(httpx_mock: HTTPXMock):
+    def send_message_response(request: httpx.Request):
+        content = json.loads(request.content.decode())
+        
+        return httpx.Response(
+            status_code=200,
+            json={
+                "ok": True,
+                "result": True,
+                "message": content
+            }
+        )
+
+    httpx_mock.add_callback(send_message_response)
+
+    keyboard_button_dict = {
+        "text": "Button",
+        "request_contact": False,
+        "request_location": False,
+    }
+
+    keyboard_button = KeyboardButton.parse_obj(keyboard_button_dict)
+
+    reply_keyboard_markup = ReplyKeyboardMarkup(
+        keyboard=[[keyboard_button, keyboard_button]],
+        resize_keyboard=False,
+        one_time_keyboard=False,
+    )
+
+    message = Message(
+        chat_id=1234,
+        text="text",
+        disable_web_page_preview=False,
+        reply_markup=reply_keyboard_markup,
+    )
+
+    message_dict = message.dict(exclude_none=True)
+    message_dict.update({"parse_mode": "HTML"})
+
+    r = tg_helper.syncSendMessage(
+        chat_id=1234,
+        text="text",
+        disable_web_page_preview=False,
+        reply_markup=reply_keyboard_markup
+    )
+
+    assert r == {"ok": True, "result": True, "message": message_dict}
 
 
 def test_sync_helper_answer_callback_query(httpx_mock: HTTPXMock):
@@ -182,6 +233,56 @@ async def test_async_helper_async_set_webhook(httpx_mock: HTTPXMock):
     r = await tg_helper.asyncSetWebhook(webhook_url="https://test_url/api/bot")
 
     assert r == {"ok": True, "result": True, "description": "Webhook was set"}
+
+
+@pytest.mark.asyncio
+async def test_sync_send_message(httpx_mock: HTTPXMock):
+    def send_message_response(request: httpx.Request):
+        content = json.loads(request.content.decode())
+        
+        return httpx.Response(
+            status_code=200,
+            json={
+                "ok": True,
+                "result": True,
+                "message": content
+            }
+        )
+
+    httpx_mock.add_callback(send_message_response)
+
+    keyboard_button_dict = {
+        "text": "Button",
+        "request_contact": False,
+        "request_location": False,
+    }
+
+    keyboard_button = KeyboardButton.parse_obj(keyboard_button_dict)
+
+    reply_keyboard_markup = ReplyKeyboardMarkup(
+        keyboard=[[keyboard_button, keyboard_button]],
+        resize_keyboard=False,
+        one_time_keyboard=False,
+    )
+
+    message = Message(
+        chat_id=1234,
+        text="text",
+        disable_web_page_preview=False,
+        reply_markup=reply_keyboard_markup,
+    )
+
+    message_dict = message.dict(exclude_none=True)
+    message_dict.update({"parse_mode": "HTML"})
+
+    r = await tg_helper.asyncSendMessage(
+        chat_id=1234,
+        text="text",
+        disable_web_page_preview=False,
+        reply_markup=reply_keyboard_markup
+    )
+
+    assert r == {"ok": True, "result": True, "message": message_dict}
 
 
 @pytest.mark.asyncio

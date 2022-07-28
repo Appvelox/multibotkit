@@ -50,19 +50,27 @@ def test_syncSendMessage(httpx_mock: HTTPXMock):
 
     keyboard = Keyboard(one_time=False, inline=True, buttons=[[keyboard_button]])
 
-    message = Message(
+    r = vk_helper.syncSendMessage(
         user_id=1234,
-        message="message",
+        text="message",
         keyboard=keyboard,
         lat=0,
         long=0,
         attachment="attachment",
-        template={},
+        template={}
     )
 
-    r = vk_helper.syncSendMessage(message=message)
-
     assert r == {"peer_id": 1234, "message_id": 4321}
+
+
+def test_syncSendMessageArgumentsError():
+    try:
+        r = vk_helper.syncSendMessage(
+        user_id=1234
+        )
+        assert False
+    except vk_helper._SendMessageArgumentsError:
+        assert True
 
 
 def test_syncUploadPhoto(httpx_mock: HTTPXMock):
@@ -189,17 +197,15 @@ async def test_asyncSendMessage(httpx_mock: HTTPXMock):
 
     keyboard = Keyboard(one_time=False, inline=True, buttons=[[keyboard_button]])
 
-    message = Message(
+    r = vk_helper.syncSendMessage(
         user_id=1234,
-        message="message",
+        text="message",
         keyboard=keyboard,
         lat=0,
         long=0,
         attachment="attachment",
-        template={},
+        template={}
     )
-
-    r = await vk_helper.asyncSendMessage(message=message)
 
     assert r == {"peer_id": 1234, "message_id": 4321}
 

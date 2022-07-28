@@ -397,7 +397,7 @@ def test_viber_outgoing_models():
         sender=sender,
         tracking_data="tracking data",
         keyboard=keyboard,
-        type="type",
+        type="text",
         text="text",
     )
 
@@ -409,7 +409,7 @@ def test_viber_outgoing_models():
         "sender": sender_dict,
         "tracking_data": "tracking data",
         "keyboard": keyboard_dict,
-        "type": "type",
+        "type": "text",
         "text": "text",
     }
 
@@ -421,7 +421,7 @@ def test_viber_outgoing_models():
         sender=sender,
         tracking_data="tracking data",
         keyboard=keyboard,
-        type="type",
+        type="text",
         text="text",
     )
 
@@ -431,7 +431,7 @@ def test_viber_outgoing_models():
         sender=sender,
         tracking_data="tracking data",
         keyboard=keyboard,
-        type="type",
+        type="picture",
         text="text",
         media="media",
         thumbnail="thumbnail",
@@ -445,7 +445,7 @@ def test_viber_outgoing_models():
         "sender": sender_dict,
         "tracking_data": "tracking data",
         "keyboard": keyboard_dict,
-        "type": "type",
+        "type": "picture",
         "text": "text",
         "media": "media",
         "thumbnail": "thumbnail",
@@ -459,7 +459,7 @@ def test_viber_outgoing_models():
         sender=sender,
         tracking_data="tracking data",
         keyboard=keyboard,
-        type="type",
+        type="picture",
         text="text",
         media="media",
         thumbnail="thumbnail",
@@ -471,7 +471,7 @@ def test_viber_outgoing_models():
         sender=sender,
         tracking_data="tracking data",
         keyboard=keyboard,
-        type="type",
+        type="video",
         media="media",
         thumbnail="thumbnail",
         size=512,
@@ -486,7 +486,7 @@ def test_viber_outgoing_models():
         "sender": sender_dict,
         "tracking_data": "tracking data",
         "keyboard": keyboard_dict,
-        "type": "type",
+        "type": "video",
         "media": "media",
         "thumbnail": "thumbnail",
         "size": 512,
@@ -501,7 +501,7 @@ def test_viber_outgoing_models():
         sender=sender,
         tracking_data="tracking data",
         keyboard=keyboard,
-        type="type",
+        type="video",
         media="media",
         thumbnail="thumbnail",
         size=512,
@@ -514,7 +514,7 @@ def test_viber_outgoing_models():
         sender=sender,
         tracking_data="tracking data",
         keyboard=keyboard,
-        type="type",
+        type="file",
         media="media",
         size=512,
         file_name="file name",
@@ -528,7 +528,7 @@ def test_viber_outgoing_models():
         "sender": sender_dict,
         "tracking_data": "tracking data",
         "keyboard": keyboard_dict,
-        "type": "type",
+        "type": "file",
         "media": "media",
         "size": 512,
         "file_name": "file name",
@@ -542,7 +542,7 @@ def test_viber_outgoing_models():
         sender=sender,
         tracking_data="tracking data",
         keyboard=keyboard,
-        type="type",
+        type="file",
         media="media",
         size=512,
         file_name="file name",
@@ -554,7 +554,7 @@ def test_viber_outgoing_models():
         sender=sender,
         tracking_data="tracking data",
         keyboard=keyboard,
-        type="type",
+        type="contact",
         contact=contact,
     )
 
@@ -566,7 +566,7 @@ def test_viber_outgoing_models():
         "sender": sender_dict,
         "tracking_data": "tracking data",
         "keyboard": keyboard_dict,
-        "type": "type",
+        "type": "contact",
         "contact": contact_dict,
     }
 
@@ -578,7 +578,7 @@ def test_viber_outgoing_models():
         sender=sender,
         tracking_data="tracking data",
         keyboard=keyboard,
-        type="type",
+        type="contact",
         contact=contact,
     )
 
@@ -588,7 +588,7 @@ def test_viber_outgoing_models():
         sender=sender,
         tracking_data="tracking data",
         keyboard=keyboard,
-        type="type",
+        type="location",
         location=location,
     )
 
@@ -600,7 +600,7 @@ def test_viber_outgoing_models():
         "sender": sender_dict,
         "tracking_data": "tracking data",
         "keyboard": keyboard_dict,
-        "type": "type",
+        "type": "location",
         "location": location_dict,
     }
 
@@ -612,7 +612,7 @@ def test_viber_outgoing_models():
         sender=sender,
         tracking_data="tracking data",
         keyboard=keyboard,
-        type="type",
+        type="location",
         location=location,
     )
 
@@ -622,7 +622,7 @@ def test_viber_outgoing_models():
         sender=sender,
         tracking_data="tracking data",
         keyboard=keyboard,
-        type="type",
+        type="url",
         media="media",
     )
 
@@ -634,7 +634,7 @@ def test_viber_outgoing_models():
         "sender": sender_dict,
         "tracking_data": "tracking data",
         "keyboard": keyboard_dict,
-        "type": "type",
+        "type": "url",
         "media": "media",
     }
 
@@ -644,7 +644,7 @@ def test_viber_outgoing_models():
         sender=sender,
         tracking_data="tracking data",
         keyboard=keyboard,
-        type="type",
+        type="sticker",
         sticker_id=1234,
     )
 
@@ -656,7 +656,7 @@ def test_viber_outgoing_models():
         "sender": sender_dict,
         "tracking_data": "tracking data",
         "keyboard": keyboard_dict,
-        "type": "type",
+        "type": "sticker",
         "sticker_id": 1234,
     }
 
@@ -668,6 +668,6 @@ def test_viber_outgoing_models():
         sender=sender,
         tracking_data="tracking data",
         keyboard=keyboard,
-        type="type",
+        type="sticker",
         sticker_id=1234,
     )

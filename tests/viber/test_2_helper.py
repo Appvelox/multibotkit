@@ -5,7 +5,9 @@ from pytest_httpx import HTTPXMock
 from multibotkit.helpers.viber import ViberHelper
 from multibotkit.schemas.viber.outgoing import (
     Button,
+    Contact,
     Keyboard,
+    Location,
     Sender,
     SetWebhook,
     StickerMessage,
@@ -121,6 +123,13 @@ def test_sync_send_message(httpx_mock: HTTPXMock):
         return httpx.Response(status_code=200, json={})
 
     httpx_mock.add_callback(send_message_response)
+    httpx_mock.add_callback(send_message_response)
+    httpx_mock.add_callback(send_message_response)
+    httpx_mock.add_callback(send_message_response)
+    httpx_mock.add_callback(send_message_response)
+    httpx_mock.add_callback(send_message_response)
+    httpx_mock.add_callback(send_message_response)
+    httpx_mock.add_callback(send_message_response)
 
     button = Button(
         Columns=1,
@@ -141,19 +150,241 @@ def test_sync_send_message(httpx_mock: HTTPXMock):
 
     sender = Sender(name="name", avatar="avatar")
 
-    sticker_message = StickerMessage(
-        receiver="reciever",
-        min_api_version=1111,
+    contact = Contact(
+        name="name",
+        phone_number="89999999999"
+    )
+
+    location = Location(
+        lat=0,
+        lon=0
+    )
+
+    r = viber_helper.sync_send_message(
+        type="text",
+        receiver="receiver",
         sender=sender,
         tracking_data="tracking data",
         keyboard=keyboard,
-        type="type",
-        sticker_id=1234,
-    )
-
-    r = viber_helper.sync_send_message(message=sticker_message)
+        text="text"
+        )
+    
+    assert r == {}
+    
+    r = viber_helper.sync_send_message(
+        type="picture",
+        receiver="receiver",
+        sender=sender,
+        tracking_data="tracking data",
+        keyboard=keyboard,
+        text="text",
+        media="media"
+        )
+    
+    assert r == {}
+    
+    r = viber_helper.sync_send_message(
+        type="video",
+        receiver="receiver",
+        sender=sender,
+        tracking_data="tracking data",
+        keyboard=keyboard,
+        media="media",
+        size=512
+        )
+    
+    assert r == {}
+    
+    r = viber_helper.sync_send_message(
+        type="file",
+        receiver="receiver",
+        sender=sender,
+        tracking_data="tracking data",
+        keyboard=keyboard,
+        media="media",
+        size=512,
+        file_name="file name"
+        )
+    
+    assert r == {}
+    
+    r = viber_helper.sync_send_message(
+        type="contact",
+        receiver="receiver",
+        sender=sender,
+        tracking_data="tracking data",
+        keyboard=keyboard,
+        contact=contact
+        )
+    
+    assert r == {}
+    
+    r = viber_helper.sync_send_message(
+        type="location",
+        receiver="receiver",
+        sender=sender,
+        tracking_data="tracking data",
+        keyboard=keyboard,
+        location=location
+        )
+    
+    assert r == {}
+    
+    r = viber_helper.sync_send_message(
+        type="url",
+        receiver="receiver",
+        sender=sender,
+        tracking_data="tracking data",
+        keyboard=keyboard,
+        media="media"
+        )
+    
+    assert r == {}
+    
+    r = viber_helper.sync_send_message(
+        type="sticker",
+        receiver="receiver",
+        sender=sender,
+        tracking_data="tracking data",
+        keyboard=keyboard,
+        sticker_id=1234
+        )
 
     assert r == {}
+
+
+def test_sync_send_message_arguments_errors():
+
+    button = Button(
+        Columns=1,
+        Rows=1,
+        Text="text",
+        TextSize="10",
+        TextHAlign="text H align",
+        TextVAlign="text V align",
+        ActionType="action type",
+        ActionBody="action body",
+        BgColor="bg color",
+        Image="image",
+    )
+
+    keyboard = Keyboard(
+        Type="type", DefaultHeight=True, BgColor="bg color", Buttons=[button]
+    )
+
+    sender = Sender(name="name", avatar="avatar")
+
+    try:
+        r = viber_helper.sync_send_message(
+        type="text",
+        receiver="receiver",
+        sender=sender,
+        tracking_data="tracking data",
+        keyboard=keyboard
+        )
+        
+        assert False
+
+    except viber_helper._SendMessageArgumentsError:
+        assert True
+
+    try:
+        r = viber_helper.sync_send_message(
+        type="picture",
+        receiver="receiver",
+        sender=sender,
+        tracking_data="tracking data",
+        keyboard=keyboard
+        )
+
+        assert False
+
+    except viber_helper._SendMessageArgumentsError:
+        assert True
+    
+    try:
+        r = viber_helper.sync_send_message(
+        type="video",
+        receiver="receiver",
+        sender=sender,
+        tracking_data="tracking data",
+        keyboard=keyboard
+        )
+
+        assert False
+
+    except viber_helper._SendMessageArgumentsError:
+        assert True
+    
+    try:
+        r = viber_helper.sync_send_message(
+        type="file",
+        receiver="receiver",
+        sender=sender,
+        tracking_data="tracking data",
+        keyboard=keyboard
+        )
+
+        assert False
+
+    except viber_helper._SendMessageArgumentsError:
+        assert True
+    
+    try:
+        r = viber_helper.sync_send_message(
+        type="contact",
+        receiver="receiver",
+        sender=sender,
+        tracking_data="tracking data",
+        keyboard=keyboard
+        )
+
+        assert False
+
+    except viber_helper._SendMessageArgumentsError:
+        assert True
+    
+    try:
+        r = viber_helper.sync_send_message(
+        type="location",
+        receiver="receiver",
+        sender=sender,
+        tracking_data="tracking data",
+        keyboard=keyboard
+        )
+
+        assert False
+
+    except viber_helper._SendMessageArgumentsError:
+        assert True
+    
+    try:
+        r = viber_helper.sync_send_message(
+        type="url",
+        receiver="receiver",
+        sender=sender,
+        tracking_data="tracking data",
+        keyboard=keyboard
+        )
+
+        assert False
+
+    except viber_helper._SendMessageArgumentsError:
+        assert True
+    
+    try:
+        r = viber_helper.sync_send_message(
+        type="sticker",
+        receiver="receiver",
+        sender=sender,
+        tracking_data="tracking data",
+        keyboard=keyboard
+        )
+
+        assert False
+
+    except viber_helper._SendMessageArgumentsError:
+        assert True
 
 
 @pytest.mark.asyncio
@@ -284,16 +515,13 @@ async def test_async_send_message(httpx_mock: HTTPXMock):
 
     sender = Sender(name="name", avatar="avatar")
 
-    sticker_message = StickerMessage(
-        receiver="reciever",
-        min_api_version=1111,
+    r = viber_helper.sync_send_message(
+        type="text",
+        receiver="receiver",
         sender=sender,
         tracking_data="tracking data",
         keyboard=keyboard,
-        type="type",
-        sticker_id=1234,
-    )
-
-    r = await viber_helper.async_send_message(message=sticker_message)
+        text="text"
+        )
 
     assert r == {}
