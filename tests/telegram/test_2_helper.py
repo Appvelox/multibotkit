@@ -236,7 +236,7 @@ async def test_async_helper_async_set_webhook(httpx_mock: HTTPXMock):
 
 
 @pytest.mark.asyncio
-async def test_sync_send_message(httpx_mock: HTTPXMock):
+async def test_async_send_message(httpx_mock: HTTPXMock):
     def send_message_response(request: httpx.Request):
         content = json.loads(request.content.decode())
         

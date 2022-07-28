@@ -5,7 +5,7 @@ import pytest
 from pytest_httpx import HTTPXMock
 
 from multibotkit.helpers.fb import FBHelper
-from multibotkit.schemas.fb.outgoing import Message, MessageDataAttachment, PersistentMenu, QuickReply
+from multibotkit.schemas.fb.outgoing import MessageDataAttachment, PersistentMenu, QuickReply
 from tests.config import settings
 
 
@@ -81,9 +81,9 @@ def test_sync_send_message(httpx_mock: HTTPXMock):
     }
 
 
-def test_sync_send_message_arguments_error(): 
+def test_sync_send_message_arguments_error():
     try:
-        r = fb_helper.sync_send_message(
+        _ = fb_helper.sync_send_message(
             recipient_id="id"
         )
         assert False

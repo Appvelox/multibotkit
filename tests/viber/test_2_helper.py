@@ -10,7 +10,6 @@ from multibotkit.schemas.viber.outgoing import (
     Location,
     Sender,
     SetWebhook,
-    StickerMessage,
 )
 from tests.config import settings
 
@@ -161,93 +160,93 @@ def test_sync_send_message(httpx_mock: HTTPXMock):
     )
 
     r = viber_helper.sync_send_message(
-        type="text",
-        receiver="receiver",
-        sender=sender,
-        tracking_data="tracking data",
-        keyboard=keyboard,
-        text="text"
+            type="text",
+            receiver="receiver",
+            sender=sender,
+            tracking_data="tracking data",
+            keyboard=keyboard,
+            text="text"
         )
     
     assert r == {}
     
     r = viber_helper.sync_send_message(
-        type="picture",
-        receiver="receiver",
-        sender=sender,
-        tracking_data="tracking data",
-        keyboard=keyboard,
-        text="text",
-        media="media"
+            type="picture",
+            receiver="receiver",
+            sender=sender,
+            tracking_data="tracking data",
+            keyboard=keyboard,
+            text="text",
+            media="media"
         )
     
     assert r == {}
     
     r = viber_helper.sync_send_message(
-        type="video",
-        receiver="receiver",
-        sender=sender,
-        tracking_data="tracking data",
-        keyboard=keyboard,
-        media="media",
-        size=512
+            type="video",
+            receiver="receiver",
+            sender=sender,
+            tracking_data="tracking data",
+            keyboard=keyboard,
+            media="media",
+            size=512
         )
     
     assert r == {}
     
     r = viber_helper.sync_send_message(
-        type="file",
-        receiver="receiver",
-        sender=sender,
-        tracking_data="tracking data",
-        keyboard=keyboard,
-        media="media",
-        size=512,
-        file_name="file name"
+            type="file",
+            receiver="receiver",
+            sender=sender,
+            tracking_data="tracking data",
+            keyboard=keyboard,
+            media="media",
+            size=512,
+            file_name="file name"
         )
     
     assert r == {}
     
     r = viber_helper.sync_send_message(
-        type="contact",
-        receiver="receiver",
-        sender=sender,
-        tracking_data="tracking data",
-        keyboard=keyboard,
-        contact=contact
+            type="contact",
+            receiver="receiver",
+            sender=sender,
+            tracking_data="tracking data",
+            keyboard=keyboard,
+            contact=contact
         )
     
     assert r == {}
     
     r = viber_helper.sync_send_message(
-        type="location",
-        receiver="receiver",
-        sender=sender,
-        tracking_data="tracking data",
-        keyboard=keyboard,
-        location=location
+            type="location",
+            receiver="receiver",
+            sender=sender,
+            tracking_data="tracking data",
+            keyboard=keyboard,
+            location=location
         )
     
     assert r == {}
     
     r = viber_helper.sync_send_message(
-        type="url",
-        receiver="receiver",
-        sender=sender,
-        tracking_data="tracking data",
-        keyboard=keyboard,
-        media="media"
+            type="url",
+            receiver="receiver",
+            sender=sender,
+            tracking_data="tracking data",
+            keyboard=keyboard,
+            media="media"
         )
     
     assert r == {}
     
     r = viber_helper.sync_send_message(
-        type="sticker",
-        receiver="receiver",
-        sender=sender,
-        tracking_data="tracking data",
-        keyboard=keyboard,
-        sticker_id=1234
+            type="sticker",
+            receiver="receiver",
+            sender=sender,
+            tracking_data="tracking data",
+            keyboard=keyboard,
+            sticker_id=1234
         )
 
     assert r == {}
@@ -276,11 +275,11 @@ def test_sync_send_message_arguments_errors():
 
     try:
         r = viber_helper.sync_send_message(
-        type="text",
-        receiver="receiver",
-        sender=sender,
-        tracking_data="tracking data",
-        keyboard=keyboard
+            type="text",
+            receiver="receiver",
+            sender=sender,
+            tracking_data="tracking data",
+            keyboard=keyboard
         )
         
         assert False
@@ -290,11 +289,11 @@ def test_sync_send_message_arguments_errors():
 
     try:
         r = viber_helper.sync_send_message(
-        type="picture",
-        receiver="receiver",
-        sender=sender,
-        tracking_data="tracking data",
-        keyboard=keyboard
+            type="picture",
+            receiver="receiver",
+            sender=sender,
+            tracking_data="tracking data",
+            keyboard=keyboard
         )
 
         assert False
@@ -304,11 +303,11 @@ def test_sync_send_message_arguments_errors():
     
     try:
         r = viber_helper.sync_send_message(
-        type="video",
-        receiver="receiver",
-        sender=sender,
-        tracking_data="tracking data",
-        keyboard=keyboard
+            type="video",
+            receiver="receiver",
+            sender=sender,
+            tracking_data="tracking data",
+            keyboard=keyboard
         )
 
         assert False
@@ -318,11 +317,11 @@ def test_sync_send_message_arguments_errors():
     
     try:
         r = viber_helper.sync_send_message(
-        type="file",
-        receiver="receiver",
-        sender=sender,
-        tracking_data="tracking data",
-        keyboard=keyboard
+            type="file",
+            receiver="receiver",
+            sender=sender,
+            tracking_data="tracking data",
+            keyboard=keyboard
         )
 
         assert False
@@ -332,11 +331,11 @@ def test_sync_send_message_arguments_errors():
     
     try:
         r = viber_helper.sync_send_message(
-        type="contact",
-        receiver="receiver",
-        sender=sender,
-        tracking_data="tracking data",
-        keyboard=keyboard
+            type="contact",
+            receiver="receiver",
+            sender=sender,
+            tracking_data="tracking data",
+            keyboard=keyboard
         )
 
         assert False
@@ -346,11 +345,11 @@ def test_sync_send_message_arguments_errors():
     
     try:
         r = viber_helper.sync_send_message(
-        type="location",
-        receiver="receiver",
-        sender=sender,
-        tracking_data="tracking data",
-        keyboard=keyboard
+            type="location",
+            receiver="receiver",
+            sender=sender,
+            tracking_data="tracking data",
+            keyboard=keyboard
         )
 
         assert False
@@ -360,11 +359,11 @@ def test_sync_send_message_arguments_errors():
     
     try:
         r = viber_helper.sync_send_message(
-        type="url",
-        receiver="receiver",
-        sender=sender,
-        tracking_data="tracking data",
-        keyboard=keyboard
+            type="url",
+            receiver="receiver",
+            sender=sender,
+            tracking_data="tracking data",
+            keyboard=keyboard
         )
 
         assert False
@@ -374,11 +373,11 @@ def test_sync_send_message_arguments_errors():
     
     try:
         r = viber_helper.sync_send_message(
-        type="sticker",
-        receiver="receiver",
-        sender=sender,
-        tracking_data="tracking data",
-        keyboard=keyboard
+            type="sticker",
+            receiver="receiver",
+            sender=sender,
+            tracking_data="tracking data",
+            keyboard=keyboard
         )
 
         assert False

@@ -8,7 +8,6 @@ from multibotkit.schemas.vk.outgoing import (
     Keyboard,
     KeyboardAction,
     KeyboardButton,
-    Message,
 )
 from tests.config import settings
 
@@ -65,8 +64,8 @@ def test_syncSendMessage(httpx_mock: HTTPXMock):
 
 def test_syncSendMessageArgumentsError():
     try:
-        r = vk_helper.syncSendMessage(
-        user_id=1234
+        _ = vk_helper.syncSendMessage(
+            user_id=1234
         )
         assert False
     except vk_helper._SendMessageArgumentsError:
