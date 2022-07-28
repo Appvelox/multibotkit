@@ -274,7 +274,7 @@ def test_sync_send_message_arguments_errors():
     sender = Sender(name="name", avatar="avatar")
 
     try:
-        r = viber_helper.sync_send_message(
+        _ = viber_helper.sync_send_message(
             type="text",
             receiver="receiver",
             sender=sender,
@@ -288,7 +288,7 @@ def test_sync_send_message_arguments_errors():
         assert True
 
     try:
-        r = viber_helper.sync_send_message(
+        _ = viber_helper.sync_send_message(
             type="picture",
             receiver="receiver",
             sender=sender,
@@ -302,7 +302,7 @@ def test_sync_send_message_arguments_errors():
         assert True
     
     try:
-        r = viber_helper.sync_send_message(
+        _ = viber_helper.sync_send_message(
             type="video",
             receiver="receiver",
             sender=sender,
@@ -316,7 +316,7 @@ def test_sync_send_message_arguments_errors():
         assert True
     
     try:
-        r = viber_helper.sync_send_message(
+        _ = viber_helper.sync_send_message(
             type="file",
             receiver="receiver",
             sender=sender,
@@ -330,7 +330,7 @@ def test_sync_send_message_arguments_errors():
         assert True
     
     try:
-        r = viber_helper.sync_send_message(
+        _ = viber_helper.sync_send_message(
             type="contact",
             receiver="receiver",
             sender=sender,
@@ -344,7 +344,7 @@ def test_sync_send_message_arguments_errors():
         assert True
     
     try:
-        r = viber_helper.sync_send_message(
+        _ = viber_helper.sync_send_message(
             type="location",
             receiver="receiver",
             sender=sender,
