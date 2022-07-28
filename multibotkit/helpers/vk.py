@@ -11,10 +11,11 @@ from tenacity import (
     wait_exponential,
 )
 
+from multibotkit.helpers.base_helper import BaseHelper
 from multibotkit.schemas.vk.outgoing import Message
 
 
-class VKHelper:
+class VKHelper(BaseHelper):
 
     MESSAGES_URL = "https://api.vk.com/method/messages.send"
     GET_MESSAGES_UPLOAD_SERVER_URL = (
@@ -23,36 +24,11 @@ class VKHelper:
     SAVE_MESSAGES_PHOTO_URL = "https://api.vk.com/method/photos.saveMessagesPhoto"
     UPLOAD_PHOTO_URL = "https://api.vk.com/method/photos.getMessagesUploadServer"
 
+
     def __init__(self, access_token: str, api_version: str):
         self.access_token = access_token
         self.api_version = api_version
 
-    @retry(
-        retry=retry_if_exception_type(httpx.HTTPError)
-        | retry_if_exception_type(JSONDecodeError),
-        reraise=True,
-        stop=stop_after_attempt(5),
-        wait=wait_exponential(multiplier=1, min=4, max=10),
-    )
-    def _perform_sync_request(self, url: str, data: dict = None):
-        data["access_token"] = self.access_token
-        data["v"] = self.api_version
-        r = httpx.post(url=url, json=data)
-        return r.json()
-
-    @retry(
-        retry=retry_if_exception_type(httpx.HTTPError)
-        | retry_if_exception_type(JSONDecodeError),
-        reraise=True,
-        stop=stop_after_attempt(5),
-        wait=wait_exponential(multiplier=1, min=4, max=10),
-    )
-    async def _perform_async_request(self, url: str, data: dict = None):
-        data["access_token"] = self.access_token
-        data["v"] = self.api_version
-        async with httpx.AsyncClient() as client:
-            r = await client.post(url, data=data)
-            return r.json()
 
     def command(self, json_payload: Optional[str] = None):
         if json_payload is None:

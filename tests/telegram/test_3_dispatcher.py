@@ -50,4 +50,4 @@ async def test_telegram_dispatcher():
     async def test_handler(update: Update, state_data: dict):
         assert True
 
-    await dp.process_event(update, state_data)
+    await dp.process_event(event=update, state_data=state_data)

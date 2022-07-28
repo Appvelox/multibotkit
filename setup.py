@@ -19,6 +19,6 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    install_requires=["httpx>=0.23", "pydantic>=1.9"],
+    install_requires=["httpx>=0.23", "pydantic>=1.9", "tenacity>=8.0.1"],
     python_requires=">=3.7",
 )
