@@ -1,4 +1,3 @@
-from email import message
 from typing import List, Optional
 from multibotkit.helpers.base_helper import BaseHelper
 from multibotkit.schemas.fb.outgoing import (
@@ -27,7 +26,8 @@ class FBHelper(BaseHelper):
         self.PROFILE_URL = profile_endpoint + token
 
 
-    def __build_message(self,
+    def __build_message(
+        self,
         recipient_id: str,
         message_type: str = "RESPONSE",
         text: Optional[str] = None,

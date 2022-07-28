@@ -55,7 +55,7 @@ class VKHelper(BaseHelper):
         long: Optional[float] = None,
         attachment: Optional[str] = None,
         template: Optional[dict] = None
-        ):
+    ):
         
         if (text is None) and (attachment is None):
             raise self._SendMessageArgumentsError(
@@ -90,7 +90,7 @@ class VKHelper(BaseHelper):
         long: Optional[float] = None,
         attachment: Optional[str] = None,
         template: Optional[dict] = None
-        ):
+    ):
         if (text is None) and (attachment is None):
             raise self.__SendMessageArgumentsError(
                 "One of the arguments text and attachment is required, \
@@ -99,7 +99,7 @@ but not both"
         
         message = Message(
             user_id=user_id,
-            message=message,
+            message=text,
             keyboard=keyboard,
             lat=lat,
             long=long,

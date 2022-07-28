@@ -1,5 +1,4 @@
-from email import message
-from typing import Optional, Union
+from typing import Optional
 
 from multibotkit.helpers.base_helper import BaseHelper
 from multibotkit.schemas.viber.outgoing import (
@@ -228,7 +227,7 @@ are required"
     ):
         message = self.__build_message(
             type=type,
-            receiver = receiver,
+            receiver=receiver,
             min_api_version=min_api_version,
             sender=sender,
             tracking_data=tracking_data,
@@ -271,7 +270,7 @@ are required"
     ):
         message = self.__build_message(
             type=type,
-            receiver = receiver,
+            receiver=receiver,
             min_api_version=min_api_version,
             sender=sender,
             tracking_data=tracking_data,
