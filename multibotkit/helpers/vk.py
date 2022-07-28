@@ -1,4 +1,3 @@
-from email import message
 import json
 from json import JSONDecodeError
 from io import BytesIO

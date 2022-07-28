@@ -138,6 +138,7 @@ class Location(BaseModel):
     lat: str = Field(..., title="Latitude", description="±90°")
     lon: str = Field(..., title="Longitude", description="±180°")
 
+
 class MessageType(str, Enum):
     text = "text",
     picture = "picture",

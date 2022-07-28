@@ -358,7 +358,7 @@ def test_sync_send_message_arguments_errors():
         assert True
     
     try:
-        r = viber_helper.sync_send_message(
+        _ = viber_helper.sync_send_message(
             type="url",
             receiver="receiver",
             sender=sender,
