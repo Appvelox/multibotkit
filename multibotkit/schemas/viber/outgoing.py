@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import Optional, List
 
 from pydantic import Field
@@ -138,6 +139,17 @@ class Location(BaseModel):
     lon: str = Field(..., title="Longitude", description="±180°")
 
 
+class MessageType(str, Enum):
+    text = "text",
+    picture = "picture",
+    video = "video",
+    file = "file",
+    contact = "contact",
+    location = "location",
+    url = "url",
+    sticker = "sticker"
+
+
 class BaseMessage(BaseModel):
     receiver: str = Field(
         ...,
@@ -163,7 +175,7 @@ Sent tracking_data value will be passed back with user’s reply",
 
 
 class TextMessage(BaseMessage):
-    type: str = Field(
+    type: MessageType = Field(
         "text",
         title="Message type",
         description="text. Supports text formatting"
@@ -176,7 +188,7 @@ class TextMessage(BaseMessage):
 
 
 class PictureMessage(BaseMessage):
-    type: str = Field(
+    type: MessageType = Field(
         "picture",
         title="Message type",
         description="picture"
@@ -205,7 +217,7 @@ Max image size: 1MB on iOS, 3MB on Android.",
 
 
 class VideoMessage(BaseMessage):
-    type: str = Field("video", title="Message type")
+    type: MessageType = Field("video", title="Message type")
     media: str = Field(
         ...,
         title="URL of the video (MP4, H264)",
@@ -230,7 +242,7 @@ to the receiver",
 
 
 class FileMessage(BaseMessage):
-    type: str = Field("file", title="Message type")
+    type: MessageType = Field("file", title="Message type")
     media: str = Field(
         ...,
         title="URL of the file",
@@ -249,17 +261,17 @@ might cause the client to be unable to open the file",
 
 
 class ContactMessage(BaseMessage):
-    type: str = Field("contact", title="Message type")
+    type: MessageType = Field("contact", title="Message type")
     contact: Contact = Field(..., title="Contact info")
 
 
 class LocationMessage(BaseMessage):
-    type: str = Field("location", title="Message type")
+    type: MessageType = Field("location", title="Message type")
     location: Location = Field(..., title="Location coordinates")
 
 
 class UrlMessage(BaseMessage):
-    type: str = Field("url", title="Message type")
+    type: MessageType = Field("url", title="Message type")
     media: str = Field(
         ...,
         title="URL",
@@ -268,7 +280,7 @@ class UrlMessage(BaseMessage):
 
 
 class StickerMessage(BaseMessage):
-    type: str = Field("sticker", title="Message type")
+    type: MessageType = Field("sticker", title="Message type")
     sticker_id: int = Field(
         ...,
         title="Unique Viber sticker ID",

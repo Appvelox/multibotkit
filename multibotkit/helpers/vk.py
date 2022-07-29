@@ -12,7 +12,7 @@ from tenacity import (
 )
 
 from multibotkit.helpers.base_helper import BaseHelper
-from multibotkit.schemas.vk.outgoing import Message
+from multibotkit.schemas.vk.outgoing import Keyboard, Message
 
 
 class VKHelper(BaseHelper):
@@ -23,6 +23,10 @@ class VKHelper(BaseHelper):
     )
     SAVE_MESSAGES_PHOTO_URL = "https://api.vk.com/method/photos.saveMessagesPhoto"
     UPLOAD_PHOTO_URL = "https://api.vk.com/method/photos.getMessagesUploadServer"
+
+
+    class _SendMessageArgumentsError(Exception):
+        pass
 
 
     def __init__(self, access_token: str, api_version: str):
@@ -40,7 +44,33 @@ class VKHelper(BaseHelper):
             return ""
         return json.loads(json_payload).get("button")
 
-    def syncSendMessage(self, message: Message):
+
+    def sync_send_message(
+        self,
+        user_id: int,
+        text: Optional[str] = None,
+        keyboard: Optional[Keyboard] = None,
+        lat: Optional[float] = None,
+        long: Optional[float] = None,
+        attachment: Optional[str] = None,
+        template: Optional[dict] = None
+    ):
+        
+        if (text is None) and (attachment is None):
+            raise self._SendMessageArgumentsError(
+                "One of the arguments text and attachment is required"
+            )
+        
+        message = Message(
+            user_id=user_id,
+            message=text,
+            keyboard=keyboard,
+            lat=lat,
+            long=long,
+            attachment=attachment,
+            template=template
+        )
+
         data = message.dict(exclude_none=True)
         if data.get("keyboard"):
             data["keyboard"] = json.dumps(data["keyboard"], ensure_ascii=False)
@@ -50,7 +80,31 @@ class VKHelper(BaseHelper):
         r = self._perform_sync_request(url=self.MESSAGES_URL, data=data)
         return r
 
-    async def asyncSendMessage(self, message: Message):
+    async def async_send_message(
+        self,
+        user_id: int,
+        text: Optional[str] = None,
+        keyboard: Optional[Keyboard] = None,
+        lat: Optional[float] = None,
+        long: Optional[float] = None,
+        attachment: Optional[str] = None,
+        template: Optional[dict] = None
+    ):
+        if (text is None) and (attachment is None):
+            raise self.__SendMessageArgumentsError(
+                "One of the arguments text and attachment is required, \
+but not both"
+            )
+        
+        message = Message(
+            user_id=user_id,
+            message=text,
+            keyboard=keyboard,
+            lat=lat,
+            long=long,
+            attachment=attachment,
+            template=template
+        )
         data = message.dict(exclude_none=True)
         if data.get("keyboard"):
             data["keyboard"] = json.dumps(data["keyboard"], ensure_ascii=False)
@@ -60,6 +114,7 @@ class VKHelper(BaseHelper):
         r = await self._perform_async_request(url=self.MESSAGES_URL, data=data)
         return r
 
+
     @retry(
         retry=retry_if_exception_type(httpx.HTTPError)
         | retry_if_exception_type(JSONDecodeError),
@@ -67,7 +122,7 @@ class VKHelper(BaseHelper):
         stop=stop_after_attempt(5),
         wait=wait_exponential(multiplier=1, min=4, max=10),
     )
-    def syncUploadPhoto(self, photo: BytesIO, file_name: str, server_url: str):
+    def sync_upload_photo(self, photo: BytesIO, file_name: str, server_url: str):
         files = {"photo": (f"{file_name}", photo)}
         r = httpx.post(server_url, files=files)
         return r.json()
@@ -79,30 +134,32 @@ class VKHelper(BaseHelper):
         stop=stop_after_attempt(5),
         wait=wait_exponential(multiplier=1, min=4, max=10),
     )
-    async def asyncUploadPhoto(self, photo: BytesIO, file_name: str, server_url: str):
+    async def async_upload_photo(self, photo: BytesIO, file_name: str, server_url: str):
         files = {"photo": (f"{file_name}", photo)}
         async with httpx.AsyncClient() as client:
             r = await client.post(server_url, files=files)
         return r.json()
 
-    def syncSavePhoto(self, uploaded_photo: dict):
+
+    def sync_save_photo(self, uploaded_photo: dict):
         r = self._perform_sync_request(
             url=self.SAVE_MESSAGES_PHOTO_URL, data={**uploaded_photo}
         )
         return r["response"][0]
 
-    async def asyncSavePhoto(self, uploaded_photo: dict):
+    async def async_save_photo(self, uploaded_photo: dict):
         r = await self._perform_async_request(
             url=self.SAVE_MESSAGES_PHOTO_URL, data={**uploaded_photo}
         )
         return r["response"][0]
 
-    def syncGetPhotoAttachment(self, photo, file_name):
+
+    def sync_get_photo_attachment(self, photo, file_name):
         r = self._perform_sync_request(self.UPLOAD_PHOTO_URL, data={})
         url = r["response"]["upload_url"]
 
-        uploaded_photo = self.syncUploadPhoto(photo, file_name, url)
-        saved_photo = self.syncSavePhoto(uploaded_photo)
+        uploaded_photo = self.sync_upload_photo(photo, file_name, url)
+        saved_photo = self.sync_save_photo(uploaded_photo)
 
         owner_id = saved_photo['owner_id']
         photo_id = saved_photo['id']
@@ -111,12 +168,12 @@ class VKHelper(BaseHelper):
 
         return attachment
 
-    async def asyncGetPhotoAttachment(self, photo, file_name):
+    async def async_get_photo_attachment(self, photo, file_name):
         r = await self._perform_async_request(self.UPLOAD_PHOTO_URL, data={})
         url = r["response"]["upload_url"]
 
-        uploaded_photo = await self.asyncUploadPhoto(photo, file_name, url)
-        saved_photo = await self.asyncSavePhoto(uploaded_photo)
+        uploaded_photo = await self.async_upload_photo(photo, file_name, url)
+        saved_photo = await self.async_save_photo(uploaded_photo)
 
         owner_id = saved_photo['owner_id']
         photo_id = saved_photo['id']

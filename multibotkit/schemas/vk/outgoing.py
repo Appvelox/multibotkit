@@ -67,8 +67,8 @@ class Message(BaseModel):
         ...,
         title="User ID (by default — current user)."
     )
-    message: str = Field(
-        ...,
+    message: Optional[str] = Field(
+        None,
         title="(Required if attachments is not set.) Text of the message."
     )
     keyboard: Optional[Keyboard] = Field(None)
