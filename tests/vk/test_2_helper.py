@@ -35,7 +35,7 @@ def test_button_code_and_command():
     assert command == ""
 
 
-def test_syncSendMessage(httpx_mock: HTTPXMock):
+def test_sync_send_message(httpx_mock: HTTPXMock):
     def send_message_response(request: httpx.Request):
         return httpx.Response(
             status_code=200, json={"peer_id": 1234, "message_id": 4321}
@@ -49,7 +49,7 @@ def test_syncSendMessage(httpx_mock: HTTPXMock):
 
     keyboard = Keyboard(one_time=False, inline=True, buttons=[[keyboard_button]])
 
-    r = vk_helper.syncSendMessage(
+    r = vk_helper.sync_send_message(
         user_id=1234,
         text="message",
         keyboard=keyboard,
@@ -62,9 +62,9 @@ def test_syncSendMessage(httpx_mock: HTTPXMock):
     assert r == {"peer_id": 1234, "message_id": 4321}
 
 
-def test_syncSendMessageArgumentsError():
+def test_SendMessageArgumentsError():
     try:
-        _ = vk_helper.syncSendMessage(
+        _ = vk_helper.sync_send_message(
             user_id=1234
         )
         assert False
@@ -72,7 +72,7 @@ def test_syncSendMessageArgumentsError():
         assert True
 
 
-def test_syncUploadPhoto(httpx_mock: HTTPXMock):
+def test_sync_upload_photo(httpx_mock: HTTPXMock):
     def upload_photo_response(request: httpx.Request):
         return httpx.Response(
             status_code=200,
@@ -87,7 +87,7 @@ def test_syncUploadPhoto(httpx_mock: HTTPXMock):
 
     image = BytesIO()
 
-    r = vk_helper.syncUploadPhoto(
+    r = vk_helper.sync_upload_photo(
         photo=image, file_name="photo.img", server_url="https://server_url"
     )
 
@@ -98,7 +98,7 @@ def test_syncUploadPhoto(httpx_mock: HTTPXMock):
     }
 
 
-def test_syncSavePhoto(httpx_mock: HTTPXMock):
+def test_sync_save_photo(httpx_mock: HTTPXMock):
     def save_photo_response(request: httpx.Request):
         return httpx.Response(
             status_code=200,
@@ -120,7 +120,7 @@ def test_syncSavePhoto(httpx_mock: HTTPXMock):
 
     httpx_mock.add_callback(save_photo_response)
 
-    r = vk_helper.syncSavePhoto(uploaded_photo={})
+    r = vk_helper.sync_save_photo(uploaded_photo={})
 
     assert r == {
         "id": "id",
@@ -134,7 +134,7 @@ def test_syncSavePhoto(httpx_mock: HTTPXMock):
     }
 
 
-def test_syncGetPhotoAttachment(httpx_mock: HTTPXMock):
+def test_sync_get_photo_attachment(httpx_mock: HTTPXMock):
     def get_url_response(request: httpx.Request):
         return httpx.Response(
             status_code=200, json={"response": {"upload_url": "https://upload_url"}}
@@ -176,13 +176,13 @@ def test_syncGetPhotoAttachment(httpx_mock: HTTPXMock):
 
     image = BytesIO()
 
-    r = vk_helper.syncGetPhotoAttachment(photo=image, file_name="photo.img")
+    r = vk_helper.sync_get_photo_attachment(photo=image, file_name="photo.img")
 
     assert r == "photoowner_id_id_access_key"
 
 
 @pytest.mark.asyncio
-async def test_asyncSendMessage(httpx_mock: HTTPXMock):
+async def test_async_send_message(httpx_mock: HTTPXMock):
     def send_message_response(request: httpx.Request):
         return httpx.Response(
             status_code=200, json={"peer_id": 1234, "message_id": 4321}
@@ -196,7 +196,7 @@ async def test_asyncSendMessage(httpx_mock: HTTPXMock):
 
     keyboard = Keyboard(one_time=False, inline=True, buttons=[[keyboard_button]])
 
-    r = vk_helper.syncSendMessage(
+    r = vk_helper.sync_send_message(
         user_id=1234,
         text="message",
         keyboard=keyboard,
@@ -210,7 +210,7 @@ async def test_asyncSendMessage(httpx_mock: HTTPXMock):
 
 
 @pytest.mark.asyncio
-async def test_asyncUploadPhoto(httpx_mock: HTTPXMock):
+async def test_async_upload_photo(httpx_mock: HTTPXMock):
     def upload_photo_response(request: httpx.Request):
         return httpx.Response(
             status_code=200,
@@ -225,7 +225,7 @@ async def test_asyncUploadPhoto(httpx_mock: HTTPXMock):
 
     image = BytesIO()
 
-    r = await vk_helper.asyncUploadPhoto(
+    r = await vk_helper.async_upload_photo(
         photo=image, file_name="photo.img", server_url="https://server_url"
     )
 
@@ -237,7 +237,7 @@ async def test_asyncUploadPhoto(httpx_mock: HTTPXMock):
 
 
 @pytest.mark.asyncio
-async def test_asyncSavePhoto(httpx_mock: HTTPXMock):
+async def test_async_save_photo(httpx_mock: HTTPXMock):
     def save_photo_response(request: httpx.Request):
         return httpx.Response(
             status_code=200,
@@ -259,7 +259,7 @@ async def test_asyncSavePhoto(httpx_mock: HTTPXMock):
 
     httpx_mock.add_callback(save_photo_response)
 
-    r = await vk_helper.asyncSavePhoto(uploaded_photo={})
+    r = await vk_helper.async_save_photo(uploaded_photo={})
 
     assert r == {
         "id": "id",
@@ -274,7 +274,7 @@ async def test_asyncSavePhoto(httpx_mock: HTTPXMock):
 
 
 @pytest.mark.asyncio
-async def test_asyncGetPhotoAttachment(httpx_mock: HTTPXMock):
+async def test_async_get_photo_attachment(httpx_mock: HTTPXMock):
     def get_url_response(request: httpx.Request):
         return httpx.Response(
             status_code=200, json={"response": {"upload_url": "https://upload_url"}}
@@ -316,6 +316,6 @@ async def test_asyncGetPhotoAttachment(httpx_mock: HTTPXMock):
 
     image = BytesIO()
 
-    r = await vk_helper.asyncGetPhotoAttachment(photo=image, file_name="photo.img")
+    r = await vk_helper.async_get_photo_attachment(photo=image, file_name="photo.img")
 
     assert r == "photoowner_id_id_access_key"

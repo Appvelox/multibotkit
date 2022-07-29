@@ -45,7 +45,7 @@ class VKHelper(BaseHelper):
         return json.loads(json_payload).get("button")
 
 
-    def syncSendMessage(
+    def sync_send_message(
         self,
         user_id: int,
         text: Optional[str] = None,
@@ -80,7 +80,7 @@ class VKHelper(BaseHelper):
         r = self._perform_sync_request(url=self.MESSAGES_URL, data=data)
         return r
 
-    async def asyncSendMessage(
+    async def async_send_message(
         self,
         user_id: int,
         text: Optional[str] = None,
@@ -122,7 +122,7 @@ but not both"
         stop=stop_after_attempt(5),
         wait=wait_exponential(multiplier=1, min=4, max=10),
     )
-    def syncUploadPhoto(self, photo: BytesIO, file_name: str, server_url: str):
+    def sync_upload_photo(self, photo: BytesIO, file_name: str, server_url: str):
         files = {"photo": (f"{file_name}", photo)}
         r = httpx.post(server_url, files=files)
         return r.json()
@@ -134,32 +134,32 @@ but not both"
         stop=stop_after_attempt(5),
         wait=wait_exponential(multiplier=1, min=4, max=10),
     )
-    async def asyncUploadPhoto(self, photo: BytesIO, file_name: str, server_url: str):
+    async def async_upload_photo(self, photo: BytesIO, file_name: str, server_url: str):
         files = {"photo": (f"{file_name}", photo)}
         async with httpx.AsyncClient() as client:
             r = await client.post(server_url, files=files)
         return r.json()
 
 
-    def syncSavePhoto(self, uploaded_photo: dict):
+    def sync_save_photo(self, uploaded_photo: dict):
         r = self._perform_sync_request(
             url=self.SAVE_MESSAGES_PHOTO_URL, data={**uploaded_photo}
         )
         return r["response"][0]
 
-    async def asyncSavePhoto(self, uploaded_photo: dict):
+    async def async_save_photo(self, uploaded_photo: dict):
         r = await self._perform_async_request(
             url=self.SAVE_MESSAGES_PHOTO_URL, data={**uploaded_photo}
         )
         return r["response"][0]
 
 
-    def syncGetPhotoAttachment(self, photo, file_name):
+    def sync_get_photo_attachment(self, photo, file_name):
         r = self._perform_sync_request(self.UPLOAD_PHOTO_URL, data={})
         url = r["response"]["upload_url"]
 
-        uploaded_photo = self.syncUploadPhoto(photo, file_name, url)
-        saved_photo = self.syncSavePhoto(uploaded_photo)
+        uploaded_photo = self.sync_upload_photo(photo, file_name, url)
+        saved_photo = self.sync_save_photo(uploaded_photo)
 
         owner_id = saved_photo['owner_id']
         photo_id = saved_photo['id']
@@ -168,12 +168,12 @@ but not both"
 
         return attachment
 
-    async def asyncGetPhotoAttachment(self, photo, file_name):
+    async def async_get_photo_attachment(self, photo, file_name):
         r = await self._perform_async_request(self.UPLOAD_PHOTO_URL, data={})
         url = r["response"]["upload_url"]
 
-        uploaded_photo = await self.asyncUploadPhoto(photo, file_name, url)
-        saved_photo = await self.asyncSavePhoto(uploaded_photo)
+        uploaded_photo = await self.async_upload_photo(photo, file_name, url)
+        saved_photo = await self.async_save_photo(uploaded_photo)
 
         owner_id = saved_photo['owner_id']
         photo_id = saved_photo['id']

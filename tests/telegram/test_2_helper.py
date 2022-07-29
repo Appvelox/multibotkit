@@ -41,7 +41,7 @@ def test_sync_helper_get_webhook_info(httpx_mock: HTTPXMock):
 
     httpx_mock.add_callback(webhook_info_response)
 
-    r = tg_helper.syncGetWebhookInfo()
+    r = tg_helper.sync_get_webhook_info()
 
     assert r == WebhookInfo.parse_obj(
         {
@@ -66,7 +66,7 @@ def test_sync_helper_set_webhook(httpx_mock: HTTPXMock):
 
     httpx_mock.add_callback(set_webhook_response)
 
-    r = tg_helper.syncSetWebhook(webhook_url="https://test_url/api/bot")
+    r = tg_helper.sync_set_webhook(webhook_url="https://test_url/api/bot")
 
     assert r == {"ok": True, "result": True, "description": "Webhook was set"}
 
@@ -110,7 +110,7 @@ def test_sync_send_message(httpx_mock: HTTPXMock):
     message_dict = message.dict(exclude_none=True)
     message_dict.update({"parse_mode": "HTML"})
 
-    r = tg_helper.syncSendMessage(
+    r = tg_helper.sync_send_message(
         chat_id=1234,
         text="text",
         disable_web_page_preview=False,
@@ -126,7 +126,7 @@ def test_sync_helper_answer_callback_query(httpx_mock: HTTPXMock):
 
     httpx_mock.add_callback(answer_callback_response)
 
-    r = tg_helper.syncAnswerCallbackQuery(callback_query_id="callback_query_id")
+    r = tg_helper.sync_answer_callback_query(callback_query_id="callback_query_id")
 
     assert r == {"ok": True, "result": True}
 
@@ -137,7 +137,7 @@ def test_sync_helper_edit_message_text(httpx_mock: HTTPXMock):
 
     httpx_mock.add_callback(edit_message_text_response)
 
-    r = tg_helper.syncEditMessageText(chat_id=1234, message_id=1111, text="new text")
+    r = tg_helper.sync_edit_message_text(chat_id=1234, message_id=1111, text="new text")
 
     assert r == {"ok": True, "result": True}
 
@@ -148,7 +148,7 @@ def test_sync_helper_edit_message_caption(httpx_mock: HTTPXMock):
 
     httpx_mock.add_callback(edit_message_caption_response)
 
-    r = tg_helper.syncEditMessageCaption(
+    r = tg_helper.sync_edit_message_caption(
         chat_id=1234, message_id=1111, caption="New caption"
     )
 
@@ -171,7 +171,7 @@ def test_sync_helper_edit_message_reply_markup(httpx_mock: HTTPXMock):
         one_time_keyboard=False,
     )
 
-    r = tg_helper.syncEditMessageReplyMarkup(
+    r = tg_helper.sync_edit_message_reply_markup(
         chat_id=1234, message_id=1111, reply_markup=reply_keyboard_markup
     )
 
@@ -204,7 +204,7 @@ async def test_async_helper_async_get_webhook_info(httpx_mock: HTTPXMock):
 
     httpx_mock.add_callback(webhook_info_response)
 
-    r = await tg_helper.asyncGetWebhookInfo()
+    r = await tg_helper.async_get_webhook_info()
 
     assert r == WebhookInfo.parse_obj(
         {
@@ -230,7 +230,7 @@ async def test_async_helper_async_set_webhook(httpx_mock: HTTPXMock):
 
     httpx_mock.add_callback(set_webhook_response)
 
-    r = await tg_helper.asyncSetWebhook(webhook_url="https://test_url/api/bot")
+    r = await tg_helper.async_set_webhook(webhook_url="https://test_url/api/bot")
 
     assert r == {"ok": True, "result": True, "description": "Webhook was set"}
 
@@ -275,7 +275,7 @@ async def test_async_send_message(httpx_mock: HTTPXMock):
     message_dict = message.dict(exclude_none=True)
     message_dict.update({"parse_mode": "HTML"})
 
-    r = await tg_helper.asyncSendMessage(
+    r = await tg_helper.async_send_message(
         chat_id=1234,
         text="text",
         disable_web_page_preview=False,
@@ -292,7 +292,7 @@ async def test_async_helper_answer_callback_query(httpx_mock: HTTPXMock):
 
     httpx_mock.add_callback(answer_callback_response)
 
-    r = await tg_helper.asyncAnswerCallbackQuery(callback_query_id="callback_query_id")
+    r = await tg_helper.async_answer_callback_query(callback_query_id="callback_query_id")
 
     assert r == {"ok": True, "result": True}
 
@@ -304,7 +304,7 @@ async def test_async_helper_edit_message_text(httpx_mock: HTTPXMock):
 
     httpx_mock.add_callback(edit_message_text_response)
 
-    r = await tg_helper.asyncEditMessageText(
+    r = await tg_helper.async_edit_message_text(
         chat_id=1234, message_id=1111, text="new text"
     )
 
@@ -318,7 +318,7 @@ async def test_async_helper_edit_message_caption(httpx_mock: HTTPXMock):
 
     httpx_mock.add_callback(edit_message_caption_response)
 
-    r = await tg_helper.asyncEditMessageCaption(
+    r = await tg_helper.async_edit_message_caption(
         chat_id=1234, message_id=1111, caption="New caption"
     )
 
@@ -342,7 +342,7 @@ async def test_async_helper_edit_message_reply_markup(httpx_mock: HTTPXMock):
         one_time_keyboard=False,
     )
 
-    r = await tg_helper.asyncEditMessageReplyMarkup(
+    r = await tg_helper.async_edit_message_reply_markup(
         chat_id=1234, message_id=1111, reply_markup=reply_keyboard_markup
     )
 
