@@ -5,6 +5,7 @@ from pydantic import BaseSettings
 
 load_dotenv()
 
+
 class Settings(BaseSettings):
 
     TG_TOKEN: str# = "tg_token"

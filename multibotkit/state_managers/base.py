@@ -1,4 +1,4 @@
-from typing import Callable, Optional
+from typing import Optional
 
 
 class BaseStateManager():
@@ -13,9 +13,9 @@ class BaseStateManager():
         async def set_state(self, state: str, data: Optional[dict] = None):
             new_data = self.data if data is None else data
             await self.manager.set_state(
-                state_id = self.id,
-                state = state,
-                state_data = new_data
+                state_id=self.id,
+                state=state,
+                state_data=new_data
             )
         
         async def delete_state(self):

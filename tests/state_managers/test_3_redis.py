@@ -11,6 +11,7 @@ def redis_manager():
     )
     return test_manager
 
+
 @pytest.mark.asyncio
 async def test_memory_manager(redis_manager):
     state_id = "telegram_12"
@@ -21,8 +22,8 @@ async def test_memory_manager(redis_manager):
 
     state_object = await redis_manager.get_state(state_id=state_id)
 
-    assert state_object.state == None
-    assert state_object.data == None
+    assert state_object.state is None
+    assert state_object.data is None
 
     await redis_manager.set_state(
         state_id=state_id,
@@ -42,7 +43,7 @@ async def test_memory_manager(redis_manager):
     assert state_object.state == state
     assert state_object.data == state_data
 
-    r = await redis_manager.delete_state(state_id=state_id)
+    await redis_manager.delete_state(state_id=state_id)
 
     state_object = await redis_manager.get_state(state_id=state_id)
 

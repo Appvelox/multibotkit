@@ -13,6 +13,7 @@ def mongo_manager():
     )
     return test_manager
 
+
 @pytest.mark.asyncio
 async def test_mongo_manager_methods(mongo_manager):
     state_id = "telegram_12"
@@ -23,8 +24,8 @@ async def test_mongo_manager_methods(mongo_manager):
 
     state_object = await mongo_manager.get_state(state_id=state_id)
 
-    assert state_object.state == None
-    assert state_object.data == None
+    assert state_object.state is None
+    assert state_object.data is None
 
     await mongo_manager.set_state(
         state_id=state_id,
@@ -44,12 +45,12 @@ async def test_mongo_manager_methods(mongo_manager):
     assert state_object.state == state
     assert state_object.data == state_data
 
-    r = await mongo_manager.delete_state(state_id=state_id)
+    await mongo_manager.delete_state(state_id=state_id)
 
     state_object = await mongo_manager.get_state(state_id=state_id)
 
-    assert state_object.state == None
-    assert state_object.data == None
+    assert state_object.state is None
+    assert state_object.data is None
 
     await mongo_manager.set_state(
         state_id=state_id,
@@ -75,4 +76,4 @@ async def test_mongo_manager_methods(mongo_manager):
 
 @pytest.mark.asyncio
 async def test_clean_db(mongo_manager):
-    result = await mongo_manager.db[mongo_manager.collection].delete_many({})
+    await mongo_manager.db[mongo_manager.collection].delete_many({})

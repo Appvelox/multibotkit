@@ -14,8 +14,6 @@ async def test_viber_dispatcher():
 
     dp = ViberDispatcher()
 
-    state_data = {"state": "state"}
-
     contact_dict = {"name": "Name", "phone_number": "89999999999", "avatar": "avatar"}
 
     location_dict = {"lat": "+90°", "lon": "-180°"}
