@@ -47,8 +47,8 @@ async def test_memory_manager(redis_manager):
 
     state_object = await redis_manager.get_state(state_id=state_id)
 
-    assert state_object.state == None
-    assert state_object.data == None
+    assert state_object.state is None
+    assert state_object.data is None
 
     await redis_manager.set_state(
         state_id=state_id,
