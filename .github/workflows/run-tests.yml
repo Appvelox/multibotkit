@@ -38,6 +38,6 @@ jobs:
         run: pylama
       - name: Run tests
         run: |
-          export MONGO_CONNECTION_URL=mongodb://127.0.0.1:27017
+          export MONGO_CONNECTION_URL=mongodb://127.0.0.1:27017/
           export REDIS_CONNECTION_URL=redis://127.0.0.1:6379
           tox
