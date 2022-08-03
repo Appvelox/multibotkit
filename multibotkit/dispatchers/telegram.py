@@ -10,7 +10,6 @@ class TelegramDispatcher(BaseDispatcher):
     async def process_event(
         self,
         event: Update,
-        state_data: dict,
         func: Callable = None
     ):
         if func is not None:

@@ -9,7 +9,6 @@ class VkontakteDispatcher(BaseDispatcher):
     async def process_event(
         self,
         event: IncomingEvent,
-        state_data: dict,
         func: Callable = None
     ):
         if func is not None:

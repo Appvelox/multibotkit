@@ -5,7 +5,13 @@ from multibotkit.schemas.vk.incoming import IncomingEvent
 
 
 @pytest.mark.asyncio
-async def test_dispatcher():
+async def test_vk_dispatcher():
+    
+    test_results = {
+        1: False,
+        2: False
+    }
+    
     dp = VkontakteDispatcher()
 
     client_info_dict = {
@@ -54,13 +60,23 @@ async def test_dispatcher():
 
     incoming_event = IncomingEvent.parse_obj(incoming_event_dict)
 
-    state_data = {"state": "state"}
+    @dp.handler(
+        func=lambda event: event.object.message.text.startswith("text"),
+        state_object_func=lambda state_object: state_object.state is None,
+    )
+    async def test_handler_1(event: IncomingEvent, state_object: dict):
+        test_results[1] = True
+        await state_object.set_state(state="state")
 
     @dp.handler(
         func=lambda event: event.object.message.text.startswith("text"),
-        state_data_func=lambda state_data: state_data["state"] == "state",
+        state_object_func=lambda state_object: state_object.state == "state",
     )
-    async def test_handler(event: IncomingEvent, state_data: dict):
-        assert True
+    async def test_handler_2(event: IncomingEvent, state_object: dict):
+        test_results[2] = True
 
-    await dp.process_event(incoming_event, state_data)
+    await dp.process_event(incoming_event)
+    await dp.process_event(incoming_event)
+
+    assert test_results[1]
+    assert test_results[2]

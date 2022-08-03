@@ -10,7 +10,6 @@ class ViberDispatcher(BaseDispatcher):
     async def process_event(
         self,
         event: Callback,
-        state_data: dict,
         func: Callable = None
     ):
         if func is not None:
