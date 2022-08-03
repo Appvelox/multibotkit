@@ -8,7 +8,7 @@ load_dotenv()
 
 class Settings(BaseSettings):
 
-    TG_TOKEN: str
+    TG_TOKEN: str = "some_token"
 
     VK_TOKEN: str = "vk_token"
     VK_API_VERSION: str = "vk_api_version"

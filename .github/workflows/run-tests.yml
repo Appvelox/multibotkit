@@ -3,9 +3,21 @@ name: Code testing
 on:
   [ push, pull_request ]
 
+env:
+  MONGO_CONNECTION_URL: mongodb://127.0.0.1:27017
+  REDIS_CONNECTION_URL: redis://127.0.0.1:6379
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     strategy:
       matrix:
         python-version: ["3.7", "3.8", "3.9", "3.10"]
@@ -20,6 +32,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install tox tox-gh-actions
+      - name: Start MongoDB
+        uses: supercharge/mongodb-github-action@1.2.0
+        with:
+          mongodb-version: 4.2
       - name: Run bandit
         run: bandit -r ./multibotkit
       - name: Run pylama
