@@ -14,6 +14,8 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+        ports:
+          - 6379:6379
     strategy:
       matrix:
         python-version: ["3.7", "3.8", "3.9", "3.10"]
@@ -37,7 +39,4 @@ jobs:
       - name: Run pylama
         run: pylama
       - name: Run tests
-        env:
-          MONGO_CONNECTION_URL: mongodb://127.0.0.1:27017/
-          REDIS_CONNECTION_URL: redis://127.0.0.1:6379
         run: tox
