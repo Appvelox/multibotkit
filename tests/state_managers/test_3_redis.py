@@ -13,7 +13,7 @@ def redis_manager():
 
 
 @pytest.mark.asyncio
-async def test_memory_manager(redis_manager):
+async def test_redis_manager(redis_manager):
     state_id = "telegram_12"
     state = "some_state"
     state_data = {

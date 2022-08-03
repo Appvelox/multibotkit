@@ -15,7 +15,7 @@ def mongo_manager():
 
 
 @pytest.mark.asyncio
-async def test_mongo_manager_methods(mongo_manager):
+async def test_mongo_manager(mongo_manager):
     state_id = "telegram_12"
     state = "some_state"
     state_data = {
