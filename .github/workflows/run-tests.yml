@@ -3,7 +3,7 @@ name: Code testing
 on:
   [ push, pull_request ]
 
-environment:
+env:
   MONGO_CONNECTION_URL: mongodb://127.0.0.1:27017
   REDIS_CONNECTION_URL: redis://127.0.0.1:6379
 
