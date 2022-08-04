@@ -5,7 +5,7 @@ from multibotkit.schemas.vk.incoming import IncomingEvent
 
 class VkontakteDispatcher(BaseDispatcher):
     
-    def __getting_func_result(
+    def _getting_func_result(
         self,
         event: IncomingEvent,
         func: Optional[Callable] = None
@@ -19,11 +19,3 @@ class VkontakteDispatcher(BaseDispatcher):
                     func_result = False
         
         return func_result
-    
-    async def process_event(
-            self,
-            event: IncomingEvent,
-            func: Optional[Callable] = None,
-        ):
-
-        await super().process_event(event, func)

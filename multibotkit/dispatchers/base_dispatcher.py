@@ -31,7 +31,7 @@ class BaseDispatcher():
 
         return wrapper
 
-    def __getting_func_result(
+    def _getting_func_result(
         self,
         event: Union[FBIncomingEvent, Update, Callback, VKIncomingEvent],
         func: Callable
@@ -70,7 +70,7 @@ class BaseDispatcher():
                 if state_object_func is not None:
                     state_object_func_result = state_object_func(state_object)
                 
-                func_result = self.__getting_func_result(event, func)
+                func_result = self._getting_func_result(event, func)
 
                 event_result = {state_object_func_result, func_result}
                 
