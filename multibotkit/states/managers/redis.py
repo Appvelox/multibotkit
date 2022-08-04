@@ -3,7 +3,7 @@ from typing import Optional
 
 import aioredis
 
-from multibotkit.state_managers.base import BaseStateManager
+from multibotkit.states.managers.base import BaseStateManager
 
 
 class RedisStateManager(BaseStateManager):

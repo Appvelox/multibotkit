@@ -1,6 +1,6 @@
 import pytest
 
-from multibotkit.state_managers.mongo import MongoStateManager
+from multibotkit.states.managers.mongo import MongoStateManager
 from tests.config import settings
 
 

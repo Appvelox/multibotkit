@@ -2,7 +2,8 @@ import pytest
 
 from multibotkit.dispatchers.telegram import TelegramDispatcher
 from multibotkit.schemas.telegram.incoming import Message, Update
-from multibotkit.state_managers.base import BaseStateManager
+from multibotkit.states.managers.base import BaseStateManager
+from multibotkit.states.state import State
 
 
 @pytest.mark.asyncio
@@ -51,7 +52,7 @@ async def test_telegram_dispatcher():
         func=lambda update: update.message.text.startswith("text"),
         state_object_func=lambda state_object: state_object.state is None
     )
-    async def test_handler_1(update: Update, state_object: dp.state_manager.State):
+    async def test_handler_1(update: Update, state_object: State):
         test_results[1] = True
         await state_object.set_state(state="state")
 
@@ -59,7 +60,7 @@ async def test_telegram_dispatcher():
         func=lambda update: update.message.text.startswith("text"),
         state_object_func=lambda state_object: state_object.state == "state",
     )
-    async def test_handler_2(update: Update, state_object: BaseStateManager.State):
+    async def test_handler_2(update: Update, state_object: State):
         test_results[2] = True
 
     await dp.process_event(event=update)

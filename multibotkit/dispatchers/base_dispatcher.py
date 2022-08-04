@@ -4,18 +4,15 @@ from multibotkit.schemas.fb.incoming import IncomingEvent as FBIncomingEvent
 from multibotkit.schemas.telegram.incoming import Update
 from multibotkit.schemas.viber.incoming import Callback
 from multibotkit.schemas.vk.incoming import IncomingEvent as VKIncomingEvent
-from multibotkit.state_managers.memory import MemoryStateManager
-from multibotkit.state_managers.mongo import MongoStateManager
-from multibotkit.state_managers.redis import RedisStateManager
+from multibotkit.states.managers.base import BaseStateManager
+from multibotkit.states.managers.memory import MemoryStateManager
 
 
 class BaseDispatcher():
     
     def __init__(
         self,
-        state_manager: Union[
-            MemoryStateManager, MongoStateManager, RedisStateManager
-        ] = MemoryStateManager()
+        state_manager: BaseStateManager = MemoryStateManager()
     ):
         self.__handlers = []
         self.__default_handler = None
@@ -34,13 +31,19 @@ class BaseDispatcher():
 
         return wrapper
 
+    def __getting_func_result(
+        self,
+        event: Union[FBIncomingEvent, Update, Callback, VKIncomingEvent],
+        func: Callable
+    ):
+        raise NotImplementedError(
+            "Define getting_func_result in messanger_dispatcher"
+        )
 
-    @staticmethod
-    def process_event_decorator(getting_func_result: Callable):
-        async def wrapper(
+    async def process_event(
             self,
             event: Union[Callback, FBIncomingEvent, Update, VKIncomingEvent],
-            func: Optional[Callable] = None
+            func: Optional[Callable] = None,
         ):
             if type(event) == Callback:
                 state_id = f"viber_{event.user_id}"
@@ -67,7 +70,7 @@ class BaseDispatcher():
                 if state_object_func is not None:
                     state_object_func_result = state_object_func(state_object)
                 
-                func_result = await getting_func_result(self, event, func)
+                func_result = self.__getting_func_result(event, func)
 
                 event_result = {state_object_func_result, func_result}
                 
@@ -87,5 +90,3 @@ class BaseDispatcher():
                     pass
             if self.__default_handler is not None:
                 await self.__default_handler(event, state_object)
-        
-        return wrapper

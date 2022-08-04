@@ -2,7 +2,7 @@ from typing import Optional
 
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from multibotkit.state_managers.base import BaseStateManager
+from multibotkit.states.managers.base import BaseStateManager
 
 
 class MongoStateManager(BaseStateManager):

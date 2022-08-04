@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, Optional
 
 from multibotkit.dispatchers.base_dispatcher import BaseDispatcher
 from multibotkit.schemas.telegram.incoming import Update
@@ -6,11 +6,10 @@ from multibotkit.schemas.telegram.incoming import Update
 
 class TelegramDispatcher(BaseDispatcher):
     
-    @BaseDispatcher.process_event_decorator
-    async def process_event(
+    def __getting_func_result(
         self,
         event: Update,
-        func: Callable = None
+        func: Optional[Callable] = None
     ):
         if func is not None:
             try:
@@ -19,3 +18,11 @@ class TelegramDispatcher(BaseDispatcher):
                 func_result = False
         
         return func_result
+    
+    async def process_event(
+            self,
+            event: Update,
+            func: Optional[Callable] = None,
+        ):
+
+        await super().process_event(event, func)

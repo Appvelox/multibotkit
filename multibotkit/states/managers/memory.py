@@ -1,6 +1,6 @@
 from typing import Optional
 
-from multibotkit.state_managers.base import BaseStateManager
+from multibotkit.states.managers.base import BaseStateManager
 
 
 class MemoryStateManager(BaseStateManager):

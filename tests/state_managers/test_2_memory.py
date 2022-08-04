@@ -1,6 +1,6 @@
 import pytest
 
-from multibotkit.state_managers.memory import MemoryStateManager
+from multibotkit.states.managers.memory import MemoryStateManager
 
 
 @pytest.fixture

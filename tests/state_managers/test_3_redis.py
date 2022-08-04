@@ -1,6 +1,6 @@
 import pytest
 
-from multibotkit.state_managers.redis import RedisStateManager
+from multibotkit.states.managers.redis import RedisStateManager
 from tests.config import settings
 
 
