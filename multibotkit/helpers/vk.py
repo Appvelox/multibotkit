@@ -24,15 +24,12 @@ class VKHelper(BaseHelper):
     SAVE_MESSAGES_PHOTO_URL = "https://api.vk.com/method/photos.saveMessagesPhoto"
     UPLOAD_PHOTO_URL = "https://api.vk.com/method/photos.getMessagesUploadServer"
 
-
     class _SendMessageArgumentsError(Exception):
         pass
-
 
     def __init__(self, access_token: str, api_version: str):
         self.access_token = access_token
         self.api_version = api_version
-
 
     def command(self, json_payload: Optional[str] = None):
         if json_payload is None:
@@ -44,7 +41,6 @@ class VKHelper(BaseHelper):
             return ""
         return json.loads(json_payload).get("button")
 
-
     def sync_send_message(
         self,
         user_id: int,
@@ -53,14 +49,14 @@ class VKHelper(BaseHelper):
         lat: Optional[float] = None,
         long: Optional[float] = None,
         attachment: Optional[str] = None,
-        template: Optional[dict] = None
+        template: Optional[dict] = None,
     ):
-        
+
         if (text is None) and (attachment is None):
             raise self._SendMessageArgumentsError(
                 "One of the arguments text and attachment is required"
             )
-        
+
         message = Message(
             user_id=user_id,
             message=text,
@@ -68,7 +64,7 @@ class VKHelper(BaseHelper):
             lat=lat,
             long=long,
             attachment=attachment,
-            template=template
+            template=template,
         )
 
         data = message.dict(exclude_none=True)
@@ -88,14 +84,14 @@ class VKHelper(BaseHelper):
         lat: Optional[float] = None,
         long: Optional[float] = None,
         attachment: Optional[str] = None,
-        template: Optional[dict] = None
+        template: Optional[dict] = None,
     ):
         if (text is None) and (attachment is None):
             raise self.__SendMessageArgumentsError(
                 "One of the arguments text and attachment is required, \
 but not both"
             )
-        
+
         message = Message(
             user_id=user_id,
             message=text,
@@ -103,7 +99,7 @@ but not both"
             lat=lat,
             long=long,
             attachment=attachment,
-            template=template
+            template=template,
         )
         data = message.dict(exclude_none=True)
         if data.get("keyboard"):
@@ -113,7 +109,6 @@ but not both"
 
         r = await self._perform_async_request(url=self.MESSAGES_URL, data=data)
         return r
-
 
     @retry(
         retry=retry_if_exception_type(httpx.HTTPError)
@@ -140,7 +135,6 @@ but not both"
             r = await client.post(server_url, files=files)
         return r.json()
 
-
     def sync_save_photo(self, uploaded_photo: dict):
         r = self._perform_sync_request(
             url=self.SAVE_MESSAGES_PHOTO_URL, data={**uploaded_photo}
@@ -153,7 +147,6 @@ but not both"
         )
         return r["response"][0]
 
-
     def sync_get_photo_attachment(self, photo, file_name):
         r = self._perform_sync_request(self.UPLOAD_PHOTO_URL, data={})
         url = r["response"]["upload_url"]
@@ -161,9 +154,9 @@ but not both"
         uploaded_photo = self.sync_upload_photo(photo, file_name, url)
         saved_photo = self.sync_save_photo(uploaded_photo)
 
-        owner_id = saved_photo['owner_id']
-        photo_id = saved_photo['id']
-        access_key = saved_photo['access_key']
+        owner_id = saved_photo["owner_id"]
+        photo_id = saved_photo["id"]
+        access_key = saved_photo["access_key"]
         attachment = f"photo{owner_id}_{photo_id}_{access_key}"
 
         return attachment
@@ -175,9 +168,9 @@ but not both"
         uploaded_photo = await self.async_upload_photo(photo, file_name, url)
         saved_photo = await self.async_save_photo(uploaded_photo)
 
-        owner_id = saved_photo['owner_id']
-        photo_id = saved_photo['id']
-        access_key = saved_photo['access_key']
+        owner_id = saved_photo["owner_id"]
+        photo_id = saved_photo["id"]
+        access_key = saved_photo["access_key"]
         attachment = f"photo{owner_id}_{photo_id}_{access_key}"
 
         return attachment

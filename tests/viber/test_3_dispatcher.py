@@ -7,10 +7,7 @@ from multibotkit.schemas.viber.incoming import Callback
 @pytest.mark.asyncio
 async def test_viber_dispatcher():
 
-    test_results = {
-        1: False,
-        2: False
-    }
+    test_results = {1: False, 2: False}
 
     dp = ViberDispatcher()
 
@@ -58,7 +55,7 @@ async def test_viber_dispatcher():
 
     @dp.handler(
         func=lambda update: update.message.text.startswith("text"),
-        state_object_func=lambda state_object: state_object.state is None
+        state_object_func=lambda state_object: state_object.state is None,
     )
     async def test_handler_1(event: Callback, state_object: dict):
         test_results[1] = True

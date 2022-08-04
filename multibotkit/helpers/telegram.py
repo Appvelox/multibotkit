@@ -19,7 +19,6 @@ class TelegramHelper(BaseHelper):
         self.token = token
         self.tg_base_url = f"https://api.telegram.org/bot{self.token}/"
 
-
     def sync_get_webhook_info(self) -> Optional[WebhookInfo]:
         url = self.tg_base_url + "getWebhookInfo"
         r = self._perform_sync_request(url)
@@ -48,14 +47,13 @@ class TelegramHelper(BaseHelper):
         r = await self._perform_async_request(url, data)
         return r
 
-
     def sync_send_message(
         self,
         chat_id: int,
         text: str,
         disable_web_page_preview: Optional[bool] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None,
-        parse_mode: str = "HTML"
+        parse_mode: str = "HTML",
     ):
         url = self.tg_base_url + "sendMessage"
         message = Message(
@@ -64,7 +62,7 @@ class TelegramHelper(BaseHelper):
             disable_web_page_preview=disable_web_page_preview,
             reply_markup=reply_markup,
         )
-        
+
         data = message.dict(exclude_none=True)
         data.update({"parse_mode": parse_mode})
         r = self._perform_sync_request(url, data)
@@ -76,7 +74,7 @@ class TelegramHelper(BaseHelper):
         text: str,
         disable_web_page_preview: Optional[bool] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None,
-        parse_mode: str = "HTML"
+        parse_mode: str = "HTML",
     ):
         url = self.tg_base_url + "sendMessage"
         message = Message(
@@ -85,12 +83,11 @@ class TelegramHelper(BaseHelper):
             disable_web_page_preview=disable_web_page_preview,
             reply_markup=reply_markup,
         )
-        
+
         data = message.dict(exclude_none=True)
         data.update({"parse_mode": parse_mode})
         r = await self._perform_async_request(url, data)
         return r
-
 
     def sync_answer_callback_query(self, callback_query_id: str):
         url = self.tg_base_url + "answerCallbackQuery"
@@ -104,7 +101,6 @@ class TelegramHelper(BaseHelper):
         r = await self._perform_async_request(url, data)
         return r
 
-
     def sync_edit_message_text(self, chat_id: int, message_id: int, text: str):
         url = self.tg_base_url + "editMessageText"
         data = {"chat_id": chat_id, "message_id": message_id, "text": text}
@@ -116,7 +112,6 @@ class TelegramHelper(BaseHelper):
         data = {"chat_id": chat_id, "message_id": message_id, "text": text}
         r = await self._perform_async_request(url, data)
         return r
-
 
     def sync_edit_message_caption(self, chat_id: int, message_id: int, caption: str):
         url = self.tg_base_url + "editMessageCaption"
@@ -141,7 +136,6 @@ class TelegramHelper(BaseHelper):
         }
         r = await self._perform_async_request(url, data)
         return r
-
 
     def sync_edit_message_reply_markup(
         self,

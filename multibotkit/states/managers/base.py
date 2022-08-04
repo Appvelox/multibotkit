@@ -1,48 +1,17 @@
 from typing import Optional
 
-from multibotkit.states.state import State
 
-
-class BaseStateManager():
-   
-    def create_State(self, state_id: str, state: str, data: dict = {}):
-        return State(self, state_id, state, data)
-
-
-    def get_state(self, state_id: str, doc: Optional[dict]):
-        
-        if doc is None:
-            state = self.create_State(
-                state_id=state_id,
-                state=None,
-                data=None
-            )
-            return state
-        
-        state = self.create_State(
-            state_id=state_id,
-            state=doc["state"],
-            data=doc["data"]
-        )
-        return state
-
+class BaseStateManager:
+    def get_state(self, state_id: str):
+        raise NotImplementedError("get_state is not implemented")
 
     async def set_state(
         self,
         state_id: str,
         state: Optional[str] = None,
-        state_data: Optional[dict] = None
+        state_data: Optional[dict] = None,
     ):
-        state_object = await self.get_state(state_id=state_id)
-        
-        if state is None:
-            state = state_object.state
-        if state_data is None:
-            state_data = state_object.data
-        
-        input_state = {
-            "state": state,
-            "data": state_data
-        }
+        raise NotImplementedError("set_state is not implemented")
 
-        return input_state
+    def delete_state(self, state_id: str):
+        raise NotImplementedError("delete_state is not implemented")

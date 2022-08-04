@@ -21,17 +21,14 @@ from multibotkit.schemas.viber.outgoing import (
 
 class ViberHelper(BaseHelper):
 
-
     VIBER_BASE_URL = "https://chatapi.viber.com/pa/"
-
 
     class _SendMessageArgumentsError(Exception):
         pass
 
-
     def __init__(self, token):
         self.token = token
-    
+
     def __build_message(
         self,
         type: MessageType,
@@ -48,7 +45,7 @@ class ViberHelper(BaseHelper):
         file_name: Optional[str] = None,
         contact: Optional[Contact] = None,
         location: Optional[Location] = None,
-        sticker_id: Optional[int] = None
+        sticker_id: Optional[int] = None,
     ):
         if type == "text":
             if text is None:
@@ -62,9 +59,9 @@ class ViberHelper(BaseHelper):
                 sender=sender,
                 tracking_data=tracking_data,
                 keyboard=keyboard,
-                text=text
+                text=text,
             )
-        
+
         if type == "picture":
             if (text is None) or (media is None):
                 raise self._SendMessageArgumentsError(
@@ -79,9 +76,9 @@ class ViberHelper(BaseHelper):
                 keyboard=keyboard,
                 text=text,
                 media=media,
-                thumbnail=thumbnail
+                thumbnail=thumbnail,
             )
-        
+
         if type == "video":
             if (media is None) or (size is None):
                 raise self._SendMessageArgumentsError(
@@ -97,9 +94,9 @@ class ViberHelper(BaseHelper):
                 media=media,
                 thumbnail=thumbnail,
                 size=size,
-                duration=duration
+                duration=duration,
             )
-        
+
         if type == "file":
             if (media is None) or (size is None) or (file_name is None):
                 raise self._SendMessageArgumentsError(
@@ -115,9 +112,9 @@ are required"
                 keyboard=keyboard,
                 media=media,
                 size=size,
-                file_name=file_name
+                file_name=file_name,
             )
-        
+
         if type == "contact":
             if contact is None:
                 raise self._SendMessageArgumentsError(
@@ -130,9 +127,9 @@ are required"
                 sender=sender,
                 tracking_data=tracking_data,
                 keyboard=keyboard,
-                contact=contact
+                contact=contact,
             )
-        
+
         if type == "location":
             if location is None:
                 raise self._SendMessageArgumentsError(
@@ -145,9 +142,9 @@ are required"
                 sender=sender,
                 tracking_data=tracking_data,
                 keyboard=keyboard,
-                location=location
+                location=location,
             )
-        
+
         if type == "url":
             if media is None:
                 raise self._SendMessageArgumentsError(
@@ -160,9 +157,9 @@ are required"
                 sender=sender,
                 tracking_data=tracking_data,
                 keyboard=keyboard,
-                media=media
+                media=media,
             )
-        
+
         if type == "sticker":
             if sticker_id is None:
                 raise self._SendMessageArgumentsError(
@@ -175,11 +172,10 @@ are required"
                 sender=sender,
                 tracking_data=tracking_data,
                 keyboard=keyboard,
-                sticker_id=sticker_id
+                sticker_id=sticker_id,
             )
-        
-        return message
 
+        return message
 
     def sync_set_webhook(self, webhook_data: SetWebhook):
         url = self.VIBER_BASE_URL + "set_webhook"
@@ -195,7 +191,6 @@ are required"
         r = await self._perform_async_request(url=url, data=data)
         return r
 
-
     def sync_get_account_info(self):
         url = self.VIBER_BASE_URL + "get_account_info"
         r = self._perform_sync_request(url=url)
@@ -205,7 +200,6 @@ are required"
         url = self.VIBER_BASE_URL + "get_account_info"
         r = await self._perform_async_request(url=url)
         return r
-
 
     def sync_send_message(
         self,
@@ -223,7 +217,7 @@ are required"
         file_name: Optional[str] = None,
         contact: Optional[Contact] = None,
         location: Optional[Location] = None,
-        sticker_id: Optional[int] = None
+        sticker_id: Optional[int] = None,
     ):
         message = self.__build_message(
             type=type,
@@ -240,7 +234,7 @@ are required"
             file_name=file_name,
             contact=contact,
             location=location,
-            sticker_id=sticker_id
+            sticker_id=sticker_id,
         )
 
         url = self.VIBER_BASE_URL + "send_message"
@@ -248,7 +242,6 @@ are required"
         data["auth_token"] = self.token
         r = self._perform_sync_request(url=url, data=data)
         return r
-
 
     async def async_send_message(
         self,
@@ -266,7 +259,7 @@ are required"
         file_name: Optional[str] = None,
         contact: Optional[Contact] = None,
         location: Optional[Location] = None,
-        sticker_id: Optional[int] = None
+        sticker_id: Optional[int] = None,
     ):
         message = self.__build_message(
             type=type,
@@ -283,9 +276,9 @@ are required"
             file_name=file_name,
             contact=contact,
             location=location,
-            sticker_id=sticker_id
+            sticker_id=sticker_id,
         )
-        
+
         url = self.VIBER_BASE_URL + "send_message"
         data = message.dict(exclude_none=True)
         data["auth_token"] = self.token

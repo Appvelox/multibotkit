@@ -6,18 +6,8 @@ from pydantic.main import BaseModel
 
 
 class Button(BaseModel):
-    Columns: Optional[int] = Field(
-        6,
-        ge=1,
-        le=6,
-        title="Button width in columns"
-    )
-    Rows: Optional[int] = Field(
-        1,
-        ge=1,
-        le=2,
-        title="Button height in rows"
-    )
+    Columns: Optional[int] = Field(6, ge=1, le=6, title="Button width in columns")
+    Rows: Optional[int] = Field(1, ge=1, le=2, title="Button height in rows")
     Text: Optional[str] = Field(
         None,
         title="Text to be displayed on the button",
@@ -26,16 +16,13 @@ Max 250 characters. If the text is too long to display \
 on the button it will be cropped and ended with “…”",
     )
     TextSize: str = Field(
-        "regular",
-        title="Text size out of 3 available options: small, regular, large"
+        "regular", title="Text size out of 3 available options: small, regular, large"
     )
     TextHAlign: str = Field(
-        "center",
-        title="Horizontal align of the text: left, center, right"
+        "center", title="Horizontal align of the text: left, center, right"
     )
     TextVAlign: str = Field(
-        "center",
-        title="Vertical alignment of the text: top, middle, bottom"
+        "center", title="Vertical alignment of the text: top, middle, bottom"
     )
     ActionType: str = Field(
         "reply",
@@ -55,9 +42,7 @@ share-phone / none",
 For ActionType open-url - Valid URL.",
     )
     BgColor: Optional[str] = Field(
-        None,
-        title="Background color of button",
-        description="Valid color HEX value"
+        None, title="Background color of button", description="Valid color HEX value"
     )
     Image: Optional[str] = Field(
         None,
@@ -79,9 +64,7 @@ with the same height as the native keyboard.When \
 false - short keyboards will be displayed with \
 the minimal possible height",
     )
-    BgColor: Optional[str] = Field(
-        None, title="Background color of the keyboard"
-    )
+    BgColor: Optional[str] = Field(None, title="Background color of the keyboard")
     Buttons: List[Button] = Field(
         ..., title="Array containing all keyboard buttons by order"
     )
@@ -89,8 +72,7 @@ the minimal possible height",
 
 class SetWebhook(BaseModel):
     url: str = Field(
-        ...,
-        title="Account webhook URL to receive callbacks & messages from users"
+        ..., title="Account webhook URL to receive callbacks & messages from users"
     )
     event_types: Optional[List[str]] = Field(
         None,
@@ -98,20 +80,16 @@ class SetWebhook(BaseModel):
 the account owner would like to be notified about",
     )
     send_name: bool = Field(
-        False,
-        title=" Indicates whether or not the bot should receive the user name"
+        False, title=" Indicates whether or not the bot should receive the user name"
     )
     send_photo: bool = Field(
-        False,
-        title=" Indicates whether or not the bot should receive the user photo"
+        False, title=" Indicates whether or not the bot should receive the user photo"
     )
 
 
 class Sender(BaseModel):
     name: str = Field(
-        ...,
-        title="The sender’s name to display",
-        description="Max 28 characters"
+        ..., title="The sender’s name to display", description="Max 28 characters"
     )
     avatar: Optional[str] = Field(
         None,
@@ -122,15 +100,9 @@ Recommended 720x720",
 
 
 class Contact(BaseModel):
-    name: str = Field(
-        ...,
-        title="Name of the contact",
-        description="Max 28 characters"
-    )
+    name: str = Field(..., title="Name of the contact", description="Max 28 characters")
     phone_number: str = Field(
-        ...,
-        title="Phone number of the contact",
-        description="Max 18 characters"
+        ..., title="Phone number of the contact", description="Max 18 characters"
     )
 
 
@@ -140,13 +112,13 @@ class Location(BaseModel):
 
 
 class MessageType(str, Enum):
-    text = "text",
-    picture = "picture",
-    video = "video",
-    file = "file",
-    contact = "contact",
-    location = "location",
-    url = "url",
+    text = ("text",)
+    picture = ("picture",)
+    video = ("video",)
+    file = ("file",)
+    contact = ("contact",)
+    location = ("location",)
+    url = ("url",)
     sticker = "sticker"
 
 
@@ -176,23 +148,15 @@ Sent tracking_data value will be passed back with user’s reply",
 
 class TextMessage(BaseMessage):
     type: MessageType = Field(
-        "text",
-        title="Message type",
-        description="text. Supports text formatting"
+        "text", title="Message type", description="text. Supports text formatting"
     )
     text: str = Field(
-        ...,
-        title="The text of the message",
-        description="Max length 7,000 characters"
+        ..., title="The text of the message", description="Max length 7,000 characters"
     )
 
 
 class PictureMessage(BaseMessage):
-    type: MessageType = Field(
-        "picture",
-        title="Message type",
-        description="picture"
-    )
+    type: MessageType = Field("picture", title="Message type", description="picture")
     text: str = Field(
         ...,
         title="Description of the photo. \
@@ -272,11 +236,7 @@ class LocationMessage(BaseMessage):
 
 class UrlMessage(BaseMessage):
     type: MessageType = Field("url", title="Message type")
-    media: str = Field(
-        ...,
-        title="URL",
-        description="Max 2,000 characters"
-    )
+    media: str = Field(..., title="URL", description="Max 2,000 characters")
 
 
 class StickerMessage(BaseMessage):

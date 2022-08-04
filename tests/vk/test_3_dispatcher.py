@@ -6,12 +6,9 @@ from multibotkit.schemas.vk.incoming import IncomingEvent
 
 @pytest.mark.asyncio
 async def test_vk_dispatcher():
-    
-    test_results = {
-        1: False,
-        2: False
-    }
-    
+
+    test_results = {1: False, 2: False}
+
     dp = VkontakteDispatcher()
 
     client_info_dict = {

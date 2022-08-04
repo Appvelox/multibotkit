@@ -10,11 +10,7 @@ class Location(BaseModel):
 
 
 class Contact(BaseModel):
-    name: str = Field(
-        ...,
-        title="Name of the contact",
-        description="Max 28 characters"
-    )
+    name: str = Field(..., title="Name of the contact", description="Max 28 characters")
     phone_number: str = Field(
         ...,
         title="Phone number of the contact",
@@ -37,24 +33,16 @@ contact / url / location",
         title="URL of the message media - can be image, video, file \
 and url. Image/Video/File URLs will have a TTL of 1 hour",
     )
-    location: Optional[Location] = Field(
-        None,
-        title="Location coordinates"
-    )
+    location: Optional[Location] = Field(None, title="Location coordinates")
     contact: Optional[Contact] = Field(None, title="Contact data")
     tracking_data: Optional[str] = Field(
-        None,
-        title="Tracking data sent with the last message to the user"
+        None, title="Tracking data sent with the last message to the user"
     )
     file_name: Optional[str] = Field(
-        None,
-        title="File name",
-        description="Relevant for file type messages"
+        None, title="File name", description="Relevant for file type messages"
     )
     file_size: Optional[int] = Field(
-        None,
-        title="File size in bytes",
-        description="Relevant for file type messages"
+        None, title="File size in bytes", description="Relevant for file type messages"
     )
     duration: Optional[int] = Field(
         None,
@@ -62,9 +50,7 @@ and url. Image/Video/File URLs will have a TTL of 1 hour",
         description="Relevant for video type messages",
     )
     sticker_id: Optional[int] = Field(
-        None,
-        title="Viber sticker id",
-        description="Relevant for sticker type messages"
+        None, title="Viber sticker id", description="Relevant for sticker type messages"
     )
 
 
@@ -73,9 +59,7 @@ class User(BaseModel):
     name: str = Field(..., title="User’s Viber name")
     avatar: str = Field(..., title="URL of user’s avatar")
     country: str = Field(
-        ...,
-        title="User’s 2 letter country code",
-        description="ISO ALPHA-2 Code"
+        ..., title="User’s 2 letter country code", description="ISO ALPHA-2 Code"
     )
     language: str = Field(
         ...,
@@ -126,10 +110,7 @@ used to access the conversation passed as a string",
 
 class FailedCallback(BaseModel):
     user_id: Optional[str] = Field(None, title="User id data")
-    desc: Optional[str] = Field(
-        None,
-        title="A string describing the failure"
-    )
+    desc: Optional[str] = Field(None, title="A string describing the failure")
 
 
 class Callback(
@@ -139,12 +120,6 @@ class Callback(
     ConversationStartedCallback,
     FailedCallback,
 ):
-    event: str = Field(
-        ...,
-        title="Callback type - which event triggered the callback"
-    )
-    timestamp: int = Field(
-        ...,
-        title="Time of the event that triggered the callback"
-    )
+    event: str = Field(..., title="Callback type - which event triggered the callback")
+    timestamp: int = Field(..., title="Time of the event that triggered the callback")
     message_token: int = Field(..., title="Unique ID of the message")

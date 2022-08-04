@@ -8,10 +8,7 @@ from multibotkit.states.state import State
 @pytest.mark.asyncio
 async def test_telegram_dispatcher():
 
-    test_results = {
-        1: False,
-        2: False
-    }
+    test_results = {1: False, 2: False}
 
     dp = TelegramDispatcher()
 
@@ -49,7 +46,7 @@ async def test_telegram_dispatcher():
 
     @dp.handler(
         func=lambda update: update.message.text.startswith("text"),
-        state_object_func=lambda state_object: state_object.state is None
+        state_object_func=lambda state_object: state_object.state is None,
     )
     async def test_handler_1(update: Update, state_object: State):
         test_results[1] = True

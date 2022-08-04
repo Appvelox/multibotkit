@@ -10,8 +10,7 @@ from tenacity import (
 )
 
 
-class BaseHelper():
-
+class BaseHelper:
     @retry(
         retry=retry_if_exception_type(httpx.HTTPError)
         | retry_if_exception_type(JSONDecodeError),
