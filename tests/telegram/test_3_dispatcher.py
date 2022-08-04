@@ -2,7 +2,6 @@ import pytest
 
 from multibotkit.dispatchers.telegram import TelegramDispatcher
 from multibotkit.schemas.telegram.incoming import Message, Update
-from multibotkit.states.managers.base import BaseStateManager
 from multibotkit.states.state import State
 
 

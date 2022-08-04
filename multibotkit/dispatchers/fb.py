@@ -1,4 +1,4 @@
-from typing import Callable, Optional, Union
+from typing import Callable, Optional
 
 from multibotkit.dispatchers.base_dispatcher import BaseDispatcher
 from multibotkit.schemas.fb.incoming import IncomingEvent

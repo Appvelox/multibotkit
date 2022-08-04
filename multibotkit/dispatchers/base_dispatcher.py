@@ -44,49 +44,49 @@ class BaseDispatcher():
             self,
             event: Union[Callback, FBIncomingEvent, Update, VKIncomingEvent],
             func: Optional[Callable] = None,
-        ):
-            if type(event) == Callback:
-                state_id = f"viber_{event.user_id}"
+    ):
+        if type(event) == Callback:
+            state_id = f"viber_{event.user_id}"
+        
+        elif type(event) == FBIncomingEvent:
+            sender_id = event.entry[0].messaging[0].sender.id
+            state_id = f"facebook_{sender_id}"
+        
+        elif type(event) == Update:
+            if event.message is not None:
+                sender_id = event.message.from_.id
+            if event.callback_query is not None:
+                sender_id = event.callback_query.from_.id
+            state_id = f"telegram_{sender_id}"
+        
+        elif type(event) == VKIncomingEvent:
+            sender_id = event.object.message.from_id
+            state_id = f"vkontakte_{sender_id}"
+        
+        state_object = await self.state_manager.get_state(state_id)
+        
+        for (func, state_object_func, handler) in self.__handlers:
+            state_object_func_result = None
+            if state_object_func is not None:
+                state_object_func_result = state_object_func(state_object)
             
-            elif type(event) == FBIncomingEvent:
-                sender_id = event.entry[0].messaging[0].sender.id
-                state_id = f"facebook_{sender_id}"
-            
-            elif type(event) == Update:
-                if event.message is not None:
-                    sender_id = event.message.from_.id
-                if event.callback_query is not None:
-                    sender_id = event.callback_query.from_.id
-                state_id = f"telegram_{sender_id}"
-            
-            elif type(event) == VKIncomingEvent:
-                sender_id = event.object.message.from_id
-                state_id = f"vkontakte_{sender_id}"
-            
-            state_object = await self.state_manager.get_state(state_id)
-            
-            for (func, state_object_func, handler) in self.__handlers:
-                state_object_func_result = None
-                if state_object_func is not None:
-                    state_object_func_result = state_object_func(state_object)
-                
-                func_result = self._getting_func_result(event, func)
+            func_result = self._getting_func_result(event, func)
 
-                event_result = {state_object_func_result, func_result}
-                
-                try:
-                    event_result.remove(None)
-                except KeyError:
-                    pass
-                
-                try:
-                    summary_result = event_result.pop()
-                    for result in event_result:
-                        summary_result *= result
-                    if summary_result:
-                        await handler(event, state_object)
-                        return
-                except KeyError:
-                    pass
-            if self.__default_handler is not None:
-                await self.__default_handler(event, state_object)
+            event_result = {state_object_func_result, func_result}
+            
+            try:
+                event_result.remove(None)
+            except KeyError:
+                pass
+            
+            try:
+                summary_result = event_result.pop()
+                for result in event_result:
+                    summary_result *= result
+                if summary_result:
+                    await handler(event, state_object)
+                    return
+            except KeyError:
+                pass
+        if self.__default_handler is not None:
+            await self.__default_handler(event, state_object)
