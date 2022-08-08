@@ -2,14 +2,15 @@ import pytest
 
 from multibotkit.dispatchers.telegram import TelegramDispatcher
 from multibotkit.schemas.telegram.incoming import Message, Update
+from multibotkit.states.state import State
 
 
 @pytest.mark.asyncio
 async def test_telegram_dispatcher():
 
-    dp = TelegramDispatcher()
+    test_results = {1: False, 2: False}
 
-    state_data = {"state": "state"}
+    dp = TelegramDispatcher()
 
     user_dict = {
         "id": 1234,
@@ -45,9 +46,21 @@ async def test_telegram_dispatcher():
 
     @dp.handler(
         func=lambda update: update.message.text.startswith("text"),
-        state_data_func=lambda state_data: state_data["state"] == "state",
+        state_object_func=lambda state_object: state_object.state is None,
     )
-    async def test_handler(update: Update, state_data: dict):
-        assert True
+    async def test_handler_1(update: Update, state_object: State):
+        test_results[1] = True
+        await state_object.set_state(state="state")
 
-    await dp.process_event(event=update, state_data=state_data)
+    @dp.handler(
+        func=lambda update: update.message.text.startswith("text"),
+        state_object_func=lambda state_object: state_object.state == "state",
+    )
+    async def test_handler_2(update: Update, state_object: State):
+        test_results[2] = True
+
+    await dp.process_event(event=update)
+    await dp.process_event(event=update)
+
+    assert test_results[1]
+    assert test_results[2]

@@ -4,11 +4,7 @@ import pytest
 from pytest_httpx import HTTPXMock
 
 from multibotkit.helpers.vk import VKHelper
-from multibotkit.schemas.vk.outgoing import (
-    Keyboard,
-    KeyboardAction,
-    KeyboardButton,
-)
+from multibotkit.schemas.vk.outgoing import Keyboard, KeyboardAction, KeyboardButton
 from tests.config import settings
 
 
@@ -56,7 +52,7 @@ def test_sync_send_message(httpx_mock: HTTPXMock):
         lat=0,
         long=0,
         attachment="attachment",
-        template={}
+        template={},
     )
 
     assert r == {"peer_id": 1234, "message_id": 4321}
@@ -64,9 +60,7 @@ def test_sync_send_message(httpx_mock: HTTPXMock):
 
 def test_SendMessageArgumentsError():
     try:
-        _ = vk_helper.sync_send_message(
-            user_id=1234
-        )
+        _ = vk_helper.sync_send_message(user_id=1234)
         assert False
     except vk_helper._SendMessageArgumentsError:
         assert True
@@ -203,7 +197,7 @@ async def test_async_send_message(httpx_mock: HTTPXMock):
         lat=0,
         long=0,
         attachment="attachment",
-        template={}
+        template={},
     )
 
     assert r == {"peer_id": 1234, "message_id": 4321}

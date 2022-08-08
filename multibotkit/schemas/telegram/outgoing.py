@@ -33,23 +33,16 @@ updates may be received for a short period of time.",
 
 
 class WebhookInfo(BaseModel):
-    url: str = Field(
-        ...,
-        title="Webhook URL, may be empty if webhook is not set up"
-    )
+    url: str = Field(..., title="Webhook URL, may be empty if webhook is not set up")
     has_custom_certificate: Optional[bool] = Field(
         None,
         title="True, if a custom certificate was provided for webhook \
 certificate checks",
     )
     pending_update_count: Optional[int] = Field(
-        None,
-        title="Number of updates awaiting delivery"
+        None, title="Number of updates awaiting delivery"
     )
-    ip_address: Optional[str] = Field(
-        None,
-        title="Currently used webhook IP address"
-    )
+    ip_address: Optional[str] = Field(None, title="Currently used webhook IP address")
     last_error_date: Optional[int] = Field(
         None,
         title="Unix time for the most recent error that happened when \
@@ -67,16 +60,14 @@ an update via webhook",
 to the webhook for update delivery",
     )
     allowed_updates: Optional[List[str]] = Field(
-        None,
-        title="A list of update types the bot is subscribed to"
+        None, title="A list of update types the bot is subscribed to"
     )
 
 
 class InlineKeyboardButton(BaseModel):
     text: str = Field(..., title="Label text on the button")
     url: Optional[str] = Field(
-        None,
-        title="HTTP or tg:// url to be opened when button is pressed"
+        None, title="HTTP or tg:// url to be opened when button is pressed"
     )
     callback_data: Optional[str] = Field(
         None,
@@ -116,28 +107,25 @@ Array of KeyboardButton objects",
     resize_keyboard: Optional[bool] = Field(
         None,
         title="Requests clients to resize the keyboard vertically \
-for optimal fit"
+for optimal fit",
     )
     one_time_keyboard: Optional[bool] = Field(
         None,
         title="Requests clients to hide the keyboard as soon as \
-it's been used"
+it's been used",
     )
 
 
 class Message(BaseModel):
     chat_id: int = Field(..., title="Unique identifier for the chat")
     text: str = Field(
-        ...,
-        title="For text messages, the actual UTF-8 text of the message"
+        ..., title="For text messages, the actual UTF-8 text of the message"
     )
     disable_web_page_preview: Optional[bool] = Field(
-        None,
-        title="Disables link previews for links in this message"
+        None, title="Disables link previews for links in this message"
     )
     reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = Field(
-        None,
-        title="Inline or Reply keyboard attached to the message"
+        None, title="Inline or Reply keyboard attached to the message"
     )
 
 

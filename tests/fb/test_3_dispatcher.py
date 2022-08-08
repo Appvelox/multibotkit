@@ -5,7 +5,9 @@ from multibotkit.schemas.fb.incoming import IncomingEvent
 
 
 @pytest.mark.asyncio
-async def test_telegram_dispatcher():
+async def test_fb_dispatcher():
+
+    test_results = {1: False, 2: False}
 
     dp = FacebookDispatcher()
 
@@ -65,10 +67,26 @@ async def test_telegram_dispatcher():
     update = IncomingEvent.parse_obj(incoming_event_dict)
 
     @dp.handler(
-        func=lambda update: update.entry.messaging.message.text.startswith("text"),
-        state_data_func=lambda state_data: state_data["state"] == "state",
+        func=lambda update: update.entry[0]
+        .messaging[0]
+        .message.text.startswith("text"),
+        state_object_func=lambda state_object: state_object.state is None,
     )
-    async def test_handler(update: IncomingEvent, state_data: dict):
-        assert True
+    async def test_handler_1(update: IncomingEvent, state_object: dict):
+        test_results[1] = True
+        await state_object.set_state(state="state")
+
+    @dp.handler(
+        func=lambda update: update.entry[0]
+        .messaging[0]
+        .message.text.startswith("text"),
+        state_object_func=lambda state_object: state_object.state == "state",
+    )
+    async def test_handler_2(update: IncomingEvent, state_object: dict):
+        test_results[2] = True
 
     await dp.process_event(update, state_data)
+    await dp.process_event(update, state_data)
+
+    assert test_results[1]
+    assert test_results[2]

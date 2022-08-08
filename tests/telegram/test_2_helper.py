@@ -74,14 +74,9 @@ def test_sync_helper_set_webhook(httpx_mock: HTTPXMock):
 def test_sync_send_message(httpx_mock: HTTPXMock):
     def send_message_response(request: httpx.Request):
         content = json.loads(request.content.decode())
-        
+
         return httpx.Response(
-            status_code=200,
-            json={
-                "ok": True,
-                "result": True,
-                "message": content
-            }
+            status_code=200, json={"ok": True, "result": True, "message": content}
         )
 
     httpx_mock.add_callback(send_message_response)
@@ -114,7 +109,7 @@ def test_sync_send_message(httpx_mock: HTTPXMock):
         chat_id=1234,
         text="text",
         disable_web_page_preview=False,
-        reply_markup=reply_keyboard_markup
+        reply_markup=reply_keyboard_markup,
     )
 
     assert r == {"ok": True, "result": True, "message": message_dict}
@@ -239,14 +234,9 @@ async def test_async_helper_async_set_webhook(httpx_mock: HTTPXMock):
 async def test_async_send_message(httpx_mock: HTTPXMock):
     def send_message_response(request: httpx.Request):
         content = json.loads(request.content.decode())
-        
+
         return httpx.Response(
-            status_code=200,
-            json={
-                "ok": True,
-                "result": True,
-                "message": content
-            }
+            status_code=200, json={"ok": True, "result": True, "message": content}
         )
 
     httpx_mock.add_callback(send_message_response)
@@ -279,7 +269,7 @@ async def test_async_send_message(httpx_mock: HTTPXMock):
         chat_id=1234,
         text="text",
         disable_web_page_preview=False,
-        reply_markup=reply_keyboard_markup
+        reply_markup=reply_keyboard_markup,
     )
 
     assert r == {"ok": True, "result": True, "message": message_dict}
@@ -292,7 +282,9 @@ async def test_async_helper_answer_callback_query(httpx_mock: HTTPXMock):
 
     httpx_mock.add_callback(answer_callback_response)
 
-    r = await tg_helper.async_answer_callback_query(callback_query_id="callback_query_id")
+    r = await tg_helper.async_answer_callback_query(
+        callback_query_id="callback_query_id"
+    )
 
     assert r == {"ok": True, "result": True}
 

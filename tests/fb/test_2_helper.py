@@ -5,7 +5,11 @@ import pytest
 from pytest_httpx import HTTPXMock
 
 from multibotkit.helpers.fb import FBHelper
-from multibotkit.schemas.fb.outgoing import MessageDataAttachment, PersistentMenu, QuickReply
+from multibotkit.schemas.fb.outgoing import (
+    MessageDataAttachment,
+    PersistentMenu,
+    QuickReply,
+)
 from tests.config import settings
 
 
@@ -83,9 +87,7 @@ def test_sync_send_message(httpx_mock: HTTPXMock):
 
 def test_sync_send_message_arguments_error():
     try:
-        _ = fb_helper.sync_send_message(
-            recipient_id="id"
-        )
+        _ = fb_helper.sync_send_message(recipient_id="id")
         assert False
     except fb_helper._SendMessageArgumentsError:
         assert True
@@ -127,19 +129,17 @@ def test_sync_send_persistent_menu(httpx_mock: HTTPXMock):
         "webview_height_ratio": "webview height ratio",
         "messenger_extensions": False,
         "fallback_url": "fallback url",
-        "webview_share_button": "webview share button"
+        "webview_share_button": "webview share button",
     }
 
     persistent_menu_element_dict = {
         "locale": "locale",
         "composer_input_disabled": False,
         "disabled_surfaces": ["disabled surface"],
-        "call_to_actions": [menu_item_dict]
+        "call_to_actions": [menu_item_dict],
     }
 
-    persistent_menu_dict = {
-        "persistent_menu": [persistent_menu_element_dict]
-    }
+    persistent_menu_dict = {"persistent_menu": [persistent_menu_element_dict]}
 
     persistent_menu = PersistentMenu.parse_obj(persistent_menu_dict)
 
@@ -253,19 +253,17 @@ async def test_async_send_persistent_menu(httpx_mock: HTTPXMock):
         "webview_height_ratio": "webview height ratio",
         "messenger_extensions": False,
         "fallback_url": "fallback url",
-        "webview_share_button": "webview share button"
+        "webview_share_button": "webview share button",
     }
 
     persistent_menu_element_dict = {
         "locale": "locale",
         "composer_input_disabled": False,
         "disabled_surfaces": ["disabled surface"],
-        "call_to_actions": [menu_item_dict]
+        "call_to_actions": [menu_item_dict],
     }
 
-    persistent_menu_dict = {
-        "persistent_menu": [persistent_menu_element_dict]
-    }
+    persistent_menu_dict = {"persistent_menu": [persistent_menu_element_dict]}
 
     persistent_menu = PersistentMenu.parse_obj(persistent_menu_dict)
 
