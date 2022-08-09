@@ -25,13 +25,15 @@ async def test_redis_manager(redis_manager):
 
     state_object = await redis_manager.get_state(state_id=state_id)
 
-    assert state_object.id == state_id
+    assert state_object.db_id == state_id
+    assert state_object.id == state_id.split("_")[1]
     assert state_object.state == state
     assert state_object.data == state_data
 
     await redis_manager.set_state(state_id=state_id)
 
-    assert state_object.id == state_id
+    assert state_object.db_id == state_id
+    assert state_object.id == state_id.split("_")[1]
     assert state_object.state == state
     assert state_object.data == state_data
 
@@ -49,11 +51,12 @@ async def test_redis_manager(redis_manager):
     new_state = "new_state"
     new_data = {"new_key": "new_value"}
 
-    await state_object.set_state(state=new_state, data=new_data)
+    await state_object.set_state(state=new_state, state_data=new_data)
 
     state_object = await redis_manager.get_state(state_id=state_id)
 
-    assert state_object.id == state_id
+    assert state_object.db_id == state_id
+    assert state_object.id == state_id.split("_")[1]
     assert state_object.state == new_state
     assert state_object.data == new_data
 
