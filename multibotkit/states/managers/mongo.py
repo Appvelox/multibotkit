@@ -47,9 +47,9 @@ class MongoStateManager(BaseStateManager):
 
         if doc is None:
             state = State(
-                self, 
-                state_id=state_id, 
-                state=None, 
+                self,
+                state_id=state_id,
+                state=None,
                 state_data=None
             )
             return state

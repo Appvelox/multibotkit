@@ -6,7 +6,7 @@ class TelegramDispatcher(BaseDispatcher):
 
     async def process_event(
         self, event: Update
-    ):    
+    ):
         if event.message is not None:
             sender_id = event.message.from_.id
         if event.callback_query is not None:

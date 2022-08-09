@@ -1,5 +1,3 @@
-from typing import Callable, Optional
-
 from multibotkit.dispatchers.base_dispatcher import BaseDispatcher
 from multibotkit.schemas.viber.incoming import Callback
 

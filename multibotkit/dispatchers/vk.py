@@ -1,4 +1,3 @@
-from typing import Callable, Optional
 from multibotkit.dispatchers.base_dispatcher import BaseDispatcher
 from multibotkit.schemas.vk.incoming import IncomingEvent
 
@@ -17,7 +16,7 @@ class VkontakteDispatcher(BaseDispatcher):
             if state_func is not None:
                 try:
                     state_func_result = state_func(state_object)
-                except:
+                except Exception:
                     continue
             
             func_result = True
