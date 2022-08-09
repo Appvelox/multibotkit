@@ -35,7 +35,7 @@ jobs:
         with:
           mongodb-version: 4.2
       - name: Run bandit
-        run: bandit -r ./multibotkit
+        run: bandit -r ./multibotkit --skip B112
       - name: Run pylama
         run: pylama
       - name: Run tests
