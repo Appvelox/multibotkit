@@ -18,11 +18,5 @@ class BaseDispatcher:
 
         return wrapper
 
-    def default_handler(self):
-        def wrapper(f):
-            self._default_handler = f
-
-        return wrapper
-
     async def process_event(self, event: BaseModel, func: Optional[Callable] = None):
         raise NotImplementedError("process_event is not implemented")
