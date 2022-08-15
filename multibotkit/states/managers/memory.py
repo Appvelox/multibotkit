@@ -50,4 +50,5 @@ class MemoryStateManager(BaseStateManager):
 
 
     async def delete_state(self, state_id: str):
-        self.storage.pop(state_id)
+        if state_id in self.storage.keys():
+            self.storage.pop(state_id)
