@@ -22,7 +22,7 @@ class State:
         self,
         state: Optional[str] = None,
         state_data: Optional[dict] = None
-    ):  
+    ):
         new_state = self.state if state is None else state
         new_data = self.data if state_data is None else state_data
         
