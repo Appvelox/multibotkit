@@ -153,8 +153,8 @@ class Photo(BaseModel):
     photo: str = Field(..., title="photo")
     caption: Optional[str] = Field(None, title="caption")
     parse_mode: str = Field("HTML", title="parse mode")
-    disable_notification: Optional[bool] = Field(None, title="disable notification"),
-    protect_content: Optional[bool] = Field(None, title="protect content"),
-    reply_to_message_id: Optional[int] = Field(None, title="reply to message id"),
-    allow_sending_without_reply: Optional[bool] = Field(None, title="allow sending without reply"),
+    disable_notification: Optional[bool] = Field(None, title="disable notification")
+    protect_content: Optional[bool] = Field(None, title="protect content")
+    reply_to_message_id: Optional[int] = Field(None, title="reply to message id")
+    allow_sending_without_reply: Optional[bool] = Field(None, title="allow sending without reply")
     reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = Field(None, title="reply markup")
