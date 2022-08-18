@@ -186,6 +186,10 @@ class TelegramHelper(BaseHelper):
         allow_sending_without_reply: Optional[bool] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None
     ):
+        reply_markup_dict = None
+        if reply_markup is not None:
+            reply_markup_dict = reply_markup.dict(exclude_none=True)
+        
         url = self.tg_base_url + "sendMessage"
         data = {
             "chat_id": chat_id,
@@ -196,7 +200,7 @@ class TelegramHelper(BaseHelper):
             "protect_content": protect_content,
             "reply_to_message_id": reply_to_message_id,
             "allow_sending_without_reply": allow_sending_without_reply,
-            "reply_markup": reply_markup.dict(exclude_none=True)
+            "reply_markup": reply_markup_dict
         }
         r = self._perform_sync_request(url, data)
         return r
@@ -213,6 +217,10 @@ class TelegramHelper(BaseHelper):
         allow_sending_without_reply: Optional[bool] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None
     ):
+        reply_markup_dict = None
+        if reply_markup is not None:
+            reply_markup_dict = reply_markup.dict(exclude_none=True)
+        
         url = self.tg_base_url + "sendMessage"
         data = {
             "chat_id": chat_id,
@@ -223,7 +231,7 @@ class TelegramHelper(BaseHelper):
             "protect_content": protect_content,
             "reply_to_message_id": reply_to_message_id,
             "allow_sending_without_reply": allow_sending_without_reply,
-            "reply_markup": reply_markup.dict(exclude_none=True)
+            "reply_markup": reply_markup_dict
         }
         r = await self._perform_async_request(url, data)
         return r
