@@ -173,6 +173,18 @@ def test_sync_helper_edit_message_reply_markup(httpx_mock: HTTPXMock):
     assert r == {"ok": True, "result": True}
 
 
+def test_sync_helper_send_photo(httpx_mock: HTTPXMock):
+    def send_photo_response(request: httpx.Request):
+        return httpx.Response(status_code=200, json={"ok": True, "result": True})
+
+    r = tg_helper.sync_send_photo(
+        chat_id=1234,
+        photo="file_id"
+    )
+
+    assert r == {"ok": True, "result": True}
+
+
 @pytest.mark.asyncio
 async def test_async_helper_async_get_webhook_info(httpx_mock: HTTPXMock):
     def webhook_info_response(request: httpx.Request):
@@ -336,6 +348,19 @@ async def test_async_helper_edit_message_reply_markup(httpx_mock: HTTPXMock):
 
     r = await tg_helper.async_edit_message_reply_markup(
         chat_id=1234, message_id=1111, reply_markup=reply_keyboard_markup
+    )
+
+    assert r == {"ok": True, "result": True}
+
+
+@pytest.mark.asyncio
+async def test_async_helper_send_photo(httpx_mock: HTTPXMock):
+    def send_photo_response(request: httpx.Request):
+        return httpx.Response(status_code=200, json={"ok": True, "result": True})
+
+    r = await tg_helper.async_send_photo(
+        chat_id=1234,
+        photo="file_id"
     )
 
     assert r == {"ok": True, "result": True}

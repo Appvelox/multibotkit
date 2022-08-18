@@ -172,3 +172,58 @@ class TelegramHelper(BaseHelper):
             data = {"chat_id": chat_id, "message_id": message_id, "reply_markup": {}}
         r = await self._perform_async_request(url, data)
         return r
+    
+
+    def sync_send_photo(
+        self,
+        chat_id: int,
+        photo: str,
+        caption: Optional[str] = None,
+        parse_mode: str = "HTML",
+        disable_notification: Optional[bool] = None,
+        protect_content: Optional[bool] = None,
+        reply_to_message_id: Optional[int] = None,
+        allow_sending_without_reply: Optional[bool] = None,
+        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None
+    ):
+        url = self.tg_base_url + "sendMessage"
+        data = {
+            "chat_id": chat_id,
+            "photo": photo,
+            "caption": caption,
+            "parse_mode": parse_mode,
+            "disable_notification": disable_notification,
+            "protect_content": protect_content,
+            "reply_to_message_id": reply_to_message_id,
+            "allow_sending_without_reply": allow_sending_without_reply,
+            "reply_markup": reply_markup.dict(exclude_none=True)
+        }
+        r = self._perform_sync_request(url, data)
+        return r
+
+    async def async_send_photo(
+        self,
+        chat_id: int,
+        photo: str,
+        caption: Optional[str] = None,
+        parse_mode: str = "HTML",
+        disable_notification: Optional[bool] = None,
+        protect_content: Optional[bool] = None,
+        reply_to_message_id: Optional[int] = None,
+        allow_sending_without_reply: Optional[bool] = None,
+        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None
+    ):
+        url = self.tg_base_url + "sendMessage"
+        data = {
+            "chat_id": chat_id,
+            "photo": photo,
+            "caption": caption,
+            "parse_mode": parse_mode,
+            "disable_notification": disable_notification,
+            "protect_content": protect_content,
+            "reply_to_message_id": reply_to_message_id,
+            "allow_sending_without_reply": allow_sending_without_reply,
+            "reply_markup": reply_markup.dict(exclude_none=True)
+        }
+        r = await self._perform_async_request(url, data)
+        return r
