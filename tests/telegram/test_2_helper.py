@@ -177,6 +177,8 @@ def test_sync_helper_send_photo(httpx_mock: HTTPXMock):
     def send_photo_response(request: httpx.Request):
         return httpx.Response(status_code=200, json={"ok": True, "result": True})
 
+    httpx_mock.add_callback(send_photo_response)
+
     r = tg_helper.sync_send_photo(
         chat_id=1234,
         photo="file_id"
@@ -357,6 +359,8 @@ async def test_async_helper_edit_message_reply_markup(httpx_mock: HTTPXMock):
 async def test_async_helper_send_photo(httpx_mock: HTTPXMock):
     def send_photo_response(request: httpx.Request):
         return httpx.Response(status_code=200, json={"ok": True, "result": True})
+
+    httpx_mock.add_callback(send_photo_response)
 
     r = await tg_helper.async_send_photo(
         chat_id=1234,
