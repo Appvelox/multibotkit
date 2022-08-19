@@ -1,9 +1,19 @@
+from tempfile import NamedTemporaryFile
 from typing import Optional, Union
+
+import httpx
+from tenacity import (
+    retry,
+    retry_if_exception_type,
+    stop_after_attempt,
+    wait_exponential,
+)
 
 from multibotkit.helpers.base_helper import BaseHelper
 from multibotkit.schemas.telegram.outgoing import (
     InlineKeyboardMarkup,
     Message,
+    Photo,
     ReplyKeyboardMarkup,
     SetWebhookParams,
     WebhookInfo,
@@ -172,3 +182,122 @@ class TelegramHelper(BaseHelper):
             data = {"chat_id": chat_id, "message_id": message_id, "reply_markup": {}}
         r = await self._perform_async_request(url, data)
         return r
+    
+
+    def sync_send_photo(
+        self,
+        chat_id: int,
+        photo: str,
+        caption: Optional[str] = None,
+        parse_mode: str = "HTML",
+        disable_notification: Optional[bool] = None,
+        protect_content: Optional[bool] = None,
+        reply_to_message_id: Optional[int] = None,
+        allow_sending_without_reply: Optional[bool] = None,
+        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None
+    ):
+        photo = Photo(
+            chat_id=chat_id,
+            photo=photo,
+            caption=caption,
+            parse_mode=parse_mode,
+            disable_notification=disable_notification,
+            protect_content=protect_content,
+            reply_to_message_id=reply_to_message_id,
+            allow_sending_without_reply=allow_sending_without_reply,
+            reply_markup=reply_markup
+        )
+
+        url = self.tg_base_url + "sendPhoto"
+        data = photo.dict(exclude_none=True)
+        
+        r = self._perform_sync_request(url, data)
+        return r
+
+    async def async_send_photo(
+        self,
+        chat_id: int,
+        photo: str,
+        caption: Optional[str] = None,
+        parse_mode: str = "HTML",
+        disable_notification: Optional[bool] = None,
+        protect_content: Optional[bool] = None,
+        reply_to_message_id: Optional[int] = None,
+        allow_sending_without_reply: Optional[bool] = None,
+        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None
+    ):
+        photo = Photo(
+            chat_id=chat_id,
+            photo=photo,
+            caption=caption,
+            parse_mode=parse_mode,
+            disable_notification=disable_notification,
+            protect_content=protect_content,
+            reply_to_message_id=reply_to_message_id,
+            allow_sending_without_reply=allow_sending_without_reply,
+            reply_markup=reply_markup
+        )
+
+        url = self.tg_base_url + "sendPhoto"
+        data = photo.dict(exclude_none=True)
+        
+        r = await self._perform_async_request(url, data)
+        return r
+
+    @retry(
+        retry=retry_if_exception_type(httpx.HTTPError),
+        reraise=True,
+        stop=stop_after_attempt(5),
+        wait=wait_exponential(multiplier=1, min=4, max=10),
+    )
+    def sync_get_file(self, file_id: str):
+
+        url = self.tg_base_url + "getFile"
+        data = {
+            "file_id": file_id
+        }
+        r = self._perform_sync_request(url, data)
+
+        file_path = r["result"]["file_path"]
+        download_url = f"https://api.telegram.org/file/bot{self.token}/{file_path}"
+        
+        doc_file = NamedTemporaryFile()
+        doc_name = doc_file.name
+        
+        file = open(doc_name, "wb")
+        with httpx.stream(method="GET", url=download_url) as result:
+            for data in result.iter_bytes():
+                file.write(data)
+        file.close()
+
+        return doc_file
+    
+
+    @retry(
+        retry=retry_if_exception_type(httpx.HTTPError),
+        reraise=True,
+        stop=stop_after_attempt(5),
+        wait=wait_exponential(multiplier=1, min=4, max=10),
+    )
+    async def async_get_file(self, file_id: str):
+
+        url = self.tg_base_url + "getFile"
+        data = {
+            "file_id": file_id
+        }
+        r = await self._perform_async_request(url, data)
+
+        file_path = r["result"]["file_path"]
+        download_url = f"https://api.telegram.org/file/bot{self.token}/{file_path}"
+        
+        doc_file = NamedTemporaryFile()
+        doc_name = doc_file.name
+        
+        file = open(doc_name, "wb")
+        client = httpx.AsyncClient()
+        async with client.stream(method="GET", url=download_url) as result:
+            async for data in result.aiter_bytes():
+                file.write(data)
+        file.close()
+
+        return doc_file
