@@ -1,7 +1,7 @@
 import httpx
 import json
 import pytest
-from pytest_httpx import HTTPXMock
+from pytest_httpx import HTTPXMock, IteratorStream
 
 from multibotkit.helpers.telegram import TelegramHelper
 from multibotkit.schemas.telegram.outgoing import (
@@ -187,6 +187,22 @@ def test_sync_helper_send_photo(httpx_mock: HTTPXMock):
     assert r == {"ok": True, "result": True}
 
 
+def test_sync_helper_get_file(httpx_mock: HTTPXMock):
+    def get_file_path_response(request: httpx.Request):
+        return httpx.Response(
+            status_code=200,
+            json={"ok": True, "result": {"file_path": "file_path"}}
+        )
+    
+    httpx_mock.add_callback(get_file_path_response)
+    httpx_mock.add_response(stream=IteratorStream([b"part 1", b"part 2"]))
+
+    doc = tg_helper.sync_get_file(file_id="file_id")
+    with open(doc.name, "rb") as f:
+        assert f.readline() == b"part 1part 2"
+    f.close()
+
+
 @pytest.mark.asyncio
 async def test_async_helper_async_get_webhook_info(httpx_mock: HTTPXMock):
     def webhook_info_response(request: httpx.Request):
@@ -368,3 +384,20 @@ async def test_async_helper_send_photo(httpx_mock: HTTPXMock):
     )
 
     assert r == {"ok": True, "result": True}
+
+
+@pytest.mark.asyncio
+async def test_async_helper_get_file(httpx_mock: HTTPXMock):
+    def get_file_path_response(request: httpx.Request):
+        return httpx.Response(
+            status_code=200,
+            json={"ok": True, "result": {"file_path": "file_path"}}
+        )
+    
+    httpx_mock.add_callback(get_file_path_response)
+    httpx_mock.add_response(stream=IteratorStream([b"part 1", b"part 2"]))
+
+    doc = await tg_helper.async_get_file(file_id="file_id")
+    with open(doc.name, "rb") as f:
+        assert f.readline() == b"part 1part 2"
+    f.close()

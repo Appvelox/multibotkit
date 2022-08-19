@@ -1,4 +1,13 @@
+from tempfile import NamedTemporaryFile
 from typing import Optional, Union
+
+import httpx
+from tenacity import (
+    retry,
+    retry_if_exception_type,
+    stop_after_attempt,
+    wait_exponential,
+)
 
 from multibotkit.helpers.base_helper import BaseHelper
 from multibotkit.schemas.telegram.outgoing import (
@@ -234,3 +243,61 @@ class TelegramHelper(BaseHelper):
         
         r = await self._perform_async_request(url, data)
         return r
+
+    @retry(
+        retry=retry_if_exception_type(httpx.HTTPError),
+        reraise=True,
+        stop=stop_after_attempt(5),
+        wait=wait_exponential(multiplier=1, min=4, max=10),
+    )
+    def sync_get_file(self, file_id: str):
+
+        url = self.tg_base_url + "getFile"
+        data = {
+            "file_id": file_id
+        }
+        r = self._perform_sync_request(url, data)
+
+        file_path = r["result"]["file_path"]
+        download_url = f"https://api.telegram.org/file/bot{self.token}/{file_path}"
+        
+        doc_file = NamedTemporaryFile()
+        doc_name = doc_file.name
+        
+        file = open(doc_name, "wb")
+        with httpx.stream(method="GET", url=download_url) as result:
+            for data in result.iter_bytes():
+                file.write(data)
+        file.close()
+
+        return doc_file
+    
+
+    @retry(
+        retry=retry_if_exception_type(httpx.HTTPError),
+        reraise=True,
+        stop=stop_after_attempt(5),
+        wait=wait_exponential(multiplier=1, min=4, max=10),
+    )
+    async def async_get_file(self, file_id: str):
+
+        url = self.tg_base_url + "getFile"
+        data = {
+            "file_id": file_id
+        }
+        r = await self._perform_async_request(url, data)
+
+        file_path = r["result"]["file_path"]
+        download_url = f"https://api.telegram.org/file/bot{self.token}/{file_path}"
+        
+        doc_file = NamedTemporaryFile()
+        doc_name = doc_file.name
+        
+        file = open(doc_name, "wb")
+        client = httpx.AsyncClient()
+        async with client.stream(method="GET", url=download_url) as result:
+            async for data in result.aiter_bytes():
+                file.write(data)
+        file.close()
+
+        return doc_file
