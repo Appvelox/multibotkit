@@ -1,5 +1,5 @@
 from tempfile import NamedTemporaryFile
-from typing import Optional, Union
+from typing import Optional, Union, List
 
 import httpx
 from tenacity import (
@@ -16,7 +16,7 @@ from multibotkit.schemas.telegram.outgoing import (
     Photo,
     ReplyKeyboardMarkup,
     SetWebhookParams,
-    WebhookInfo,
+    WebhookInfo, InputMediaPhoto, MediaGroup,
 )
 
 
@@ -182,7 +182,6 @@ class TelegramHelper(BaseHelper):
             data = {"chat_id": chat_id, "message_id": message_id, "reply_markup": {}}
         r = await self._perform_async_request(url, data)
         return r
-    
 
     def sync_send_photo(
         self,
@@ -301,3 +300,45 @@ class TelegramHelper(BaseHelper):
         file.close()
 
         return doc_file
+
+    def sync_send_media_group(
+        self,
+        chat_id: int,
+        photos: List[str],
+    ):
+        photos_list = []
+        for photo in photos:
+            photos_list.append(
+                InputMediaPhoto(media=photo)
+            )
+        media_group = MediaGroup(
+            chat_id=chat_id,
+            media=photos_list
+        )
+
+        url = self.tg_base_url + "sendMediaGroup"
+        data = media_group.dict(exclude_none=True)
+
+        r = self._perform_sync_request(url, data)
+        return r
+
+    async def async_send_media_group(
+        self,
+        chat_id: int,
+        photos: List[str],
+    ):
+        photos_list = []
+        for photo in photos:
+            photos_list.append(
+                InputMediaPhoto(media=photo)
+            )
+        media_group = MediaGroup(
+            chat_id=chat_id,
+            media=photos_list
+        )
+
+        url = self.tg_base_url + "sendMediaGroup"
+        data = media_group.dict(exclude_none=True)
+
+        r = await self._perform_async_request(url, data)
+        return r
