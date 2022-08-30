@@ -18,8 +18,17 @@ class BaseHelper:
         stop=stop_after_attempt(5),
         wait=wait_exponential(multiplier=1, min=4, max=10),
     )
-    def _perform_sync_request(self, url: str, data: Optional[dict] = None):
-        r = httpx.post(url=url, json=data)
+    def _perform_sync_request(
+        self,
+        url: str,
+        data: Optional[dict] = None,
+        use_json: bool = True,
+        files: Optional[dict] = None
+    ):
+        if use_json:
+            r = httpx.post(url=url, json=data)
+        else:
+            r = httpx.post(url=url, data=data, files=files)
         return r.json()
 
     @retry(
@@ -29,7 +38,16 @@ class BaseHelper:
         stop=stop_after_attempt(5),
         wait=wait_exponential(multiplier=1, min=4, max=10),
     )
-    async def _perform_async_request(self, url: str, data: Optional[dict] = None):
+    async def _perform_async_request(
+        self,
+        url: str,
+        data: Optional[dict] = None,
+        use_json: bool = True,
+        files: Optional[dict] = None
+    ):
         async with httpx.AsyncClient() as client:
-            r = await client.post(url=url, json=data)
+            if use_json:
+                r = await client.post(url=url, json=data)
+            else:
+                r = await client.post(url=url, data=data, files=files)
         return r.json()
