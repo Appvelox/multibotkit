@@ -1,5 +1,5 @@
 from tempfile import NamedTemporaryFile
-from typing import Optional, Union, List
+from typing import IO, Optional, Union, List
 
 import httpx
 from tenacity import (
@@ -186,7 +186,7 @@ class TelegramHelper(BaseHelper):
     def sync_send_photo(
         self,
         chat_id: int,
-        photo: str,
+        photo: Union[str, IO],
         caption: Optional[str] = None,
         parse_mode: str = "HTML",
         disable_notification: Optional[bool] = None,
@@ -195,9 +195,28 @@ class TelegramHelper(BaseHelper):
         allow_sending_without_reply: Optional[bool] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None
     ):
-        photo = Photo(
+        if type(photo) == str:
+            photo_obj = Photo(
+                chat_id=chat_id,
+                photo=photo,
+                caption=caption,
+                parse_mode=parse_mode,
+                disable_notification=disable_notification,
+                protect_content=protect_content,
+                reply_to_message_id=reply_to_message_id,
+                allow_sending_without_reply=allow_sending_without_reply,
+                reply_markup=reply_markup
+            )
+
+            url = self.tg_base_url + "sendPhoto"
+            data = photo_obj.dict(exclude_none=True)
+            
+            r = self._perform_sync_request(url, data)
+            return r
+        
+        photo_obj = Photo(
             chat_id=chat_id,
-            photo=photo,
+            photo=f"attach://{photo.name}",
             caption=caption,
             parse_mode=parse_mode,
             disable_notification=disable_notification,
@@ -208,15 +227,16 @@ class TelegramHelper(BaseHelper):
         )
 
         url = self.tg_base_url + "sendPhoto"
-        data = photo.dict(exclude_none=True)
+        data = photo_obj.dict(exclude_none=True)
+        files = {photo.name: open(photo.name, "rb")}
         
-        r = self._perform_sync_request(url, data)
+        r = self._perform_sync_request(url, data, use_json=False, files=files)
         return r
 
     async def async_send_photo(
         self,
         chat_id: int,
-        photo: str,
+        photo: Union[str, IO],
         caption: Optional[str] = None,
         parse_mode: str = "HTML",
         disable_notification: Optional[bool] = None,
@@ -225,9 +245,28 @@ class TelegramHelper(BaseHelper):
         allow_sending_without_reply: Optional[bool] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None
     ):
-        photo = Photo(
+        if type(photo) == str:
+            photo = Photo(
+                chat_id=chat_id,
+                photo=photo,
+                caption=caption,
+                parse_mode=parse_mode,
+                disable_notification=disable_notification,
+                protect_content=protect_content,
+                reply_to_message_id=reply_to_message_id,
+                allow_sending_without_reply=allow_sending_without_reply,
+                reply_markup=reply_markup
+            )
+
+            url = self.tg_base_url + "sendPhoto"
+            data = photo.dict(exclude_none=True)
+            
+            r = await self._perform_async_request(url, data)
+            return r
+        
+        photo_obj = Photo(
             chat_id=chat_id,
-            photo=photo,
+            photo=f"attach://{photo.name}",
             caption=caption,
             parse_mode=parse_mode,
             disable_notification=disable_notification,
@@ -238,10 +277,12 @@ class TelegramHelper(BaseHelper):
         )
 
         url = self.tg_base_url + "sendPhoto"
-        data = photo.dict(exclude_none=True)
+        data = photo_obj.dict(exclude_none=True)
+        files = {photo.name: open(photo.name, "rb")}
         
-        r = await self._perform_async_request(url, data)
+        r = await self._perform_async_request(url, data, use_json=False, files=files)
         return r
+
 
     @retry(
         retry=retry_if_exception_type(httpx.HTTPError),
