@@ -6,7 +6,7 @@ class TelegramDispatcher(BaseDispatcher):
 
     async def process_event(
         self, event: Update
-    ):
+    ):  
         if event.message is not None:
             sender_id = event.message.from_.id
         if event.callback_query is not None:
@@ -35,4 +35,16 @@ class TelegramDispatcher(BaseDispatcher):
             
             if summary_result:
                 await handler(event, state_object)
+                
+                if self.logger:
+                    new_state_object = await self.state_manager.get_state(state_id)
+                    event_log = {
+                        "telegram_id": state_object.id,
+                        "old_state": state_object.state,
+                        "old_state_data": state_object.data,
+                        "new_state": new_state_object.state,
+                        "new_state_data": new_state_object.data,
+                        "event": event.dict()
+                    }
+                    self.logger.info(f"Incoming Telegram event: {event_log}")
                 return
