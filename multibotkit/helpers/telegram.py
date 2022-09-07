@@ -1,5 +1,4 @@
 from io import BytesIO
-from tempfile import NamedTemporaryFile
 from typing import IO, Optional, Union, List
 
 import httpx
