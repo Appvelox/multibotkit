@@ -209,9 +209,7 @@ def test_sync_helper_get_file(httpx_mock: HTTPXMock):
     httpx_mock.add_response(stream=IteratorStream([b"part 1", b"part 2"]))
 
     doc = tg_helper.sync_get_file(file_id="file_id")
-    with open(doc.name, "rb") as f:
-        assert f.readline() == b"part 1part 2"
-    f.close()
+    assert doc.readline() == b"part 1part 2"
 
 
 @pytest.mark.asyncio
@@ -419,6 +417,4 @@ async def test_async_helper_get_file(httpx_mock: HTTPXMock):
     httpx_mock.add_response(stream=IteratorStream([b"part 1", b"part 2"]))
 
     doc = await tg_helper.async_get_file(file_id="file_id")
-    with open(doc.name, "rb") as f:
-        assert f.readline() == b"part 1part 2"
-    f.close()
+    assert doc.readline() == b"part 1part 2"
