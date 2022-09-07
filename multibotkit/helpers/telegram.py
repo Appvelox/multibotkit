@@ -1,3 +1,4 @@
+from io import BytesIO
 from tempfile import NamedTemporaryFile
 from typing import IO, Optional, Union, List
 
@@ -301,17 +302,13 @@ class TelegramHelper(BaseHelper):
         file_path = r["result"]["file_path"]
         download_url = f"https://api.telegram.org/file/bot{self.token}/{file_path}"
         
-        doc_file = NamedTemporaryFile()
-        doc_name = doc_file.name
-        
-        file = open(doc_name, "wb")
+        io_object = BytesIO()
         with httpx.stream(method="GET", url=download_url) as result:
             for data in result.iter_bytes():
-                file.write(data)
-        file.close()
+                io_object.write(data)
+        io_object.seek(0)
 
-        return doc_file
-    
+        return io_object
 
     @retry(
         retry=retry_if_exception_type(httpx.HTTPError),
@@ -329,18 +326,15 @@ class TelegramHelper(BaseHelper):
 
         file_path = r["result"]["file_path"]
         download_url = f"https://api.telegram.org/file/bot{self.token}/{file_path}"
-        
-        doc_file = NamedTemporaryFile()
-        doc_name = doc_file.name
-        
-        file = open(doc_name, "wb")
         client = httpx.AsyncClient()
+
+        io_object = BytesIO()
         async with client.stream(method="GET", url=download_url) as result:
             async for data in result.aiter_bytes():
-                file.write(data)
-        file.close()
+                io_object.write(data)
+        io_object.seek(0)
 
-        return doc_file
+        return io_object
 
     def sync_send_media_group(
         self,
