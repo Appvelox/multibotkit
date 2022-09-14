@@ -1,6 +1,8 @@
 from io import BytesIO
+import json
 from typing import IO, Optional, Union, List
 
+import aiofiles
 import httpx
 from tenacity import (
     retry,
@@ -278,7 +280,9 @@ class TelegramHelper(BaseHelper):
 
         url = self.tg_base_url + "sendPhoto"
         data = photo_obj.dict(exclude_none=True)
-        files = {photo.name: open(photo.name, "rb")}
+        async with aiofiles.open(photo.name, "rb") as f:
+            contents = await f.read()
+            files = {photo.name: contents}
         
         r = await self._perform_async_request(url, data, use_json=False, files=files)
         return r
@@ -338,41 +342,81 @@ class TelegramHelper(BaseHelper):
     def sync_send_media_group(
         self,
         chat_id: int,
-        photos: List[str],
+        photos: Union[List[str], List[IO]]
     ):
+        files = {}
         photos_list = []
+
+        if type(photos[-1]) == str:
+            for photo in photos:
+                photos_list.append(
+                    InputMediaPhoto(media=photo)
+                )
+            
+            media_group = MediaGroup(
+                chat_id=chat_id,
+                media=photos_list
+            )
+            url = self.tg_base_url + "sendMediaGroup"
+            data = media_group.dict(exclude_none=True)
+
+            r = self._perform_sync_request(url, data)
+            return r
+
         for photo in photos:
             photos_list.append(
-                InputMediaPhoto(media=photo)
+                InputMediaPhoto(media=f"attach://{photo.name}")
             )
+            files[photo.name] = photo
+        
         media_group = MediaGroup(
             chat_id=chat_id,
             media=photos_list
         )
-
         url = self.tg_base_url + "sendMediaGroup"
         data = media_group.dict(exclude_none=True)
+        data["media"] = json.dumps(data["media"])
 
-        r = self._perform_sync_request(url, data)
+        r = self._perform_sync_request(url, data, use_json=False, files=files)
         return r
 
     async def async_send_media_group(
         self,
         chat_id: int,
-        photos: List[str],
+        photos: Union[List[str], List[IO]]
     ):
+        files = {}
         photos_list = []
+
+        if type(photos[-1]) == str:
+            for photo in photos:
+                photos_list.append(
+                    InputMediaPhoto(media=photo)
+                )
+            
+            media_group = MediaGroup(
+                chat_id=chat_id,
+                media=photos_list
+            )
+            url = self.tg_base_url + "sendMediaGroup"
+            data = media_group.dict(exclude_none=True)
+
+            r = await self._perform_async_request(url, data)
+            return r
+
         for photo in photos:
             photos_list.append(
-                InputMediaPhoto(media=photo)
+                InputMediaPhoto(media=f"attach://{photo.name}")
             )
+            files[photo.name] = photo
+        
         media_group = MediaGroup(
             chat_id=chat_id,
             media=photos_list
         )
-
         url = self.tg_base_url + "sendMediaGroup"
         data = media_group.dict(exclude_none=True)
+        data["media"] = json.dumps(data["media"])
 
-        r = await self._perform_async_request(url, data)
+        r = await self._perform_async_request(url, data, use_json=False, files=files)
         return r
