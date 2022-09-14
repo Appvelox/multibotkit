@@ -20,7 +20,6 @@ motor==3.0.0
 packaging==21.3
 pbr==5.9.0
 Pillow==9.2.0
-pkg_resources==0.0.0
 platformdirs==2.5.2
 pluggy==1.0.0
 py==1.11.0
