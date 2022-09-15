@@ -1,6 +1,8 @@
 from io import BytesIO
+import json
 from typing import IO, Optional, Union, List
 
+import aiofiles
 import httpx
 from tenacity import (
     retry,
@@ -196,6 +198,48 @@ class TelegramHelper(BaseHelper):
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None
     ):
         if type(photo) == str:
+            if photo.startswith("http://") or photo.startswith("https://"):
+                photo_obj = Photo(
+                    chat_id=chat_id,
+                    photo=photo,
+                    caption=caption,
+                    parse_mode=parse_mode,
+                    disable_notification=disable_notification,
+                    protect_content=protect_content,
+                    reply_to_message_id=reply_to_message_id,
+                    allow_sending_without_reply=allow_sending_without_reply,
+                    reply_markup=reply_markup
+                )
+
+                url = self.tg_base_url + "sendPhoto"
+                data = photo_obj.dict(exclude_none=True)
+                
+                r = self._perform_sync_request(url, data)
+                return r
+            
+            ends = [".jpg", ".jpeg", ".gif", ".png"]
+            for end in ends:
+                if photo.endswith(end):
+                    opened_photo = open(photo, "rb")
+                    photo_obj = Photo(
+                        chat_id=chat_id,
+                        photo=f"attach://{photo}",
+                        caption=caption,
+                        parse_mode=parse_mode,
+                        disable_notification=disable_notification,
+                        protect_content=protect_content,
+                        reply_to_message_id=reply_to_message_id,
+                        allow_sending_without_reply=allow_sending_without_reply,
+                        reply_markup=reply_markup
+                    )
+
+                    url = self.tg_base_url + "sendPhoto"
+                    data = photo_obj.dict(exclude_none=True)
+                    files = {photo: opened_photo}
+                    
+                    r = self._perform_sync_request(url, data, use_json=False, files=files)
+                    return r
+            
             photo_obj = Photo(
                 chat_id=chat_id,
                 photo=photo,
@@ -216,7 +260,7 @@ class TelegramHelper(BaseHelper):
         
         photo_obj = Photo(
             chat_id=chat_id,
-            photo=f"attach://{photo.name}",
+            photo="attach://image",
             caption=caption,
             parse_mode=parse_mode,
             disable_notification=disable_notification,
@@ -228,7 +272,7 @@ class TelegramHelper(BaseHelper):
 
         url = self.tg_base_url + "sendPhoto"
         data = photo_obj.dict(exclude_none=True)
-        files = {photo.name: open(photo.name, "rb")}
+        files = {"image": photo}
         
         r = self._perform_sync_request(url, data, use_json=False, files=files)
         return r
@@ -246,7 +290,48 @@ class TelegramHelper(BaseHelper):
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None
     ):
         if type(photo) == str:
-            photo = Photo(
+            if photo.startswith("http://") or photo.startswith("https://"):
+                photo_obj = Photo(
+                    chat_id=chat_id,
+                    photo=photo,
+                    caption=caption,
+                    parse_mode=parse_mode,
+                    disable_notification=disable_notification,
+                    protect_content=protect_content,
+                    reply_to_message_id=reply_to_message_id,
+                    allow_sending_without_reply=allow_sending_without_reply,
+                    reply_markup=reply_markup
+                )
+
+                url = self.tg_base_url + "sendPhoto"
+                data = photo_obj.dict(exclude_none=True)
+                r = self._perform_sync_request(url, data)
+                return r
+            
+            ends = [".jpg", ".jpeg", ".gif", ".png"]
+            for end in ends:
+                if photo.endswith(end):
+                    async with aiofiles.open(photo, "rb") as opened_photo:
+                        content = await opened_photo.read()
+                    photo_obj = Photo(
+                        chat_id=chat_id,
+                        photo=f"attach://{photo}",
+                        caption=caption,
+                        parse_mode=parse_mode,
+                        disable_notification=disable_notification,
+                        protect_content=protect_content,
+                        reply_to_message_id=reply_to_message_id,
+                        allow_sending_without_reply=allow_sending_without_reply,
+                        reply_markup=reply_markup
+                    )
+
+                    url = self.tg_base_url + "sendPhoto"
+                    data = photo_obj.dict(exclude_none=True)
+                    files = {photo: content}
+                    r = self._perform_sync_request(url, data, use_json=False, files=files)
+                    return r
+            
+            photo_obj = Photo(
                 chat_id=chat_id,
                 photo=photo,
                 caption=caption,
@@ -259,14 +344,13 @@ class TelegramHelper(BaseHelper):
             )
 
             url = self.tg_base_url + "sendPhoto"
-            data = photo.dict(exclude_none=True)
-            
-            r = await self._perform_async_request(url, data)
+            data = photo_obj.dict(exclude_none=True)
+            r = self._perform_sync_request(url, data)
             return r
         
         photo_obj = Photo(
             chat_id=chat_id,
-            photo=f"attach://{photo.name}",
+            photo="attach://image",
             caption=caption,
             parse_mode=parse_mode,
             disable_notification=disable_notification,
@@ -278,9 +362,8 @@ class TelegramHelper(BaseHelper):
 
         url = self.tg_base_url + "sendPhoto"
         data = photo_obj.dict(exclude_none=True)
-        files = {photo.name: open(photo.name, "rb")}
-        
-        r = await self._perform_async_request(url, data, use_json=False, files=files)
+        files = {"image": photo}
+        r = self._perform_sync_request(url, data, use_json=False, files=files)
         return r
 
 
@@ -338,41 +421,148 @@ class TelegramHelper(BaseHelper):
     def sync_send_media_group(
         self,
         chat_id: int,
-        photos: List[str],
+        photos: Union[List[str], List[IO]]
     ):
+        files = {}
         photos_list = []
-        for photo in photos:
-            photos_list.append(
-                InputMediaPhoto(media=photo)
+
+        if type(photos[-1]) == str:
+            if photos[-1].startswith("http://") or photos[-1].startswith("https://"):
+                for photo in photos:
+                    photos_list.append(
+                        InputMediaPhoto(media=photo)
+                    )
+                
+                media_group = MediaGroup(
+                    chat_id=chat_id,
+                    media=photos_list
+                )
+                url = self.tg_base_url + "sendMediaGroup"
+                data = media_group.dict(exclude_none=True)
+                r = self._perform_sync_request(url, data)
+                return r
+            
+            ends = [".jpg", ".jpeg", ".gif", ".png"]
+            for end in ends:
+                if photos[-1].endswith(end):
+                    for photo in photos:
+                        photos_list.append(
+                            InputMediaPhoto(media=f"attach://{photo}")
+                        )
+                        content = open(photo, "rb")
+                        files[photo] = content
+                    
+                    media_group = MediaGroup(
+                        chat_id=chat_id,
+                        media=photos_list
+                    )
+                    url = self.tg_base_url + "sendMediaGroup"
+                    data = media_group.dict(exclude_none=True)
+                    data["media"] = json.dumps(data["media"])
+                    r = self._perform_sync_request(url, data, use_json=False, files=files)
+                    return r
+
+            for photo in photos:
+                photos_list.append(
+                    InputMediaPhoto(media=photo)
+                )
+            
+            media_group = MediaGroup(
+                chat_id=chat_id,
+                media=photos_list
             )
+            url = self.tg_base_url + "sendMediaGroup"
+            data = media_group.dict(exclude_none=True)
+            r = self._perform_sync_request(url, data)
+            return r
+
+        for i in range(len(photos)):
+            photos_list.append(
+                InputMediaPhoto(media=f"attach://image_{i}")
+            )
+            files[f"image_{i}"] = photos[i]
+        
         media_group = MediaGroup(
             chat_id=chat_id,
             media=photos_list
         )
-
         url = self.tg_base_url + "sendMediaGroup"
         data = media_group.dict(exclude_none=True)
-
-        r = self._perform_sync_request(url, data)
+        data["media"] = json.dumps(data["media"])
+        r = self._perform_sync_request(url, data, use_json=False, files=files)
         return r
 
     async def async_send_media_group(
         self,
         chat_id: int,
-        photos: List[str],
+        photos: Union[List[str], List[IO]]
     ):
+        files = {}
         photos_list = []
-        for photo in photos:
-            photos_list.append(
-                InputMediaPhoto(media=photo)
+
+        if type(photos[-1]) == str:
+            if photos[-1].startswith("http://") or photos[-1].startswith("https://"):
+                for photo in photos:
+                    photos_list.append(
+                        InputMediaPhoto(media=photo)
+                    )
+                
+                media_group = MediaGroup(
+                    chat_id=chat_id,
+                    media=photos_list
+                )
+                url = self.tg_base_url + "sendMediaGroup"
+                data = media_group.dict(exclude_none=True)
+                r = await self._perform_async_request(url, data)
+                return r
+            
+            ends = [".jpg", ".jpeg", ".gif", ".png"]
+            for end in ends:
+                if photos[-1].endswith(end):
+                    for photo in photos:
+                        photos_list.append(
+                            InputMediaPhoto(media=f"attach://{photo}")
+                        )
+                        async with aiofiles.open(photo, "rb") as opened_photo:
+                            content = await opened_photo.read()
+                        files[photo] = content
+                    
+                    media_group = MediaGroup(
+                        chat_id=chat_id,
+                        media=photos_list
+                    )
+                    url = self.tg_base_url + "sendMediaGroup"
+                    data = media_group.dict(exclude_none=True)
+                    data["media"] = json.dumps(data["media"])
+                    r = await self._perform_async_request(url, data, use_json=False, files=files)
+                    return r
+
+            for photo in photos:
+                photos_list.append(
+                    InputMediaPhoto(media=photo)
+                )
+            
+            media_group = MediaGroup(
+                chat_id=chat_id,
+                media=photos_list
             )
+            url = self.tg_base_url + "sendMediaGroup"
+            data = media_group.dict(exclude_none=True)
+            r = await self._perform_async_request(url, data)
+            return r
+
+        for i in range(len(photos)):
+            photos_list.append(
+                InputMediaPhoto(media=f"attach://image_{i}")
+            )
+            files[f"image_{i}"] = photos[i]
+        
         media_group = MediaGroup(
             chat_id=chat_id,
             media=photos_list
         )
-
         url = self.tg_base_url + "sendMediaGroup"
         data = media_group.dict(exclude_none=True)
-
-        r = await self._perform_async_request(url, data)
+        data["media"] = json.dumps(data["media"])
+        r = await self._perform_async_request(url, data, use_json=False, files=files)
         return r

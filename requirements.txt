@@ -1,3 +1,4 @@
+aiofiles==22.1.0
 aioredis==2.0.1
 anyio==3.6.1
 async-timeout==4.0.2
