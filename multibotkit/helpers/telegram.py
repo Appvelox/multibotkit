@@ -272,7 +272,7 @@ class TelegramHelper(BaseHelper):
 
         url = self.tg_base_url + "sendPhoto"
         data = photo_obj.dict(exclude_none=True)
-        files = {photo.name: open(photo.name, "rb")}
+        files = {photo.name: photo}
         
         r = self._perform_sync_request(url, data, use_json=False, files=files)
         return r
@@ -362,9 +362,7 @@ class TelegramHelper(BaseHelper):
 
         url = self.tg_base_url + "sendPhoto"
         data = photo_obj.dict(exclude_none=True)
-        async with aiofiles.open(photo.name, "rb") as opened_photo:
-            content = await opened_photo.read()
-        files = {photo.name: content}
+        files = {photo.name: photo}
         r = self._perform_sync_request(url, data, use_json=False, files=files)
         return r
 
@@ -522,9 +520,7 @@ class TelegramHelper(BaseHelper):
             photos_list.append(
                 InputMediaPhoto(media=f"attach://{photo.name}")
             )
-            async with aiofiles.open(photo.name, "rb") as opened_photo:
-                content = await opened_photo.read()
-            files[photo.name] = content
+            files[photo.name] = photo
         
         media_group = MediaGroup(
             chat_id=chat_id,
