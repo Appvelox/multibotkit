@@ -223,7 +223,7 @@ class TelegramHelper(BaseHelper):
                     opened_photo = open(photo, "rb")
                     photo_obj = Photo(
                         chat_id=chat_id,
-                        photo=f"attach://{opened_photo.name}",
+                        photo=f"attach://{photo}",
                         caption=caption,
                         parse_mode=parse_mode,
                         disable_notification=disable_notification,
@@ -235,7 +235,7 @@ class TelegramHelper(BaseHelper):
 
                     url = self.tg_base_url + "sendPhoto"
                     data = photo_obj.dict(exclude_none=True)
-                    files = {opened_photo.name: opened_photo}
+                    files = {photo: opened_photo}
                     
                     r = self._perform_sync_request(url, data, use_json=False, files=files)
                     return r
@@ -260,7 +260,7 @@ class TelegramHelper(BaseHelper):
         
         photo_obj = Photo(
             chat_id=chat_id,
-            photo=f"attach://{photo.name}",
+            photo=f"attach://image",
             caption=caption,
             parse_mode=parse_mode,
             disable_notification=disable_notification,
@@ -272,7 +272,7 @@ class TelegramHelper(BaseHelper):
 
         url = self.tg_base_url + "sendPhoto"
         data = photo_obj.dict(exclude_none=True)
-        files = {photo.name: photo}
+        files = {"image": photo}
         
         r = self._perform_sync_request(url, data, use_json=False, files=files)
         return r
@@ -350,7 +350,7 @@ class TelegramHelper(BaseHelper):
         
         photo_obj = Photo(
             chat_id=chat_id,
-            photo=f"attach://{photo.name}",
+            photo=f"attach://image",
             caption=caption,
             parse_mode=parse_mode,
             disable_notification=disable_notification,
@@ -362,7 +362,7 @@ class TelegramHelper(BaseHelper):
 
         url = self.tg_base_url + "sendPhoto"
         data = photo_obj.dict(exclude_none=True)
-        files = {photo.name: photo}
+        files = {"image": photo}
         r = self._perform_sync_request(url, data, use_json=False, files=files)
         return r
 
@@ -427,6 +427,41 @@ class TelegramHelper(BaseHelper):
         photos_list = []
 
         if type(photos[-1]) == str:
+            if photos[-1].startswith("http://") or photos[-1].startswith("https://"):
+                for photo in photos:
+                    photos_list.append(
+                        InputMediaPhoto(media=photo)
+                    )
+                
+                media_group = MediaGroup(
+                    chat_id=chat_id,
+                    media=photos_list
+                )
+                url = self.tg_base_url + "sendMediaGroup"
+                data = media_group.dict(exclude_none=True)
+                r = self._perform_sync_request(url, data)
+                return r
+            
+            ends = [".jpg", ".jpeg", ".gif", ".png"]
+            for end in ends:
+                if photos[-1].endswith(end):
+                    for photo in photos:
+                        photos_list.append(
+                            InputMediaPhoto(media=f"attach://{photo}")
+                        )
+                        content = open(photo, "rb")
+                        files[photo] = content
+                    
+                    media_group = MediaGroup(
+                        chat_id=chat_id,
+                        media=photos_list
+                    )
+                    url = self.tg_base_url + "sendMediaGroup"
+                    data = media_group.dict(exclude_none=True)
+                    data["media"] = json.dumps(data["media"])
+                    r = self._perform_sync_request(url, data, use_json=False, files=files)
+                    return r
+
             for photo in photos:
                 photos_list.append(
                     InputMediaPhoto(media=photo)
@@ -441,11 +476,11 @@ class TelegramHelper(BaseHelper):
             r = self._perform_sync_request(url, data)
             return r
 
-        for photo in photos:
+        for i in range(len(photos)):
             photos_list.append(
-                InputMediaPhoto(media=f"attach://{photo.name}")
+                InputMediaPhoto(media=f"attach://image_{i}")
             )
-            files[photo.name] = photo
+            files[f"image_{i}"] = photos[i]
         
         media_group = MediaGroup(
             chat_id=chat_id,
@@ -516,11 +551,11 @@ class TelegramHelper(BaseHelper):
             r = await self._perform_async_request(url, data)
             return r
 
-        for photo in photos:
+        for i in range(len(photos)):
             photos_list.append(
-                InputMediaPhoto(media=f"attach://{photo.name}")
+                InputMediaPhoto(media=f"attach://image_{i}")
             )
-            files[photo.name] = photo
+            files[f"image_{i}"] = photos[i]
         
         media_group = MediaGroup(
             chat_id=chat_id,
