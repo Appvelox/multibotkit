@@ -260,7 +260,7 @@ class TelegramHelper(BaseHelper):
         
         photo_obj = Photo(
             chat_id=chat_id,
-            photo=f"attach://image",
+            photo="attach://image",
             caption=caption,
             parse_mode=parse_mode,
             disable_notification=disable_notification,
@@ -350,7 +350,7 @@ class TelegramHelper(BaseHelper):
         
         photo_obj = Photo(
             chat_id=chat_id,
-            photo=f"attach://image",
+            photo="attach://image",
             caption=caption,
             parse_mode=parse_mode,
             disable_notification=disable_notification,
