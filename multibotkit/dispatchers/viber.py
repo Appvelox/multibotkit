@@ -33,12 +33,16 @@ class ViberDispatcher(BaseDispatcher):
                 if self.logger:
                     new_state_object = await self.state_manager.get_state(state_id)
                     event_log = {
-                        "viber_id": state_object.id,
+                        "user_id": state_object.id,
+                        "paltform": "Viber",
                         "old_state": state_object.state,
                         "old_state_data": state_object.data,
                         "new_state": new_state_object.state,
                         "new_state_data": new_state_object.data,
                         "event": event.dict()
                     }
+                    if callable(self.logger):
+                        await self.logger(event_log)
+                        return
                     self.logger.info(f"Incoming Viber event: {event_log}")
                 return

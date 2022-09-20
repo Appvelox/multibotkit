@@ -1,5 +1,5 @@
 from logging import Logger
-from typing import Callable, Optional
+from typing import Callable, Optional, Union
 
 from pydantic import BaseModel
 
@@ -11,7 +11,7 @@ class BaseDispatcher:
     def __init__(
         self,
         state_manager: BaseStateManager = MemoryStateManager(),
-        logger: Optional[Logger] = None
+        logger: Optional[Union[Logger, Callable]] = None
     ):
         self._handlers = []
         self._default_handler = None
