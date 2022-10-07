@@ -13,12 +13,16 @@ from tenacity import (
 
 from multibotkit.helpers.base_helper import BaseHelper
 from multibotkit.schemas.telegram.outgoing import (
+    EditMessageMediaModel,
     InlineKeyboardMarkup,
+    InputMedia,
+    InputMediaPhoto,
     Message,
     Photo,
     ReplyKeyboardMarkup,
     SetWebhookParams,
-    WebhookInfo, InputMediaPhoto, MediaGroup,
+    WebhookInfo,
+    MediaGroup,
 )
 
 
@@ -184,6 +188,198 @@ class TelegramHelper(BaseHelper):
             data = {"chat_id": chat_id, "message_id": message_id, "reply_markup": {}}
         r = await self._perform_async_request(url, data)
         return r
+    
+    def sync_edit_message_media(
+        self,
+        media: Union[str, IO],
+        media_type: str,
+        caption: Optional[str] = None,
+        reply_markup: Optional[InlineKeyboardMarkup] = None,
+        chat_id: Optional[int] = None,
+        message_id: Optional[int] = None,
+        inline_message_id: Optional[Union[int, str]] = None
+    ):
+        if type(media) == str:
+            if media.startswith("http://") or media.startswith("https://"):
+                media_obj = InputMedia(
+                    type=media_type,
+                    media=media,
+                    caption=caption
+                )
+                data_obj = EditMessageMediaModel(
+                    chat_id=chat_id,
+                    message_id=message_id,
+                    inline_message_id=inline_message_id,
+                    media=media_obj,
+                    reply_markup=reply_markup
+                )
+
+                url = self.tg_base_url + "editMessageMedia"
+                data = data_obj.dict(exclude_none=True)
+
+                r = self._perform_sync_request(url, data)
+                return r
+            
+            ends = [".jpg", ".jpeg", ".gif", ".png"]
+            for end in ends:
+                if media.endswith(end):
+                    opened_media = open(media, "rb")
+
+                    media_obj = InputMedia(
+                        type=media_type,
+                        media=f"attach://{media}",
+                        caption=caption
+                    )
+                    data_obj = EditMessageMediaModel(
+                        chat_id=chat_id,
+                        message_id=message_id,
+                        inline_message_id=inline_message_id,
+                        media=media_obj,
+                        reply_markup=reply_markup
+                    )
+
+                    url = self.tg_base_url + "editMessageMedia"
+                    data = data_obj.dict(exclude_none=True)
+                    files = {media: opened_media}
+
+                    r = self._perform_sync_request(url, data, files=files)
+                    return r
+            
+            media_obj = InputMedia(
+                type=media_type,
+                media=media,
+                caption=caption
+            )
+            data_obj = EditMessageMediaModel(
+                chat_id=chat_id,
+                message_id=message_id,
+                inline_message_id=inline_message_id,
+                media=media_obj,
+                reply_markup=reply_markup
+            )
+
+            url = self.tg_base_url + "editMessageMedia"
+            data = data_obj.dict(exclude_none=True)
+
+            r = self._perform_sync_request(url, data)
+            return r
+        
+        media_obj = InputMedia(
+            type=media_type,
+            media="attach://media",
+            caption=caption
+        )
+        data_obj = EditMessageMediaModel(
+            chat_id=chat_id,
+            message_id=message_id,
+            inline_message_id=inline_message_id,
+            media=media_obj,
+            reply_markup=reply_markup
+        )
+
+        url = self.tg_base_url + "editMessageMedia"
+        data = data_obj.dict(exclude_none=True)
+        files = {"media": media}
+
+        r = self._perform_sync_request(url, data, files=files)
+        return r
+    
+
+    async def async_edit_message_media(
+        self,
+        media: Union[str, IO],
+        media_type: str,
+        caption: Optional[str] = None,
+        reply_markup: Optional[InlineKeyboardMarkup] = None,
+        chat_id: Optional[int] = None,
+        message_id: Optional[int] = None,
+        inline_message_id: Optional[Union[int, str]] = None
+    ):
+        if type(media) == str:
+            if media.startswith("http://") or media.startswith("https://"):
+                media_obj = InputMedia(
+                    type=media_type,
+                    media=media,
+                    caption=caption
+                )
+                data_obj = EditMessageMediaModel(
+                    chat_id=chat_id,
+                    message_id=message_id,
+                    inline_message_id=inline_message_id,
+                    media=media_obj,
+                    reply_markup=reply_markup
+                )
+
+                url = self.tg_base_url + "editMessageMedia"
+                data = data_obj.dict(exclude_none=True)
+
+                r = await self._perform_async_request(url, data)
+                return r
+            
+            ends = [".jpg", ".jpeg", ".gif", ".png"]
+            for end in ends:
+                if media.endswith(end):
+                    opened_media = open(media, "rb")
+
+                    media_obj = InputMedia(
+                        type=media_type,
+                        media=f"attach://{media}",
+                        caption=caption
+                    )
+                    data_obj = EditMessageMediaModel(
+                        chat_id=chat_id,
+                        message_id=message_id,
+                        inline_message_id=inline_message_id,
+                        media=media_obj,
+                        reply_markup=reply_markup
+                    )
+
+                    url = self.tg_base_url + "editMessageMedia"
+                    data = data_obj.dict(exclude_none=True)
+                    files = {media: opened_media}
+
+                    r = await self._perform_async_request(url, data, files=files)
+                    return r
+            
+            media_obj = InputMedia(
+                type=media_type,
+                media=media,
+                caption=caption
+            )
+            data_obj = EditMessageMediaModel(
+                chat_id=chat_id,
+                message_id=message_id,
+                inline_message_id=inline_message_id,
+                media=media_obj,
+                reply_markup=reply_markup
+            )
+
+            url = self.tg_base_url + "editMessageMedia"
+            data = data_obj.dict(exclude_none=True)
+
+            r = await self._perform_async_request(url, data)
+            return r
+        
+        media_obj = InputMedia(
+            type=media_type,
+            media="attach://media",
+            caption=caption
+        )
+        data_obj = EditMessageMediaModel(
+            chat_id=chat_id,
+            message_id=message_id,
+            inline_message_id=inline_message_id,
+            media=media_obj,
+            reply_markup=reply_markup
+        )
+
+        url = self.tg_base_url + "editMessageMedia"
+        data = data_obj.dict(exclude_none=True)
+        files = {"media": media}
+
+        r = await self._perform_async_request(url, data, files=files)
+        return r
+
 
     def sync_send_photo(
         self,
