@@ -174,6 +174,35 @@ def test_sync_helper_edit_message_reply_markup(httpx_mock: HTTPXMock):
     assert r == {"ok": True, "result": True}
 
 
+def test_sync_helper_edit_message_media(httpx_mock: HTTPXMock):
+    def edit_media_response(request: httpx.Request):
+        return httpx.Response(status_code=200, json={"ok": True, "result": True})
+
+    httpx_mock.add_callback(edit_media_response)
+    httpx_mock.add_callback(edit_media_response)
+
+    r = tg_helper.sync_edit_message_media(
+        media="file_id",
+        media_type="photo",
+        caption="caption",
+        chat_id=1234,
+        message_id=120
+    )
+
+    assert r == {"ok": True, "result": True}
+
+    photo = NamedTemporaryFile()
+
+    r = tg_helper.sync_edit_message_media(
+        media="file_id",
+        media_type=photo,
+        caption="caption",
+        chat_id=1234,
+        message_id=120
+    )
+
+    assert r == {"ok": True, "result": True}
+
 def test_sync_helper_send_photo(httpx_mock: HTTPXMock):
     def send_photo_response(request: httpx.Request):
         return httpx.Response(status_code=200, json={"ok": True, "result": True})
@@ -375,6 +404,37 @@ async def test_async_helper_edit_message_reply_markup(httpx_mock: HTTPXMock):
 
     r = await tg_helper.async_edit_message_reply_markup(
         chat_id=1234, message_id=1111, reply_markup=reply_keyboard_markup
+    )
+
+    assert r == {"ok": True, "result": True}
+
+
+@pytest.mark.asyncio
+async def test_async_helper_edit_message_media(httpx_mock: HTTPXMock):
+    def edit_media_response(request: httpx.Request):
+        return httpx.Response(status_code=200, json={"ok": True, "result": True})
+
+    httpx_mock.add_callback(edit_media_response)
+    httpx_mock.add_callback(edit_media_response)
+
+    r = await tg_helper.async_edit_message_media(
+        media="file_id",
+        media_type="photo",
+        caption="caption",
+        chat_id=1234,
+        message_id=120
+    )
+
+    assert r == {"ok": True, "result": True}
+
+    photo = NamedTemporaryFile()
+
+    r = tg_helper.sync_edit_message_media(
+        media="file_id",
+        media_type=photo,
+        caption="caption",
+        chat_id=1234,
+        message_id=120
     )
 
     assert r == {"ok": True, "result": True}
