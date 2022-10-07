@@ -1,3 +1,4 @@
+import io
 from tempfile import NamedTemporaryFile
 import httpx
 import json
@@ -191,7 +192,7 @@ def test_sync_helper_edit_message_media(httpx_mock: HTTPXMock):
 
     assert r == {"ok": True, "result": True}
 
-    photo = NamedTemporaryFile()
+    photo = io.BytesIO()
 
     r = tg_helper.sync_edit_message_media(
         media="file_id",
@@ -428,7 +429,7 @@ async def test_async_helper_edit_message_media(httpx_mock: HTTPXMock):
 
     assert r == {"ok": True, "result": True}
 
-    photo = NamedTemporaryFile()
+    photo = io.BytesIO()
 
     r = await tg_helper.async_edit_message_media(
         media="file_id",
