@@ -129,18 +129,20 @@ class Message(BaseModel):
     )
 
 
-class InputMediaPhoto(BaseModel):
-    type: str = "photo"
-    media: str = Field(...)
-    caption: Optional[str] = Field(None)
-    parse_mode: Optional[str] = Field(None)
-
-
-class InputMediaDocument(BaseModel):
-    type: str = "document"
+class InputMedia(BaseModel):
+    type: str
     media: Union[str, tuple] = Field(...)
     caption: Optional[str] = Field(None)
     parse_mode: Optional[str] = Field(None)
+
+
+class InputMediaPhoto(InputMedia):
+    type: str = "photo"
+    media: str = Field(...)
+
+
+class InputMediaDocument(InputMedia):
+    type: str = "document"
 
 
 class MediaGroup(BaseModel):
@@ -158,3 +160,11 @@ class Photo(BaseModel):
     reply_to_message_id: Optional[int] = Field(None, title="reply to message id")
     allow_sending_without_reply: Optional[bool] = Field(None, title="allow sending without reply")
     reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = Field(None, title="reply markup")
+
+
+class EditMessageMediaModel(BaseModel):
+    chat_id: Optional[int] = Field(None, title="chat id")
+    message_id: Optional[int] = Field(None, title="message id")
+    inline_message_id: Optional[str] = Field(None, title="inline message id")
+    media: InputMedia = Field(..., title="media")
+    reply_markup: Optional[InlineKeyboardMarkup] = Field(None, title="reply markup")
