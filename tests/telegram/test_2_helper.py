@@ -429,7 +429,7 @@ async def test_async_helper_edit_message_media(httpx_mock: HTTPXMock):
 
     photo = NamedTemporaryFile()
 
-    r = tg_helper.sync_edit_message_media(
+    r = await tg_helper.async_edit_message_media(
         media="file_id",
         media_type=photo,
         caption="caption",
