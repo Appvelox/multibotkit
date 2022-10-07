@@ -21,7 +21,8 @@ from multibotkit.schemas.telegram.outgoing import (
     Photo,
     ReplyKeyboardMarkup,
     SetWebhookParams,
-    WebhookInfo, InputMediaPhoto, MediaGroup,
+    WebhookInfo,
+    MediaGroup,
 )
 
 

@@ -203,6 +203,7 @@ def test_sync_helper_edit_message_media(httpx_mock: HTTPXMock):
 
     assert r == {"ok": True, "result": True}
 
+
 def test_sync_helper_send_photo(httpx_mock: HTTPXMock):
     def send_photo_response(request: httpx.Request):
         return httpx.Response(status_code=200, json={"ok": True, "result": True})
