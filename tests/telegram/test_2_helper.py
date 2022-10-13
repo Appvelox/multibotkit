@@ -212,9 +212,24 @@ def test_sync_helper_send_photo(httpx_mock: HTTPXMock):
     httpx_mock.add_callback(send_photo_response)
     httpx_mock.add_callback(send_photo_response)
 
+    keyboard_button_dict = {
+        "text": "Button",
+        "request_contact": False,
+        "request_location": False,
+    }
+
+    keyboard_button = KeyboardButton.parse_obj(keyboard_button_dict)
+
+    reply_keyboard_markup = ReplyKeyboardMarkup(
+        keyboard=[[keyboard_button, keyboard_button]],
+        resize_keyboard=False,
+        one_time_keyboard=False,
+    )
+
     r = tg_helper.sync_send_photo(
         chat_id=1234,
-        photo="file_id"
+        photo="file_id",
+        reply_markup=reply_keyboard_markup
     )
 
     assert r == {"ok": True, "result": True}
@@ -223,7 +238,8 @@ def test_sync_helper_send_photo(httpx_mock: HTTPXMock):
 
     r = tg_helper.sync_send_photo(
         chat_id=1234,
-        photo=photo
+        photo=photo,
+        reply_markup=reply_keyboard_markup
     )
 
     assert r == {"ok": True, "result": True}
@@ -450,9 +466,24 @@ async def test_async_helper_send_photo(httpx_mock: HTTPXMock):
     httpx_mock.add_callback(send_photo_response)
     httpx_mock.add_callback(send_photo_response)
 
+    keyboard_button_dict = {
+        "text": "Button",
+        "request_contact": False,
+        "request_location": False,
+    }
+
+    keyboard_button = KeyboardButton.parse_obj(keyboard_button_dict)
+
+    reply_keyboard_markup = ReplyKeyboardMarkup(
+        keyboard=[[keyboard_button, keyboard_button]],
+        resize_keyboard=False,
+        one_time_keyboard=False,
+    )
+
     r = await tg_helper.async_send_photo(
         chat_id=1234,
-        photo="file_id"
+        photo="file_id",
+        reply_markup=reply_keyboard_markup
     )
 
     assert r == {"ok": True, "result": True}
@@ -461,7 +492,8 @@ async def test_async_helper_send_photo(httpx_mock: HTTPXMock):
 
     r = await tg_helper.async_send_photo(
         chat_id=1234,
-        photo=photo
+        photo=photo,
+        reply_markup=reply_keyboard_markup
     )
 
     assert r == {"ok": True, "result": True}
