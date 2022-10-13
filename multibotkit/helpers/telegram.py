@@ -501,7 +501,7 @@ class TelegramHelper(BaseHelper):
 
                 url = self.tg_base_url + "sendPhoto"
                 data = photo_obj.dict(exclude_none=True)
-                r = self._perform_sync_request(url, data)
+                r = await self._perform_async_request(url, data)
                 return r
             
             ends = [".jpg", ".jpeg", ".gif", ".png"]
@@ -524,7 +524,7 @@ class TelegramHelper(BaseHelper):
                     url = self.tg_base_url + "sendPhoto"
                     data = photo_obj.dict(exclude_none=True)
                     files = {photo: content}
-                    r = self._perform_sync_request(url, data, use_json=False, files=files)
+                    r = await self._perform_async_request(url, data, use_json=False, files=files)
                     return r
             
             photo_obj = Photo(
@@ -541,7 +541,7 @@ class TelegramHelper(BaseHelper):
 
             url = self.tg_base_url + "sendPhoto"
             data = photo_obj.dict(exclude_none=True)
-            r = self._perform_sync_request(url, data)
+            r = await self._perform_async_request(url, data)
             return r
         
         photo_obj = Photo(
@@ -559,7 +559,7 @@ class TelegramHelper(BaseHelper):
         url = self.tg_base_url + "sendPhoto"
         data = photo_obj.dict(exclude_none=True)
         files = {"image": photo}
-        r = self._perform_sync_request(url, data, use_json=False, files=files)
+        r = await self._perform_async_request(url, data, use_json=False, files=files)
         return r
 
 
