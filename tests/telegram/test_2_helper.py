@@ -234,12 +234,26 @@ def test_sync_helper_send_photo(httpx_mock: HTTPXMock):
 
     assert r == {"ok": True, "result": True}
 
+    r = tg_helper.sync_send_photo(
+        chat_id=1234,
+        photo="file_id",
+    )
+
+    assert r == {"ok": True, "result": True}
+
     photo = NamedTemporaryFile()
 
     r = tg_helper.sync_send_photo(
         chat_id=1234,
         photo=photo,
         reply_markup=reply_keyboard_markup
+    )
+
+    assert r == {"ok": True, "result": True}
+
+    r = tg_helper.sync_send_photo(
+        chat_id=1234,
+        photo=photo,
     )
 
     assert r == {"ok": True, "result": True}
@@ -488,12 +502,26 @@ async def test_async_helper_send_photo(httpx_mock: HTTPXMock):
 
     assert r == {"ok": True, "result": True}
 
+    r = await tg_helper.async_send_photo(
+        chat_id=1234,
+        photo="file_id",
+    )
+
+    assert r == {"ok": True, "result": True}
+
     photo = NamedTemporaryFile()
 
     r = await tg_helper.async_send_photo(
         chat_id=1234,
         photo=photo,
         reply_markup=reply_keyboard_markup
+    )
+
+    assert r == {"ok": True, "result": True}
+
+    r = await tg_helper.async_send_photo(
+        chat_id=1234,
+        photo=photo,
     )
 
     assert r == {"ok": True, "result": True}

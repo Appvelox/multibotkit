@@ -240,9 +240,10 @@ class TelegramHelper(BaseHelper):
 
                     url = self.tg_base_url + "editMessageMedia"
                     data = data_obj.dict(exclude_none=True)
+                    data["media"] = json.dumps(data["media"])
                     files = {media: opened_media}
 
-                    r = self._perform_sync_request(url, data, files=files)
+                    r = self._perform_sync_request(url, data, use_json=False, files=files)
                     return r
             
             media_obj = InputMedia(
@@ -279,9 +280,10 @@ class TelegramHelper(BaseHelper):
 
         url = self.tg_base_url + "editMessageMedia"
         data = data_obj.dict(exclude_none=True)
+        data["media"] = json.dumps(data["media"])
         files = {"media": media}
 
-        r = self._perform_sync_request(url, data, files=files)
+        r = self._perform_sync_request(url, data, use_json=False, files=files)
         return r
     
 
@@ -336,9 +338,10 @@ class TelegramHelper(BaseHelper):
 
                     url = self.tg_base_url + "editMessageMedia"
                     data = data_obj.dict(exclude_none=True)
+                    data["media"] = json.dumps(data["media"])
                     files = {media: opened_media}
 
-                    r = await self._perform_async_request(url, data, files=files)
+                    r = await self._perform_async_request(url, data, use_json=False, files=files)
                     return r
             
             media_obj = InputMedia(
@@ -375,9 +378,10 @@ class TelegramHelper(BaseHelper):
 
         url = self.tg_base_url + "editMessageMedia"
         data = data_obj.dict(exclude_none=True)
+        data["media"] = json.dumps(data["media"])
         files = {"media": media}
 
-        r = await self._perform_async_request(url, data, files=files)
+        r = await self._perform_async_request(url, data, use_json=False, files=files)
         return r
 
 
@@ -431,7 +435,8 @@ class TelegramHelper(BaseHelper):
 
                     url = self.tg_base_url + "sendPhoto"
                     data = photo_obj.dict(exclude_none=True)
-                    data["reply_markup"] = json.dumps(data["reply_markup"])
+                    if "reply_markup" in data.keys():
+                        data["reply_markup"] = json.dumps(data["reply_markup"])
                     files = {photo: opened_photo}
                     
                     r = self._perform_sync_request(url, data, use_json=False, files=files)
@@ -469,7 +474,8 @@ class TelegramHelper(BaseHelper):
 
         url = self.tg_base_url + "sendPhoto"
         data = photo_obj.dict(exclude_none=True)
-        data["reply_markup"] = json.dumps(data["reply_markup"])
+        if "reply_markup" in data.keys():
+            data["reply_markup"] = json.dumps(data["reply_markup"])
         files = {"image": photo}
         
         r = self._perform_sync_request(url, data, use_json=False, files=files)
@@ -525,7 +531,8 @@ class TelegramHelper(BaseHelper):
 
                     url = self.tg_base_url + "sendPhoto"
                     data = photo_obj.dict(exclude_none=True)
-                    data["reply_markup"] = json.dumps(data["reply_markup"])
+                    if "reply_markup" in data.keys():
+                        data["reply_markup"] = json.dumps(data["reply_markup"])
                     files = {photo: content}
                     r = await self._perform_async_request(url, data, use_json=False, files=files)
                     return r
@@ -561,7 +568,8 @@ class TelegramHelper(BaseHelper):
 
         url = self.tg_base_url + "sendPhoto"
         data = photo_obj.dict(exclude_none=True)
-        data["reply_markup"] = json.dumps(data["reply_markup"])
+        if "reply_markup" in data.keys():
+            data["reply_markup"] = json.dumps(data["reply_markup"])
         files = {"image": photo}
         r = await self._perform_async_request(url, data, use_json=False, files=files)
         return r
