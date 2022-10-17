@@ -7,6 +7,8 @@ from pytest_httpx import HTTPXMock, IteratorStream
 
 from multibotkit.helpers.telegram import TelegramHelper
 from multibotkit.schemas.telegram.outgoing import (
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
     Message,
     ReplyKeyboardMarkup,
     KeyboardButton,
@@ -182,12 +184,24 @@ def test_sync_helper_edit_message_media(httpx_mock: HTTPXMock):
     httpx_mock.add_callback(edit_media_response)
     httpx_mock.add_callback(edit_media_response)
 
+    keyboard_button_dict = {
+        "text": "Button",
+        "callback_data": "some_data"
+    }
+
+    keyboard_button = InlineKeyboardButton.parse_obj(keyboard_button_dict)
+
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[[keyboard_button, keyboard_button]],
+    )
+
     r = tg_helper.sync_edit_message_media(
         media="file_id",
         media_type="photo",
         caption="caption",
         chat_id=1234,
-        message_id=120
+        message_id=120,
+        reply_markup=keyboard
     )
 
     assert r == {"ok": True, "result": True}
@@ -199,7 +213,8 @@ def test_sync_helper_edit_message_media(httpx_mock: HTTPXMock):
         media_type="photo",
         caption="caption",
         chat_id=1234,
-        message_id=120
+        message_id=120,
+        reply_markup=keyboard
     )
 
     assert r == {"ok": True, "result": True}
@@ -449,12 +464,24 @@ async def test_async_helper_edit_message_media(httpx_mock: HTTPXMock):
     httpx_mock.add_callback(edit_media_response)
     httpx_mock.add_callback(edit_media_response)
 
+    keyboard_button_dict = {
+        "text": "Button",
+        "callback_data": "some_data"
+    }
+
+    keyboard_button = InlineKeyboardButton.parse_obj(keyboard_button_dict)
+
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[[keyboard_button, keyboard_button]],
+    )
+
     r = await tg_helper.async_edit_message_media(
         media="file_id",
         media_type="photo",
         caption="caption",
         chat_id=1234,
-        message_id=120
+        message_id=120,
+        reply_markup=keyboard
     )
 
     assert r == {"ok": True, "result": True}
@@ -466,7 +493,8 @@ async def test_async_helper_edit_message_media(httpx_mock: HTTPXMock):
         media_type="photo",
         caption="caption",
         chat_id=1234,
-        message_id=120
+        message_id=120,
+        reply_markup=keyboard
     )
 
     assert r == {"ok": True, "result": True}
