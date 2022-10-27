@@ -165,7 +165,7 @@ class Photo(BaseModel):
 class Document(BaseModel):
     chat_id: int = Field(..., title="chat id")
     document: str = Field(..., title="document"),
-    thumb: Optional[str] = Field(None , title="document thumbnail")
+    thumb: Optional[str] = Field(None, title="document thumbnail")
     caption: Optional[str] = Field(None, title="caption")
     parse_mode: str = Field("HTML", title="parse mode")
     disable_notification: Optional[bool] = Field(None, title="disable notification")
@@ -173,6 +173,7 @@ class Document(BaseModel):
     reply_to_message_id: Optional[int] = Field(None, title="reply to message id")
     allow_sending_without_reply: Optional[bool] = Field(None, title="allow sending without reply")
     reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = Field(None, title="reply markup")
+
 
 class EditMessageMediaModel(BaseModel):
     chat_id: Optional[int] = Field(None, title="chat id")

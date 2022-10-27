@@ -601,11 +601,11 @@ class TelegramHelper(BaseHelper):
 
         if type(document) == str:
             if not (document.startswith("http://") or document.startswith("https://")):
-                ends = [".jpg", ".jpeg", ".gif", ".png"]
+                ends = [".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx"]
                 for end in ends:
                     if document.endswith(end):
                         files["document"] = open(document, "rb")
-                        document_str=f"attach://{document}"
+                        document_str = f"attach://{document}"
             document_str = document
         else:
             document_str = "attach://document"
@@ -653,11 +653,11 @@ class TelegramHelper(BaseHelper):
         
         if type(document) == str:
             if not (document.startswith("http://") or document.startswith("https://")):
-                ends = ["pdf"]
+                ends = [".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx"]
                 for end in ends:
                     if document.endswith(end):
                         files["document"] = open(document, "rb")
-                        document_str=f"attach://{document}"
+                        document_str = f"attach://{document}"
             document_str = document
         else:
             document_str = "attach://document"
