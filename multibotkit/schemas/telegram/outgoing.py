@@ -164,7 +164,7 @@ class Photo(BaseModel):
 
 class Document(BaseModel):
     chat_id: int = Field(..., title="chat id")
-    document: str = Field(..., title="document"),
+    document: str = Field(..., title="document")
     thumb: Optional[str] = Field(None, title="document thumbnail")
     caption: Optional[str] = Field(None, title="caption")
     parse_mode: str = Field("HTML", title="parse mode")
