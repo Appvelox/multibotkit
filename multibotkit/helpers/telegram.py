@@ -13,6 +13,7 @@ from tenacity import (
 
 from multibotkit.helpers.base_helper import BaseHelper
 from multibotkit.schemas.telegram.outgoing import (
+    Document,
     EditMessageMediaModel,
     InlineKeyboardMarkup,
     InputMedia,
@@ -580,6 +581,111 @@ class TelegramHelper(BaseHelper):
             data["reply_markup"] = json.dumps(data["reply_markup"])
         files = {"image": photo}
         r = await self._perform_async_request(url, data, use_json=False, files=files)
+        return r
+    
+
+    def sync_send_document(
+        self,
+        chat_id: int,
+        document: Union[str, IO],
+        caption: Optional[str] = None,
+        parse_mode: str = "HTML",
+        disable_notification: Optional[bool] = None,
+        protect_content: Optional[bool] = None,
+        reply_to_message_id: Optional[int] = None,
+        allow_sending_without_reply: Optional[bool] = None,
+        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None
+    ):
+        files = {}
+        document_str = None
+
+        if type(document) == str:
+            if not (document.startswith("http://") or document.startswith("https://")):
+                ends = [".jpg", ".jpeg", ".gif", ".png"]
+                for end in ends:
+                    if document.endswith(end):
+                        files["document"] = open(document, "rb")
+                        document_str=f"attach://{document}"
+            document_str = document
+        else:
+            document_str = "attach://document"
+            files["document"] = document
+
+        document_obj = Document(
+            chat_id=chat_id,
+            document=document_str,
+            caption=caption,
+            parse_mode=parse_mode,
+            disable_notification=disable_notification,
+            protect_content=protect_content,
+            reply_to_message_id=reply_to_message_id,
+            allow_sending_without_reply=allow_sending_without_reply,
+            reply_markup=reply_markup
+        )
+
+        url = self.tg_base_url + "sendDocument"
+        data = document_obj.dict(exclude_none=True)
+        if "reply_markup" in data.keys():
+            data["reply_markup"] = json.dumps(data["reply_markup"])
+
+        if len(files.keys()):
+            r = self._perform_sync_request(url, data, use_json=False, files=files)
+            return r
+        
+        r = self._perform_sync_request(url, data)
+        return r
+
+
+    async def async_send_document(
+        self,
+        chat_id: int,
+        document: Union[str, IO],
+        caption: Optional[str] = None,
+        parse_mode: str = "HTML",
+        disable_notification: Optional[bool] = None,
+        protect_content: Optional[bool] = None,
+        reply_to_message_id: Optional[int] = None,
+        allow_sending_without_reply: Optional[bool] = None,
+        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None
+    ):
+        files = {}
+        document_str = None
+        
+        if type(document) == str:
+            if not (document.startswith("http://") or document.startswith("https://")):
+                ends = ["pdf"]
+                for end in ends:
+                    if document.endswith(end):
+                        files["document"] = open(document, "rb")
+                        document_str=f"attach://{document}"
+            document_str = document
+        else:
+            document_str = "attach://document"
+            files["document"] = document
+
+        document_obj = Document(
+            chat_id=chat_id,
+            document=document_str,
+            caption=caption,
+            parse_mode=parse_mode,
+            disable_notification=disable_notification,
+            protect_content=protect_content,
+            reply_to_message_id=reply_to_message_id,
+            allow_sending_without_reply=allow_sending_without_reply,
+            reply_markup=reply_markup
+        )
+
+        url = self.tg_base_url + "sendDocument"
+        data = document_obj.dict(exclude_none=True)
+        
+        if "reply_markup" in data.keys():
+            data["reply_markup"] = json.dumps(data["reply_markup"])
+        
+        if len(files.keys()):
+            r = await self._perform_async_request(url, data, use_json=False, files=files)
+            return r
+        
+        r = await self._perform_async_request(url, data)
         return r
 
 

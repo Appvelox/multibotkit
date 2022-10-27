@@ -274,6 +274,60 @@ def test_sync_helper_send_photo(httpx_mock: HTTPXMock):
     assert r == {"ok": True, "result": True}
 
 
+def test_sync_helper_send_doc(httpx_mock: HTTPXMock):
+    def send_doc_response(request: httpx.Request):
+        return httpx.Response(status_code=200, json={"ok": True, "result": True})
+
+    httpx_mock.add_callback(send_doc_response)
+    httpx_mock.add_callback(send_doc_response)
+
+    keyboard_button_dict = {
+        "text": "Button",
+        "request_contact": False,
+        "request_location": False,
+    }
+
+    keyboard_button = KeyboardButton.parse_obj(keyboard_button_dict)
+
+    reply_keyboard_markup = ReplyKeyboardMarkup(
+        keyboard=[[keyboard_button, keyboard_button]],
+        resize_keyboard=False,
+        one_time_keyboard=False,
+    )
+
+    r = tg_helper.sync_send_document(
+        chat_id=1234,
+        document="file_id",
+        reply_markup=reply_keyboard_markup
+    )
+
+    assert r == {"ok": True, "result": True}
+
+    r = tg_helper.sync_send_document(
+        chat_id=1234,
+        document="file_id",
+    )
+
+    assert r == {"ok": True, "result": True}
+
+    doc = NamedTemporaryFile()
+
+    r = tg_helper.sync_send_document(
+        chat_id=1234,
+        document=doc,
+        reply_markup=reply_keyboard_markup
+    )
+
+    assert r == {"ok": True, "result": True}
+
+    r = tg_helper.sync_send_document(
+        chat_id=1234,
+        document=doc,
+    )
+
+    assert r == {"ok": True, "result": True}
+
+
 def test_sync_helper_get_file(httpx_mock: HTTPXMock):
     def get_file_path_response(request: httpx.Request):
         return httpx.Response(
@@ -550,6 +604,61 @@ async def test_async_helper_send_photo(httpx_mock: HTTPXMock):
     r = await tg_helper.async_send_photo(
         chat_id=1234,
         photo=photo,
+    )
+
+    assert r == {"ok": True, "result": True}
+
+
+@pytest.mark.asyncio
+async def test_async_helper_send_doc(httpx_mock: HTTPXMock):
+    def send_doc_response(request: httpx.Request):
+        return httpx.Response(status_code=200, json={"ok": True, "result": True})
+
+    httpx_mock.add_callback(send_doc_response)
+    httpx_mock.add_callback(send_doc_response)
+
+    keyboard_button_dict = {
+        "text": "Button",
+        "request_contact": False,
+        "request_location": False,
+    }
+
+    keyboard_button = KeyboardButton.parse_obj(keyboard_button_dict)
+
+    reply_keyboard_markup = ReplyKeyboardMarkup(
+        keyboard=[[keyboard_button, keyboard_button]],
+        resize_keyboard=False,
+        one_time_keyboard=False,
+    )
+
+    r = await tg_helper.async_send_document(
+        chat_id=1234,
+        document="file_id",
+        reply_markup=reply_keyboard_markup
+    )
+
+    assert r == {"ok": True, "result": True}
+
+    r = await tg_helper.async_send_document(
+        chat_id=1234,
+        document="file_id",
+    )
+
+    assert r == {"ok": True, "result": True}
+
+    doc = NamedTemporaryFile()
+
+    r = await tg_helper.async_send_document(
+        chat_id=1234,
+        document=doc,
+        reply_markup=reply_keyboard_markup
+    )
+
+    assert r == {"ok": True, "result": True}
+
+    r = await tg_helper.async_send_document(
+        chat_id=1234,
+        document=doc,
     )
 
     assert r == {"ok": True, "result": True}
