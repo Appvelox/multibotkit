@@ -604,12 +604,13 @@ class TelegramHelper(BaseHelper):
                 ends = [".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx"]
                 for end in ends:
                     if document.endswith(end):
-                        files["document"] = (file_name, open(document, "rb"))
-                        document_str = f"attach://{document}"
-            document_str = document
+                        files["document"] = (file_name if file_name else document, open(document, "rb"))
+                        document_str = f"attach://document"
+            if document_str is None:
+                document_str = document
         else:
             document_str = "attach://document"
-            files["document"] = (file_name, document)
+            files["document"] = (file_name if file_name else "file", document)
 
         document_obj = Document(
             chat_id=chat_id,
@@ -656,12 +657,13 @@ class TelegramHelper(BaseHelper):
                 ends = [".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx"]
                 for end in ends:
                     if document.endswith(end):
-                        files["document"] = (file_name, open(document, "rb"))
-                        document_str = f"attach://{document}"
-            document_str = document
+                        files["document"] = (file_name if file_name else document, open(document, "rb"))
+                        document_str = f"attach://document"
+            if document_str is None:
+                document_str = document
         else:
             document_str = "attach://document"
-            files["document"] = (file_name, document)
+            files["document"] = (file_name if file_name else "file", document)
 
         document_obj = Document(
             chat_id=chat_id,
