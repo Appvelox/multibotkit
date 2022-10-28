@@ -605,7 +605,7 @@ class TelegramHelper(BaseHelper):
                 for end in ends:
                     if document.endswith(end):
                         files["document"] = (file_name if file_name else document, open(document, "rb"))
-                        document_str = f"attach://document"
+                        document_str = "attach://document"
             if document_str is None:
                 document_str = document
         else:
@@ -658,7 +658,7 @@ class TelegramHelper(BaseHelper):
                 for end in ends:
                     if document.endswith(end):
                         files["document"] = (file_name if file_name else document, open(document, "rb"))
-                        document_str = f"attach://document"
+                        document_str = "attach://document"
             if document_str is None:
                 document_str = document
         else:
