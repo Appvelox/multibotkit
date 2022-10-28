@@ -10,7 +10,6 @@ from tenacity import (
     stop_after_attempt,
     wait_exponential,
 )
-
 from multibotkit.helpers.base_helper import BaseHelper
 from multibotkit.schemas.telegram.outgoing import (
     Document,
@@ -589,6 +588,7 @@ class TelegramHelper(BaseHelper):
         chat_id: int,
         document: Union[str, IO],
         caption: Optional[str] = None,
+        file_name: Optional[str] = None,
         parse_mode: str = "HTML",
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
@@ -604,12 +604,13 @@ class TelegramHelper(BaseHelper):
                 ends = [".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx"]
                 for end in ends:
                     if document.endswith(end):
-                        files["document"] = open(document, "rb")
-                        document_str = f"attach://{document}"
-            document_str = document
+                        files["document"] = (file_name if file_name else document, open(document, "rb"))
+                        document_str = "attach://document"
+            if document_str is None:
+                document_str = document
         else:
             document_str = "attach://document"
-            files["document"] = document
+            files["document"] = (file_name if file_name else "file", document)
 
         document_obj = Document(
             chat_id=chat_id,
@@ -635,12 +636,12 @@ class TelegramHelper(BaseHelper):
         r = self._perform_sync_request(url, data)
         return r
 
-
     async def async_send_document(
         self,
         chat_id: int,
         document: Union[str, IO],
         caption: Optional[str] = None,
+        file_name: Optional[str] = None,
         parse_mode: str = "HTML",
         disable_notification: Optional[bool] = None,
         protect_content: Optional[bool] = None,
@@ -656,12 +657,13 @@ class TelegramHelper(BaseHelper):
                 ends = [".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx"]
                 for end in ends:
                     if document.endswith(end):
-                        files["document"] = open(document, "rb")
-                        document_str = f"attach://{document}"
-            document_str = document
+                        files["document"] = (file_name if file_name else document, open(document, "rb"))
+                        document_str = "attach://document"
+            if document_str is None:
+                document_str = document
         else:
             document_str = "attach://document"
-            files["document"] = document
+            files["document"] = (file_name if file_name else "file", document)
 
         document_obj = Document(
             chat_id=chat_id,
@@ -680,7 +682,7 @@ class TelegramHelper(BaseHelper):
         
         if "reply_markup" in data.keys():
             data["reply_markup"] = json.dumps(data["reply_markup"])
-        
+
         if len(files.keys()):
             r = await self._perform_async_request(url, data, use_json=False, files=files)
             return r
