@@ -116,6 +116,10 @@ it's been used",
     )
 
 
+class ReplyKeyboardRemove(BaseModel):
+    remove_keyboard: bool = Field(True, title="Remove reply keyboard")
+
+
 class Message(BaseModel):
     chat_id: int = Field(..., title="Unique identifier for the chat")
     text: str = Field(
@@ -124,7 +128,7 @@ class Message(BaseModel):
     disable_web_page_preview: Optional[bool] = Field(
         None, title="Disables link previews for links in this message"
     )
-    reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = Field(
+    reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove]] = Field(
         None, title="Inline or Reply keyboard attached to the message"
     )
 

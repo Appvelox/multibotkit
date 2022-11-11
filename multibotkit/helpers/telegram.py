@@ -22,7 +22,7 @@ from multibotkit.schemas.telegram.outgoing import (
     ReplyKeyboardMarkup,
     SetWebhookParams,
     WebhookInfo,
-    MediaGroup,
+    MediaGroup, ReplyKeyboardRemove,
 )
 
 
@@ -68,7 +68,7 @@ class TelegramHelper(BaseHelper):
         chat_id: int,
         text: str,
         disable_web_page_preview: Optional[bool] = None,
-        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None,
+        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove]] = None,
         parse_mode: str = "HTML",
     ):
         url = self.tg_base_url + "sendMessage"
@@ -89,7 +89,7 @@ class TelegramHelper(BaseHelper):
         chat_id: int,
         text: str,
         disable_web_page_preview: Optional[bool] = None,
-        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None,
+        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove]] = None,
         parse_mode: str = "HTML",
     ):
         url = self.tg_base_url + "sendMessage"
