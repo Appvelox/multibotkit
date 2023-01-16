@@ -185,3 +185,19 @@ class EditMessageMediaModel(BaseModel):
     inline_message_id: Optional[str] = Field(None, title="inline message id")
     media: InputMedia = Field(..., title="media")
     reply_markup: Optional[InlineKeyboardMarkup] = Field(None, title="reply markup")
+
+
+class Animation(BaseModel):
+    chat_id: int = Field(..., title="chat id")
+    animation: str = Field(..., title="document")
+    duration: Optional[int] = Field(None, title="Duration of sent animation in seconds")
+    width: Optional[int] = Field(None, title="Animation width")
+    height: Optional[int] = Field(None, title="Animation height")
+    thumb: Optional[str] = Field(None, title="document thumbnail")
+    caption: Optional[str] = Field(None, title="caption")
+    parse_mode: str = Field("HTML", title="parse mode")
+    disable_notification: Optional[bool] = Field(None, title="disable notification")
+    protect_content: Optional[bool] = Field(None, title="protect content")
+    reply_to_message_id: Optional[int] = Field(None, title="reply to message id")
+    allow_sending_without_reply: Optional[bool] = Field(None, title="allow sending without reply")
+    reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = Field(None, title="reply markup")

@@ -17,6 +17,8 @@ class State:
         self.data = state_data
         self.manager = manager
 
+    def __str__(self):
+        return f"ID: {self.id} STATE: {self.state} DATA: {self.data}"
 
     async def set_state(
         self,
