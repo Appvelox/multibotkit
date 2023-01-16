@@ -186,6 +186,7 @@ class EditMessageMediaModel(BaseModel):
     media: InputMedia = Field(..., title="media")
     reply_markup: Optional[InlineKeyboardMarkup] = Field(None, title="reply markup")
 
+
 class Animation(BaseModel):
     chat_id: int = Field(..., title="chat id")
     animation: str = Field(..., title="document")
