@@ -12,6 +12,7 @@ from tenacity import (
 )
 from multibotkit.helpers.base_helper import BaseHelper
 from multibotkit.schemas.telegram.outgoing import (
+    Animation,
     Document,
     EditMessageMediaModel,
     InlineKeyboardMarkup,
@@ -889,4 +890,122 @@ class TelegramHelper(BaseHelper):
         data = media_group.dict(exclude_none=True)
         data["media"] = json.dumps(data["media"])
         r = await self._perform_async_request(url, data, use_json=False, files=files)
+        return r
+
+    def sync_send_animation(
+        self,
+        chat_id: int,
+        animation: Union[str, IO],
+        duration: Optional[int] = None,
+        width: Optional[int] = None,
+        height: Optional[int] = None,
+        caption: Optional[str] = None,
+        file_name: Optional[str] = None,
+        parse_mode: str = "HTML",
+        disable_notification: Optional[bool] = None,
+        protect_content: Optional[bool] = None,
+        reply_to_message_id: Optional[int] = None,
+        allow_sending_without_reply: Optional[bool] = None,
+        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None
+    ):
+        files = {}
+        animation_str = None
+
+        if type(animation) == str:
+            if not (animation.startswith("http://") or animation.startswith("https://")):
+                ends = [".gif"]
+                for end in ends:
+                    if animation.endswith(end):
+                        files["animation"] = (file_name if file_name else animation, open(animation, "rb"))
+                        animation_str = "attach://animation"
+            if animation_str is None:
+                animation_str = animation
+        else:
+            animation_str = "attach://animation"
+            files["animation"] = (file_name if file_name else "file", animation)
+
+        animation_obj = Animation(
+            chat_id=chat_id,
+            animation=animation_str,
+            duration=duration,
+            width=width,
+            height=height,
+            caption=caption,
+            parse_mode=parse_mode,
+            disable_notification=disable_notification,
+            protect_content=protect_content,
+            reply_to_message_id=reply_to_message_id,
+            allow_sending_without_reply=allow_sending_without_reply,
+            reply_markup=reply_markup
+        )
+
+        url = self.tg_base_url + "sendAnimation"
+        data = animation_obj.dict(exclude_none=True)
+        if "reply_markup" in data.keys():
+            data["reply_markup"] = json.dumps(data["reply_markup"])
+
+        if len(files.keys()):
+            r = self._perform_sync_request(url, data, use_json=False, files=files)
+            return r
+        
+        r = self._perform_sync_request(url, data)
+        return r
+
+    async def async_send_animation(
+        self,
+        chat_id: int,
+        animation: Union[str, IO],
+        duration: Optional[int] = None,
+        width: Optional[int] = None,
+        height: Optional[int] = None,
+        caption: Optional[str] = None,
+        file_name: Optional[str] = None,
+        parse_mode: str = "HTML",
+        disable_notification: Optional[bool] = None,
+        protect_content: Optional[bool] = None,
+        reply_to_message_id: Optional[int] = None,
+        allow_sending_without_reply: Optional[bool] = None,
+        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None
+    ):
+        files = {}
+        animation_str = None
+
+        if type(animation) == str:
+            if not (animation.startswith("http://") or animation.startswith("https://")):
+                ends = [".gif"]
+                for end in ends:
+                    if animation.endswith(end):
+                        files["animation"] = (file_name if file_name else animation, open(animation, "rb"))
+                        animation_str = "attach://animation"
+            if animation_str is None:
+                animation_str = animation
+        else:
+            animation_str = "attach://animation"
+            files["animation"] = (file_name if file_name else "file", animation)
+
+        animation_obj = Animation(
+            chat_id=chat_id,
+            animation=animation_str,
+            duration=duration,
+            width=width,
+            height=height,
+            caption=caption,
+            parse_mode=parse_mode,
+            disable_notification=disable_notification,
+            protect_content=protect_content,
+            reply_to_message_id=reply_to_message_id,
+            allow_sending_without_reply=allow_sending_without_reply,
+            reply_markup=reply_markup
+        )
+
+        url = self.tg_base_url + "sendAnimation"
+        data = animation_obj.dict(exclude_none=True)
+        if "reply_markup" in data.keys():
+            data["reply_markup"] = json.dumps(data["reply_markup"])
+
+        if len(files.keys()):
+            r = await self._perform_async_request(url, data, use_json=False, files=files)
+            return r
+        
+        r = await self._perform_async_request(url, data)
         return r
