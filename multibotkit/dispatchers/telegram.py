@@ -1,3 +1,4 @@
+from datetime import datetime
 from multibotkit.dispatchers.base_dispatcher import BaseDispatcher
 from multibotkit.schemas.telegram.incoming import Update
 
@@ -39,6 +40,7 @@ class TelegramDispatcher(BaseDispatcher):
                 if self.logger:
                     new_state_object = await self.state_manager.get_state(state_id)
                     event_log = {
+                        "created_at": datetime.now(),
                         "user_id": state_object.id,
                         "paltform": "Telegram",
                         "old_state": state_object.state,
