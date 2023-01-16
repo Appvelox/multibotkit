@@ -194,6 +194,7 @@ class Animation(BaseModel):
     width: Optional[int] = Field(None, title="Animation width")
     height: Optional[int] = Field(None, title="Animation height")
     thumb: Optional[str] = Field(None, title="document thumbnail")
+    has_spoiler: bool = Field(False, title="Animation needs a spoiler")
     caption: Optional[str] = Field(None, title="caption")
     parse_mode: str = Field("HTML", title="parse mode")
     disable_notification: Optional[bool] = Field(None, title="disable notification")

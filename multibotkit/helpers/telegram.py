@@ -900,6 +900,7 @@ class TelegramHelper(BaseHelper):
         width: Optional[int] = None,
         height: Optional[int] = None,
         caption: Optional[str] = None,
+        has_spoiler: Optional[bool] = False,
         file_name: Optional[str] = None,
         parse_mode: str = "HTML",
         disable_notification: Optional[bool] = None,
@@ -916,14 +917,14 @@ class TelegramHelper(BaseHelper):
                 ends = [".gif"]
                 for end in ends:
                     if animation.endswith(end):
-                        files["animation"] = (file_name if file_name else animation, open(animation, "rb"))
+                        files["animation"] = (file_name if file_name else "file.gif", open(animation, "rb"))
                         animation_str = "attach://animation"
             if animation_str is None:
                 animation_str = animation
         else:
             animation_str = "attach://animation"
-            files["animation"] = (file_name if file_name else "file", animation)
-
+            files["animation"] = (file_name if file_name else "file.gif", animation)
+        
         animation_obj = Animation(
             chat_id=chat_id,
             animation=animation_str,
@@ -931,6 +932,7 @@ class TelegramHelper(BaseHelper):
             width=width,
             height=height,
             caption=caption,
+            has_spoiler=has_spoiler,
             parse_mode=parse_mode,
             disable_notification=disable_notification,
             protect_content=protect_content,
@@ -959,6 +961,7 @@ class TelegramHelper(BaseHelper):
         width: Optional[int] = None,
         height: Optional[int] = None,
         caption: Optional[str] = None,
+        has_spoiler: Optional[bool] = False,
         file_name: Optional[str] = None,
         parse_mode: str = "HTML",
         disable_notification: Optional[bool] = None,
@@ -975,13 +978,13 @@ class TelegramHelper(BaseHelper):
                 ends = [".gif"]
                 for end in ends:
                     if animation.endswith(end):
-                        files["animation"] = (file_name if file_name else animation, open(animation, "rb"))
+                        files["animation"] = (file_name if file_name else "file.gif", open(animation, "rb"))
                         animation_str = "attach://animation"
             if animation_str is None:
                 animation_str = animation
         else:
             animation_str = "attach://animation"
-            files["animation"] = (file_name if file_name else "file", animation)
+            files["animation"] = (file_name if file_name else "file.gif", animation)
 
         animation_obj = Animation(
             chat_id=chat_id,
@@ -990,6 +993,7 @@ class TelegramHelper(BaseHelper):
             width=width,
             height=height,
             caption=caption,
+            has_spoiler=has_spoiler,
             parse_mode=parse_mode,
             disable_notification=disable_notification,
             protect_content=protect_content,
