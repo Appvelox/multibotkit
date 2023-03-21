@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="multibotkit",
-    version="0.1.7",
+    version="0.1.8",
     author="Appvelox LLC",
     author_email="team@appvelox.ru",
     description="Functional library for developing multiplatform chatbots",
