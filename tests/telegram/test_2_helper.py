@@ -774,6 +774,61 @@ async def test_async_helper_send_animation(httpx_mock: HTTPXMock):
 
 
 @pytest.mark.asyncio
+async def test_async_helper_send_audio(httpx_mock: HTTPXMock):
+    def send_audio_response(request: httpx.Request):
+        return httpx.Response(status_code=200, json={"ok": True, "result": True})
+
+    httpx_mock.add_callback(send_audio_response)
+    httpx_mock.add_callback(send_audio_response)
+
+    keyboard_button_dict = {
+        "text": "Button",
+        "request_contact": False,
+        "request_location": False,
+    }
+
+    keyboard_button = KeyboardButton.parse_obj(keyboard_button_dict)
+
+    reply_keyboard_markup = ReplyKeyboardMarkup(
+        keyboard=[[keyboard_button, keyboard_button]],
+        resize_keyboard=False,
+        one_time_keyboard=False,
+    )
+
+    r = await tg_helper.async_send_audio(
+        chat_id=1234,
+        audio="file_id",
+        reply_markup=reply_keyboard_markup
+    )
+
+    assert r == {"ok": True, "result": True}
+
+    r = await tg_helper.async_send_audio(
+        chat_id=1234,
+        audio="file_id",
+    )
+
+    assert r == {"ok": True, "result": True}
+
+    audio = NamedTemporaryFile()
+
+    r = await tg_helper.async_send_audio(
+        chat_id=1234,
+        audio=audio,
+        reply_markup=reply_keyboard_markup
+    )
+
+    assert r == {"ok": True, "result": True}
+
+    r = await tg_helper.async_send_audio(
+        chat_id=1234,
+        audio=audio,
+    )
+
+    assert r == {"ok": True, "result": True}
+
+
+@pytest.mark.asyncio
 async def test_async_helper_get_file(httpx_mock: HTTPXMock):
     def get_file_path_response(request: httpx.Request):
         return httpx.Response(
