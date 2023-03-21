@@ -13,6 +13,7 @@ from tenacity import (
 from multibotkit.helpers.base_helper import BaseHelper
 from multibotkit.schemas.telegram.outgoing import (
     Animation,
+    Audio,
     Document,
     EditMessageMediaModel,
     InlineKeyboardMarkup,
@@ -1000,6 +1001,67 @@ class TelegramHelper(BaseHelper):
 
         url = self.tg_base_url + "sendAnimation"
         data = animation_obj.dict(exclude_none=True)
+        if "reply_markup" in data.keys():
+            data["reply_markup"] = json.dumps(data["reply_markup"])
+
+        if len(files.keys()):
+            r = await self._perform_async_request(url, data, use_json=False, files=files)
+            return r
+        
+        r = await self._perform_async_request(url, data)
+        return r
+
+    async def async_send_audio(
+        self,
+        chat_id: int,
+        audio: str,
+        file_name: Optional[str] = None,
+        caption: Optional[str] = None,
+        parse_mode: str = None,
+        duration: Optional[int] = None,
+        performer: Optional[str] = None,
+        title: Optional[str] = None,
+        thumbnail: Optional[str] = None,
+        disable_notification: Optional[bool] = None,
+        protect_content: Optional[bool] = None,
+        reply_to_message_id: Optional[int] = None,
+        allow_sending_without_reply: Optional[bool] = None,
+        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None
+    ):
+        files = {}
+        audio_str = None
+
+        if type(audio) == str:
+            if not (audio.startswith("http://") or audio.startswith("https://")):
+                ends = [".mp3"]
+                for end in ends:
+                    if audio.endswith(end):
+                        files["audio"] = (file_name if file_name else audio, open(audio, "rb"))
+                        audio_str = "attach://animation"
+            if audio_str is None:
+                audio_str = audio
+        else:
+            audio_str = "attach://animation"
+            files["animation"] = (file_name if file_name else "file", audio)
+
+        audio_obj = Audio(
+            chat_id=chat_id,
+            audio=audio_str,
+            caption=caption,
+            parse_mode=parse_mode if parse_mode else "HTML",
+            duration=duration,
+            performer=performer,
+            title=title,
+            thumbnail=thumbnail,
+            disable_notification=disable_notification,
+            protect_content=protect_content,
+            reply_to_message_id=reply_to_message_id,
+            allow_sending_without_reply=allow_sending_without_reply,
+            reply_markup=reply_markup
+        )
+
+        url = self.tg_base_url + "sendAudio"
+        data = audio_obj.dict(exclude_none=True)
         if "reply_markup" in data.keys():
             data["reply_markup"] = json.dumps(data["reply_markup"])
 
