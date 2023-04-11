@@ -218,3 +218,13 @@ class Audio(BaseModel):
     reply_to_message_id: Optional[int] = Field(None, title="reply to message id")
     allow_sending_without_reply: Optional[bool] = Field(None, title="allow sending without reply")
     reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = Field(None, title="reply markup")
+
+
+class Sticker(BaseModel):
+    chat_id: int = Field(..., title="chat id")
+    sticker: str = Field(..., title="document")
+    disable_notification: Optional[bool] = Field(None, title="disable notification")
+    protect_content: Optional[bool] = Field(None, title="protect content")
+    reply_to_message_id: Optional[int] = Field(None, title="reply to message id")
+    allow_sending_without_reply: Optional[bool] = Field(None, title="allow sending without reply")
+    reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = Field(None, title="reply markup")
