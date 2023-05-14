@@ -723,6 +723,8 @@ def test_outgoing_models():
         "text": "text",
         "disable_web_page_preview": False,
         "reply_markup": reply_keyboard_markup_dict,
+        "reply_to_message_id": None,
+        "allow_sending_without_reply": None
     }
 
     message = OutgoingMessage.parse_obj(message_dict)
