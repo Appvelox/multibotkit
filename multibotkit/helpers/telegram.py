@@ -73,6 +73,8 @@ class TelegramHelper(BaseHelper):
         disable_web_page_preview: Optional[bool] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove]] = None,
         parse_mode: str = "HTML",
+        reply_to_message_id: Optional[int] = None,
+        allow_sending_without_reply: Optional[bool] = None
     ):
         url = self.tg_base_url + "sendMessage"
         message = Message(
@@ -80,6 +82,8 @@ class TelegramHelper(BaseHelper):
             text=text,
             disable_web_page_preview=disable_web_page_preview,
             reply_markup=reply_markup,
+            reply_to_message_id=reply_to_message_id,
+            allow_sending_without_reply=allow_sending_without_reply
         )
 
         data = message.dict(exclude_none=True)
@@ -94,6 +98,8 @@ class TelegramHelper(BaseHelper):
         disable_web_page_preview: Optional[bool] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove]] = None,
         parse_mode: str = "HTML",
+        reply_to_message_id: Optional[int] = None,
+        allow_sending_without_reply: Optional[bool] = None
     ):
         url = self.tg_base_url + "sendMessage"
         message = Message(
@@ -101,6 +107,8 @@ class TelegramHelper(BaseHelper):
             text=text,
             disable_web_page_preview=disable_web_page_preview,
             reply_markup=reply_markup,
+            reply_to_message_id=reply_to_message_id,
+            allow_sending_without_reply=allow_sending_without_reply
         )
 
         data = message.dict(exclude_none=True)
