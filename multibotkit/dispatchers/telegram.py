@@ -1,3 +1,4 @@
+import inspect
 from datetime import datetime
 from multibotkit.dispatchers.base_dispatcher import BaseDispatcher
 from multibotkit.schemas.telegram.incoming import Update
@@ -21,14 +22,20 @@ class TelegramDispatcher(BaseDispatcher):
             state_func_result = True
             if state_func is not None:
                 try:
-                    state_func_result = state_func(state_object)
+                    if inspect.iscoroutinefunction(state_func):
+                        state_func_result = await state_func(state_object)
+                    else:
+                        state_func_result = state_func(state_object)
                 except Exception:
                     continue
             
             func_result = True
             if func is not None:
                 try:
-                    func_result = func(event)
+                    if inspect.iscoroutinefunction(func):
+                        func_result = await func(event)
+                    else:
+                        func_result = func(event)
                 except Exception:
                     continue
 
