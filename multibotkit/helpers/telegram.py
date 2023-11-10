@@ -24,8 +24,9 @@ from multibotkit.schemas.telegram.outgoing import (
     ReplyKeyboardMarkup,
     SetWebhookParams,
     WebhookInfo,
-    MediaGroup, ReplyKeyboardRemove,
-    Sticker
+    MediaGroup,
+    ReplyKeyboardRemove,
+    Sticker,
 )
 
 
@@ -71,10 +72,12 @@ class TelegramHelper(BaseHelper):
         chat_id: int,
         text: str,
         disable_web_page_preview: Optional[bool] = None,
-        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove]] = None,
+        reply_markup: Optional[
+            Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove]
+        ] = None,
         parse_mode: str = "HTML",
         reply_to_message_id: Optional[int] = None,
-        allow_sending_without_reply: Optional[bool] = None
+        allow_sending_without_reply: Optional[bool] = None,
     ):
         url = self.tg_base_url + "sendMessage"
         message = Message(
@@ -83,7 +86,7 @@ class TelegramHelper(BaseHelper):
             disable_web_page_preview=disable_web_page_preview,
             reply_markup=reply_markup,
             reply_to_message_id=reply_to_message_id,
-            allow_sending_without_reply=allow_sending_without_reply
+            allow_sending_without_reply=allow_sending_without_reply,
         )
 
         data = message.dict(exclude_none=True)
@@ -96,10 +99,12 @@ class TelegramHelper(BaseHelper):
         chat_id: int,
         text: str,
         disable_web_page_preview: Optional[bool] = None,
-        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove]] = None,
+        reply_markup: Optional[
+            Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove]
+        ] = None,
         parse_mode: str = "HTML",
         reply_to_message_id: Optional[int] = None,
-        allow_sending_without_reply: Optional[bool] = None
+        allow_sending_without_reply: Optional[bool] = None,
     ):
         url = self.tg_base_url + "sendMessage"
         message = Message(
@@ -108,7 +113,7 @@ class TelegramHelper(BaseHelper):
             disable_web_page_preview=disable_web_page_preview,
             reply_markup=reply_markup,
             reply_to_message_id=reply_to_message_id,
-            allow_sending_without_reply=allow_sending_without_reply
+            allow_sending_without_reply=allow_sending_without_reply,
         )
 
         data = message.dict(exclude_none=True)
@@ -140,26 +145,36 @@ class TelegramHelper(BaseHelper):
         r = await self._perform_async_request(url, data)
         return r
 
-    def sync_edit_message_caption(self, chat_id: int, message_id: int, caption: str):
-        url = self.tg_base_url + "editMessageCaption"
-        data = {
-            "chat_id": chat_id,
-            "message_id": message_id,
-            "caption": caption,
-            "parse_mode": "Markdown",
-        }
-        r = self._perform_sync_request(url, data)
-        return r
-
-    async def async_edit_message_caption(
-        self, chat_id: int, message_id: int, caption: str
+    def sync_edit_message_caption(
+        self,
+        chat_id: int,
+        message_id: int,
+        caption: str,
+        parse_mode: Optional[str] = "HTML",
     ):
         url = self.tg_base_url + "editMessageCaption"
         data = {
             "chat_id": chat_id,
             "message_id": message_id,
             "caption": caption,
-            "parse_mode": "Markdown",
+            "parse_mode": parse_mode,
+        }
+        r = self._perform_sync_request(url, data)
+        return r
+
+    async def async_edit_message_caption(
+        self,
+        chat_id: int,
+        message_id: int,
+        caption: str,
+        parse_mode: Optional[str] = "HTML",
+    ):
+        url = self.tg_base_url + "editMessageCaption"
+        data = {
+            "chat_id": chat_id,
+            "message_id": message_id,
+            "caption": caption,
+            "parse_mode": parse_mode,
         }
         r = await self._perform_async_request(url, data)
         return r
@@ -199,7 +214,7 @@ class TelegramHelper(BaseHelper):
             data = {"chat_id": chat_id, "message_id": message_id, "reply_markup": {}}
         r = await self._perform_async_request(url, data)
         return r
-    
+
     def sync_edit_message_media(
         self,
         media: Union[str, IO],
@@ -208,21 +223,20 @@ class TelegramHelper(BaseHelper):
         reply_markup: Optional[InlineKeyboardMarkup] = None,
         chat_id: Optional[int] = None,
         message_id: Optional[int] = None,
-        inline_message_id: Optional[Union[int, str]] = None
+        inline_message_id: Optional[Union[int, str]] = None,
+        parse_mode: Optional[str] = "HTML",
     ):
         if type(media) == str:
             if media.startswith("http://") or media.startswith("https://"):
                 media_obj = InputMedia(
-                    type=media_type,
-                    media=media,
-                    caption=caption
+                    type=media_type, media=media, caption=caption, parse_mode=parse_mode
                 )
                 data_obj = EditMessageMediaModel(
                     chat_id=chat_id,
                     message_id=message_id,
                     inline_message_id=inline_message_id,
                     media=media_obj,
-                    reply_markup=reply_markup
+                    reply_markup=reply_markup,
                 )
 
                 url = self.tg_base_url + "editMessageMedia"
@@ -230,7 +244,7 @@ class TelegramHelper(BaseHelper):
 
                 r = self._perform_sync_request(url, data)
                 return r
-            
+
             ends = [".jpg", ".jpeg", ".gif", ".png"]
             for end in ends:
                 if media.endswith(end):
@@ -239,14 +253,15 @@ class TelegramHelper(BaseHelper):
                     media_obj = InputMedia(
                         type=media_type,
                         media=f"attach://{media}",
-                        caption=caption
+                        caption=caption,
+                        parse_mode=parse_mode,
                     )
                     data_obj = EditMessageMediaModel(
                         chat_id=chat_id,
                         message_id=message_id,
                         inline_message_id=inline_message_id,
                         media=media_obj,
-                        reply_markup=reply_markup
+                        reply_markup=reply_markup,
                     )
 
                     url = self.tg_base_url + "editMessageMedia"
@@ -256,20 +271,20 @@ class TelegramHelper(BaseHelper):
                         data["reply_markup"] = json.dumps(data["reply_markup"])
                     files = {media: opened_media}
 
-                    r = self._perform_sync_request(url, data, use_json=False, files=files)
+                    r = self._perform_sync_request(
+                        url, data, use_json=False, files=files
+                    )
                     return r
-            
+
             media_obj = InputMedia(
-                type=media_type,
-                media=media,
-                caption=caption
+                type=media_type, media=media, caption=caption, parse_mode=parse_mode
             )
             data_obj = EditMessageMediaModel(
                 chat_id=chat_id,
                 message_id=message_id,
                 inline_message_id=inline_message_id,
                 media=media_obj,
-                reply_markup=reply_markup
+                reply_markup=reply_markup,
             )
 
             url = self.tg_base_url + "editMessageMedia"
@@ -277,18 +292,19 @@ class TelegramHelper(BaseHelper):
 
             r = self._perform_sync_request(url, data)
             return r
-        
+
         media_obj = InputMedia(
             type=media_type,
             media="attach://media",
-            caption=caption
+            caption=caption,
+            parse_mode=parse_mode,
         )
         data_obj = EditMessageMediaModel(
             chat_id=chat_id,
             message_id=message_id,
             inline_message_id=inline_message_id,
             media=media_obj,
-            reply_markup=reply_markup
+            reply_markup=reply_markup,
         )
 
         url = self.tg_base_url + "editMessageMedia"
@@ -300,7 +316,6 @@ class TelegramHelper(BaseHelper):
 
         r = self._perform_sync_request(url, data, use_json=False, files=files)
         return r
-    
 
     async def async_edit_message_media(
         self,
@@ -310,21 +325,20 @@ class TelegramHelper(BaseHelper):
         reply_markup: Optional[InlineKeyboardMarkup] = None,
         chat_id: Optional[int] = None,
         message_id: Optional[int] = None,
-        inline_message_id: Optional[Union[int, str]] = None
+        inline_message_id: Optional[Union[int, str]] = None,
+        parse_mode: Optional[str] = "HTML",
     ):
         if type(media) == str:
             if media.startswith("http://") or media.startswith("https://"):
                 media_obj = InputMedia(
-                    type=media_type,
-                    media=media,
-                    caption=caption
+                    type=media_type, media=media, caption=caption, parse_mode=parse_mode
                 )
                 data_obj = EditMessageMediaModel(
                     chat_id=chat_id,
                     message_id=message_id,
                     inline_message_id=inline_message_id,
                     media=media_obj,
-                    reply_markup=reply_markup
+                    reply_markup=reply_markup,
                 )
 
                 url = self.tg_base_url + "editMessageMedia"
@@ -332,7 +346,7 @@ class TelegramHelper(BaseHelper):
 
                 r = await self._perform_async_request(url, data)
                 return r
-            
+
             ends = [".jpg", ".jpeg", ".gif", ".png"]
             for end in ends:
                 if media.endswith(end):
@@ -341,14 +355,15 @@ class TelegramHelper(BaseHelper):
                     media_obj = InputMedia(
                         type=media_type,
                         media=f"attach://{media}",
-                        caption=caption
+                        caption=caption,
+                        parse_mode=parse_mode,
                     )
                     data_obj = EditMessageMediaModel(
                         chat_id=chat_id,
                         message_id=message_id,
                         inline_message_id=inline_message_id,
                         media=media_obj,
-                        reply_markup=reply_markup
+                        reply_markup=reply_markup,
                     )
 
                     url = self.tg_base_url + "editMessageMedia"
@@ -358,20 +373,20 @@ class TelegramHelper(BaseHelper):
                         data["reply_markup"] = json.dumps(data["reply_markup"])
                     files = {media: opened_media}
 
-                    r = await self._perform_async_request(url, data, use_json=False, files=files)
+                    r = await self._perform_async_request(
+                        url, data, use_json=False, files=files
+                    )
                     return r
-            
+
             media_obj = InputMedia(
-                type=media_type,
-                media=media,
-                caption=caption
+                type=media_type, media=media, caption=caption, parse_mode=parse_mode
             )
             data_obj = EditMessageMediaModel(
                 chat_id=chat_id,
                 message_id=message_id,
                 inline_message_id=inline_message_id,
                 media=media_obj,
-                reply_markup=reply_markup
+                reply_markup=reply_markup,
             )
 
             url = self.tg_base_url + "editMessageMedia"
@@ -379,18 +394,19 @@ class TelegramHelper(BaseHelper):
 
             r = await self._perform_async_request(url, data)
             return r
-        
+
         media_obj = InputMedia(
             type=media_type,
             media="attach://media",
-            caption=caption
+            caption=caption,
+            parse_mode=parse_mode,
         )
         data_obj = EditMessageMediaModel(
             chat_id=chat_id,
             message_id=message_id,
             inline_message_id=inline_message_id,
             media=media_obj,
-            reply_markup=reply_markup
+            reply_markup=reply_markup,
         )
 
         url = self.tg_base_url + "editMessageMedia"
@@ -403,7 +419,6 @@ class TelegramHelper(BaseHelper):
         r = await self._perform_async_request(url, data, use_json=False, files=files)
         return r
 
-
     def sync_send_photo(
         self,
         chat_id: int,
@@ -414,7 +429,7 @@ class TelegramHelper(BaseHelper):
         protect_content: Optional[bool] = None,
         reply_to_message_id: Optional[int] = None,
         allow_sending_without_reply: Optional[bool] = None,
-        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None
+        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None,
     ):
         if type(photo) == str:
             if photo.startswith("http://") or photo.startswith("https://"):
@@ -427,15 +442,15 @@ class TelegramHelper(BaseHelper):
                     protect_content=protect_content,
                     reply_to_message_id=reply_to_message_id,
                     allow_sending_without_reply=allow_sending_without_reply,
-                    reply_markup=reply_markup
+                    reply_markup=reply_markup,
                 )
 
                 url = self.tg_base_url + "sendPhoto"
                 data = photo_obj.dict(exclude_none=True)
-                
+
                 r = self._perform_sync_request(url, data)
                 return r
-            
+
             ends = [".jpg", ".jpeg", ".gif", ".png"]
             for end in ends:
                 if photo.endswith(end):
@@ -449,7 +464,7 @@ class TelegramHelper(BaseHelper):
                         protect_content=protect_content,
                         reply_to_message_id=reply_to_message_id,
                         allow_sending_without_reply=allow_sending_without_reply,
-                        reply_markup=reply_markup
+                        reply_markup=reply_markup,
                     )
 
                     url = self.tg_base_url + "sendPhoto"
@@ -457,10 +472,12 @@ class TelegramHelper(BaseHelper):
                     if "reply_markup" in data.keys():
                         data["reply_markup"] = json.dumps(data["reply_markup"])
                     files = {photo: opened_photo}
-                    
-                    r = self._perform_sync_request(url, data, use_json=False, files=files)
+
+                    r = self._perform_sync_request(
+                        url, data, use_json=False, files=files
+                    )
                     return r
-            
+
             photo_obj = Photo(
                 chat_id=chat_id,
                 photo=photo,
@@ -470,15 +487,15 @@ class TelegramHelper(BaseHelper):
                 protect_content=protect_content,
                 reply_to_message_id=reply_to_message_id,
                 allow_sending_without_reply=allow_sending_without_reply,
-                reply_markup=reply_markup
+                reply_markup=reply_markup,
             )
 
             url = self.tg_base_url + "sendPhoto"
             data = photo_obj.dict(exclude_none=True)
-            
+
             r = self._perform_sync_request(url, data)
             return r
-        
+
         photo_obj = Photo(
             chat_id=chat_id,
             photo="attach://image",
@@ -488,7 +505,7 @@ class TelegramHelper(BaseHelper):
             protect_content=protect_content,
             reply_to_message_id=reply_to_message_id,
             allow_sending_without_reply=allow_sending_without_reply,
-            reply_markup=reply_markup
+            reply_markup=reply_markup,
         )
 
         url = self.tg_base_url + "sendPhoto"
@@ -496,7 +513,7 @@ class TelegramHelper(BaseHelper):
         if "reply_markup" in data.keys():
             data["reply_markup"] = json.dumps(data["reply_markup"])
         files = {"image": photo}
-        
+
         r = self._perform_sync_request(url, data, use_json=False, files=files)
         return r
 
@@ -510,7 +527,7 @@ class TelegramHelper(BaseHelper):
         protect_content: Optional[bool] = None,
         reply_to_message_id: Optional[int] = None,
         allow_sending_without_reply: Optional[bool] = None,
-        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None
+        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None,
     ):
         if type(photo) == str:
             if photo.startswith("http://") or photo.startswith("https://"):
@@ -523,14 +540,14 @@ class TelegramHelper(BaseHelper):
                     protect_content=protect_content,
                     reply_to_message_id=reply_to_message_id,
                     allow_sending_without_reply=allow_sending_without_reply,
-                    reply_markup=reply_markup
+                    reply_markup=reply_markup,
                 )
 
                 url = self.tg_base_url + "sendPhoto"
                 data = photo_obj.dict(exclude_none=True)
                 r = await self._perform_async_request(url, data)
                 return r
-            
+
             ends = [".jpg", ".jpeg", ".gif", ".png"]
             for end in ends:
                 if photo.endswith(end):
@@ -545,7 +562,7 @@ class TelegramHelper(BaseHelper):
                         protect_content=protect_content,
                         reply_to_message_id=reply_to_message_id,
                         allow_sending_without_reply=allow_sending_without_reply,
-                        reply_markup=reply_markup
+                        reply_markup=reply_markup,
                     )
 
                     url = self.tg_base_url + "sendPhoto"
@@ -553,9 +570,11 @@ class TelegramHelper(BaseHelper):
                     if "reply_markup" in data.keys():
                         data["reply_markup"] = json.dumps(data["reply_markup"])
                     files = {photo: content}
-                    r = await self._perform_async_request(url, data, use_json=False, files=files)
+                    r = await self._perform_async_request(
+                        url, data, use_json=False, files=files
+                    )
                     return r
-            
+
             photo_obj = Photo(
                 chat_id=chat_id,
                 photo=photo,
@@ -565,14 +584,14 @@ class TelegramHelper(BaseHelper):
                 protect_content=protect_content,
                 reply_to_message_id=reply_to_message_id,
                 allow_sending_without_reply=allow_sending_without_reply,
-                reply_markup=reply_markup
+                reply_markup=reply_markup,
             )
 
             url = self.tg_base_url + "sendPhoto"
             data = photo_obj.dict(exclude_none=True)
             r = await self._perform_async_request(url, data)
             return r
-        
+
         photo_obj = Photo(
             chat_id=chat_id,
             photo="attach://image",
@@ -582,7 +601,7 @@ class TelegramHelper(BaseHelper):
             protect_content=protect_content,
             reply_to_message_id=reply_to_message_id,
             allow_sending_without_reply=allow_sending_without_reply,
-            reply_markup=reply_markup
+            reply_markup=reply_markup,
         )
 
         url = self.tg_base_url + "sendPhoto"
@@ -592,7 +611,6 @@ class TelegramHelper(BaseHelper):
         files = {"image": photo}
         r = await self._perform_async_request(url, data, use_json=False, files=files)
         return r
-    
 
     def sync_send_document(
         self,
@@ -605,7 +623,7 @@ class TelegramHelper(BaseHelper):
         protect_content: Optional[bool] = None,
         reply_to_message_id: Optional[int] = None,
         allow_sending_without_reply: Optional[bool] = None,
-        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None
+        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None,
     ):
         files = {}
         document_str = None
@@ -615,7 +633,10 @@ class TelegramHelper(BaseHelper):
                 ends = [".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx"]
                 for end in ends:
                     if document.endswith(end):
-                        files["document"] = (file_name if file_name else document, open(document, "rb"))
+                        files["document"] = (
+                            file_name if file_name else document,
+                            open(document, "rb"),
+                        )
                         document_str = "attach://document"
             if document_str is None:
                 document_str = document
@@ -632,7 +653,7 @@ class TelegramHelper(BaseHelper):
             protect_content=protect_content,
             reply_to_message_id=reply_to_message_id,
             allow_sending_without_reply=allow_sending_without_reply,
-            reply_markup=reply_markup
+            reply_markup=reply_markup,
         )
 
         url = self.tg_base_url + "sendDocument"
@@ -643,7 +664,7 @@ class TelegramHelper(BaseHelper):
         if len(files.keys()):
             r = self._perform_sync_request(url, data, use_json=False, files=files)
             return r
-        
+
         r = self._perform_sync_request(url, data)
         return r
 
@@ -658,17 +679,20 @@ class TelegramHelper(BaseHelper):
         protect_content: Optional[bool] = None,
         reply_to_message_id: Optional[int] = None,
         allow_sending_without_reply: Optional[bool] = None,
-        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None
+        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None,
     ):
         files = {}
         document_str = None
-        
+
         if type(document) == str:
             if not (document.startswith("http://") or document.startswith("https://")):
                 ends = [".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx"]
                 for end in ends:
                     if document.endswith(end):
-                        files["document"] = (file_name if file_name else document, open(document, "rb"))
+                        files["document"] = (
+                            file_name if file_name else document,
+                            open(document, "rb"),
+                        )
                         document_str = "attach://document"
             if document_str is None:
                 document_str = document
@@ -685,22 +709,23 @@ class TelegramHelper(BaseHelper):
             protect_content=protect_content,
             reply_to_message_id=reply_to_message_id,
             allow_sending_without_reply=allow_sending_without_reply,
-            reply_markup=reply_markup
+            reply_markup=reply_markup,
         )
 
         url = self.tg_base_url + "sendDocument"
         data = document_obj.dict(exclude_none=True)
-        
+
         if "reply_markup" in data.keys():
             data["reply_markup"] = json.dumps(data["reply_markup"])
 
         if len(files.keys()):
-            r = await self._perform_async_request(url, data, use_json=False, files=files)
+            r = await self._perform_async_request(
+                url, data, use_json=False, files=files
+            )
             return r
-        
+
         r = await self._perform_async_request(url, data)
         return r
-
 
     @retry(
         retry=retry_if_exception_type(httpx.HTTPError),
@@ -711,14 +736,12 @@ class TelegramHelper(BaseHelper):
     def sync_get_file(self, file_id: str):
 
         url = self.tg_base_url + "getFile"
-        data = {
-            "file_id": file_id
-        }
+        data = {"file_id": file_id}
         r = self._perform_sync_request(url, data)
 
         file_path = r["result"]["file_path"]
         download_url = f"https://api.telegram.org/file/bot{self.token}/{file_path}"
-        
+
         io_object = BytesIO()
         with httpx.stream(method="GET", url=download_url) as result:
             for data in result.iter_bytes():
@@ -736,9 +759,7 @@ class TelegramHelper(BaseHelper):
     async def async_get_file(self, file_id: str):
 
         url = self.tg_base_url + "getFile"
-        data = {
-            "file_id": file_id
-        }
+        data = {"file_id": file_id}
         r = await self._perform_async_request(url, data)
 
         file_path = r["result"]["file_path"]
@@ -753,74 +774,52 @@ class TelegramHelper(BaseHelper):
 
         return io_object
 
-    def sync_send_media_group(
-        self,
-        chat_id: int,
-        photos: Union[List[str], List[IO]]
-    ):
+    def sync_send_media_group(self, chat_id: int, photos: Union[List[str], List[IO]]):
         files = {}
         photos_list = []
 
         if type(photos[-1]) == str:
             if photos[-1].startswith("http://") or photos[-1].startswith("https://"):
                 for photo in photos:
-                    photos_list.append(
-                        InputMediaPhoto(media=photo)
-                    )
-                
-                media_group = MediaGroup(
-                    chat_id=chat_id,
-                    media=photos_list
-                )
+                    photos_list.append(InputMediaPhoto(media=photo))
+
+                media_group = MediaGroup(chat_id=chat_id, media=photos_list)
                 url = self.tg_base_url + "sendMediaGroup"
                 data = media_group.dict(exclude_none=True)
                 r = self._perform_sync_request(url, data)
                 return r
-            
+
             ends = [".jpg", ".jpeg", ".gif", ".png"]
             for end in ends:
                 if photos[-1].endswith(end):
                     for photo in photos:
-                        photos_list.append(
-                            InputMediaPhoto(media=f"attach://{photo}")
-                        )
+                        photos_list.append(InputMediaPhoto(media=f"attach://{photo}"))
                         content = open(photo, "rb")
                         files[photo] = content
-                    
-                    media_group = MediaGroup(
-                        chat_id=chat_id,
-                        media=photos_list
-                    )
+
+                    media_group = MediaGroup(chat_id=chat_id, media=photos_list)
                     url = self.tg_base_url + "sendMediaGroup"
                     data = media_group.dict(exclude_none=True)
                     data["media"] = json.dumps(data["media"])
-                    r = self._perform_sync_request(url, data, use_json=False, files=files)
+                    r = self._perform_sync_request(
+                        url, data, use_json=False, files=files
+                    )
                     return r
 
             for photo in photos:
-                photos_list.append(
-                    InputMediaPhoto(media=photo)
-                )
-            
-            media_group = MediaGroup(
-                chat_id=chat_id,
-                media=photos_list
-            )
+                photos_list.append(InputMediaPhoto(media=photo))
+
+            media_group = MediaGroup(chat_id=chat_id, media=photos_list)
             url = self.tg_base_url + "sendMediaGroup"
             data = media_group.dict(exclude_none=True)
             r = self._perform_sync_request(url, data)
             return r
 
         for i in range(len(photos)):
-            photos_list.append(
-                InputMediaPhoto(media=f"attach://image_{i}")
-            )
+            photos_list.append(InputMediaPhoto(media=f"attach://image_{i}"))
             files[f"image_{i}"] = photos[i]
-        
-        media_group = MediaGroup(
-            chat_id=chat_id,
-            media=photos_list
-        )
+
+        media_group = MediaGroup(chat_id=chat_id, media=photos_list)
         url = self.tg_base_url + "sendMediaGroup"
         data = media_group.dict(exclude_none=True)
         data["media"] = json.dumps(data["media"])
@@ -828,9 +827,7 @@ class TelegramHelper(BaseHelper):
         return r
 
     async def async_send_media_group(
-        self,
-        chat_id: int,
-        photos: Union[List[str], List[IO]]
+        self, chat_id: int, photos: Union[List[str], List[IO]]
     ):
         files = {}
         photos_list = []
@@ -838,64 +835,46 @@ class TelegramHelper(BaseHelper):
         if type(photos[-1]) == str:
             if photos[-1].startswith("http://") or photos[-1].startswith("https://"):
                 for photo in photos:
-                    photos_list.append(
-                        InputMediaPhoto(media=photo)
-                    )
-                
-                media_group = MediaGroup(
-                    chat_id=chat_id,
-                    media=photos_list
-                )
+                    photos_list.append(InputMediaPhoto(media=photo))
+
+                media_group = MediaGroup(chat_id=chat_id, media=photos_list)
                 url = self.tg_base_url + "sendMediaGroup"
                 data = media_group.dict(exclude_none=True)
                 r = await self._perform_async_request(url, data)
                 return r
-            
+
             ends = [".jpg", ".jpeg", ".gif", ".png"]
             for end in ends:
                 if photos[-1].endswith(end):
                     for photo in photos:
-                        photos_list.append(
-                            InputMediaPhoto(media=f"attach://{photo}")
-                        )
+                        photos_list.append(InputMediaPhoto(media=f"attach://{photo}"))
                         async with aiofiles.open(photo, "rb") as opened_photo:
                             content = await opened_photo.read()
                         files[photo] = content
-                    
-                    media_group = MediaGroup(
-                        chat_id=chat_id,
-                        media=photos_list
-                    )
+
+                    media_group = MediaGroup(chat_id=chat_id, media=photos_list)
                     url = self.tg_base_url + "sendMediaGroup"
                     data = media_group.dict(exclude_none=True)
                     data["media"] = json.dumps(data["media"])
-                    r = await self._perform_async_request(url, data, use_json=False, files=files)
+                    r = await self._perform_async_request(
+                        url, data, use_json=False, files=files
+                    )
                     return r
 
             for photo in photos:
-                photos_list.append(
-                    InputMediaPhoto(media=photo)
-                )
-            
-            media_group = MediaGroup(
-                chat_id=chat_id,
-                media=photos_list
-            )
+                photos_list.append(InputMediaPhoto(media=photo))
+
+            media_group = MediaGroup(chat_id=chat_id, media=photos_list)
             url = self.tg_base_url + "sendMediaGroup"
             data = media_group.dict(exclude_none=True)
             r = await self._perform_async_request(url, data)
             return r
 
         for i in range(len(photos)):
-            photos_list.append(
-                InputMediaPhoto(media=f"attach://image_{i}")
-            )
+            photos_list.append(InputMediaPhoto(media=f"attach://image_{i}"))
             files[f"image_{i}"] = photos[i]
-        
-        media_group = MediaGroup(
-            chat_id=chat_id,
-            media=photos_list
-        )
+
+        media_group = MediaGroup(chat_id=chat_id, media=photos_list)
         url = self.tg_base_url + "sendMediaGroup"
         data = media_group.dict(exclude_none=True)
         data["media"] = json.dumps(data["media"])
@@ -917,24 +896,29 @@ class TelegramHelper(BaseHelper):
         protect_content: Optional[bool] = None,
         reply_to_message_id: Optional[int] = None,
         allow_sending_without_reply: Optional[bool] = None,
-        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None
+        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None,
     ):
         files = {}
         animation_str = None
 
         if type(animation) == str:
-            if not (animation.startswith("http://") or animation.startswith("https://")):
+            if not (
+                animation.startswith("http://") or animation.startswith("https://")
+            ):
                 ends = [".gif"]
                 for end in ends:
                     if animation.endswith(end):
-                        files["animation"] = (file_name if file_name else "file.gif", open(animation, "rb"))
+                        files["animation"] = (
+                            file_name if file_name else "file.gif",
+                            open(animation, "rb"),
+                        )
                         animation_str = "attach://animation"
             if animation_str is None:
                 animation_str = animation
         else:
             animation_str = "attach://animation"
             files["animation"] = (file_name if file_name else "file.gif", animation)
-        
+
         animation_obj = Animation(
             chat_id=chat_id,
             animation=animation_str,
@@ -948,7 +932,7 @@ class TelegramHelper(BaseHelper):
             protect_content=protect_content,
             reply_to_message_id=reply_to_message_id,
             allow_sending_without_reply=allow_sending_without_reply,
-            reply_markup=reply_markup
+            reply_markup=reply_markup,
         )
 
         url = self.tg_base_url + "sendAnimation"
@@ -959,7 +943,7 @@ class TelegramHelper(BaseHelper):
         if len(files.keys()):
             r = self._perform_sync_request(url, data, use_json=False, files=files)
             return r
-        
+
         r = self._perform_sync_request(url, data)
         return r
 
@@ -978,17 +962,22 @@ class TelegramHelper(BaseHelper):
         protect_content: Optional[bool] = None,
         reply_to_message_id: Optional[int] = None,
         allow_sending_without_reply: Optional[bool] = None,
-        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None
+        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None,
     ):
         files = {}
         animation_str = None
 
         if type(animation) == str:
-            if not (animation.startswith("http://") or animation.startswith("https://")):
+            if not (
+                animation.startswith("http://") or animation.startswith("https://")
+            ):
                 ends = [".gif"]
                 for end in ends:
                     if animation.endswith(end):
-                        files["animation"] = (file_name if file_name else "file.gif", open(animation, "rb"))
+                        files["animation"] = (
+                            file_name if file_name else "file.gif",
+                            open(animation, "rb"),
+                        )
                         animation_str = "attach://animation"
             if animation_str is None:
                 animation_str = animation
@@ -1009,7 +998,7 @@ class TelegramHelper(BaseHelper):
             protect_content=protect_content,
             reply_to_message_id=reply_to_message_id,
             allow_sending_without_reply=allow_sending_without_reply,
-            reply_markup=reply_markup
+            reply_markup=reply_markup,
         )
 
         url = self.tg_base_url + "sendAnimation"
@@ -1018,9 +1007,11 @@ class TelegramHelper(BaseHelper):
             data["reply_markup"] = json.dumps(data["reply_markup"])
 
         if len(files.keys()):
-            r = await self._perform_async_request(url, data, use_json=False, files=files)
+            r = await self._perform_async_request(
+                url, data, use_json=False, files=files
+            )
             return r
-        
+
         r = await self._perform_async_request(url, data)
         return r
 
@@ -1039,7 +1030,7 @@ class TelegramHelper(BaseHelper):
         protect_content: Optional[bool] = None,
         reply_to_message_id: Optional[int] = None,
         allow_sending_without_reply: Optional[bool] = None,
-        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None
+        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None,
     ):
         files = {}
         audio_str = None
@@ -1049,7 +1040,10 @@ class TelegramHelper(BaseHelper):
                 ends = [".mp3"]
                 for end in ends:
                     if audio.endswith(end):
-                        files["audio"] = (file_name if file_name else audio, open(audio, "rb"))
+                        files["audio"] = (
+                            file_name if file_name else audio,
+                            open(audio, "rb"),
+                        )
                         audio_str = "attach://animation"
             if audio_str is None:
                 audio_str = audio
@@ -1070,7 +1064,7 @@ class TelegramHelper(BaseHelper):
             protect_content=protect_content,
             reply_to_message_id=reply_to_message_id,
             allow_sending_without_reply=allow_sending_without_reply,
-            reply_markup=reply_markup
+            reply_markup=reply_markup,
         )
 
         url = self.tg_base_url + "sendAudio"
@@ -1079,21 +1073,23 @@ class TelegramHelper(BaseHelper):
             data["reply_markup"] = json.dumps(data["reply_markup"])
 
         if len(files.keys()):
-            r = await self._perform_async_request(url, data, use_json=False, files=files)
+            r = await self._perform_async_request(
+                url, data, use_json=False, files=files
+            )
             return r
-        
+
         r = await self._perform_async_request(url, data)
         return r
 
     async def async_send_sticker(
-            self,
-            chat_id: int,
-            sticker: str,
-            disable_notification: Optional[bool] = None,
-            protect_content: Optional[bool] = None,
-            reply_to_message_id: Optional[int] = None,
-            allow_sending_without_reply: Optional[bool] = None,
-            reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None
+        self,
+        chat_id: int,
+        sticker: str,
+        disable_notification: Optional[bool] = None,
+        protect_content: Optional[bool] = None,
+        reply_to_message_id: Optional[int] = None,
+        allow_sending_without_reply: Optional[bool] = None,
+        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None,
     ):
         sticker_obj = Sticker(
             chat_id=chat_id,
@@ -1102,7 +1098,7 @@ class TelegramHelper(BaseHelper):
             protect_content=protect_content,
             reply_to_message_id=reply_to_message_id,
             allow_sending_without_reply=allow_sending_without_reply,
-            reply_markup=reply_markup
+            reply_markup=reply_markup,
         )
 
         url = self.tg_base_url + "sendSticker"
@@ -1114,14 +1110,14 @@ class TelegramHelper(BaseHelper):
         return r
 
     def sync_send_sticker(
-            self,
-            chat_id: int,
-            sticker: str,
-            disable_notification: Optional[bool] = None,
-            protect_content: Optional[bool] = None,
-            reply_to_message_id: Optional[int] = None,
-            allow_sending_without_reply: Optional[bool] = None,
-            reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None
+        self,
+        chat_id: int,
+        sticker: str,
+        disable_notification: Optional[bool] = None,
+        protect_content: Optional[bool] = None,
+        reply_to_message_id: Optional[int] = None,
+        allow_sending_without_reply: Optional[bool] = None,
+        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None,
     ):
         sticker_obj = Sticker(
             chat_id=chat_id,
@@ -1130,7 +1126,7 @@ class TelegramHelper(BaseHelper):
             protect_content=protect_content,
             reply_to_message_id=reply_to_message_id,
             allow_sending_without_reply=allow_sending_without_reply,
-            reply_markup=reply_markup
+            reply_markup=reply_markup,
         )
 
         url = self.tg_base_url + "sendSticker"
@@ -1142,8 +1138,8 @@ class TelegramHelper(BaseHelper):
         return r
 
     def sync_get_sticker_set(
-            self,
-            sticker_set: str,
+        self,
+        sticker_set: str,
     ):
         url = self.tg_base_url + "getStickerSet"
         data = {"name": sticker_set}
@@ -1151,8 +1147,8 @@ class TelegramHelper(BaseHelper):
         return r
 
     async def async_get_sticker_set(
-            self,
-            sticker_set: str,
+        self,
+        sticker_set: str,
     ):
         url = self.tg_base_url + "getStickerSet"
         data = {"name": sticker_set}
