@@ -114,6 +114,10 @@ for optimal fit",
         title="Requests clients to hide the keyboard as soon as \
 it's been used",
     )
+    is_persistent: Optional[bool] = Field(
+        None,
+        title="Requests clients to always show the keyboard when the regular keyboard is hidden.",
+    )
 
 
 class ReplyKeyboardRemove(BaseModel):
@@ -128,12 +132,15 @@ class Message(BaseModel):
     disable_web_page_preview: Optional[bool] = Field(
         None, title="Disables link previews for links in this message"
     )
-    reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove]] = Field(
-        None, title="Inline or Reply keyboard attached to the message"
+    reply_markup: Optional[
+        Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove]
+    ] = Field(None, title="Inline or Reply keyboard attached to the message")
+    reply_to_message_id: Optional[int] = Field(
+        None, title="If the message is a reply, ID of the original message"
     )
-    reply_to_message_id: Optional[int] = Field(None, title="If the message is a reply, ID of the original message")
     allow_sending_without_reply: Optional[bool] = Field(
-        None, title="Pass True if the message should be sent even if the specified replied-to message is not found"
+        None,
+        title="Pass True if the message should be sent even if the specified replied-to message is not found",
     )
 
 
@@ -166,8 +173,12 @@ class Photo(BaseModel):
     disable_notification: Optional[bool] = Field(None, title="disable notification")
     protect_content: Optional[bool] = Field(None, title="protect content")
     reply_to_message_id: Optional[int] = Field(None, title="reply to message id")
-    allow_sending_without_reply: Optional[bool] = Field(None, title="allow sending without reply")
-    reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = Field(None, title="reply markup")
+    allow_sending_without_reply: Optional[bool] = Field(
+        None, title="allow sending without reply"
+    )
+    reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = Field(
+        None, title="reply markup"
+    )
 
 
 class Document(BaseModel):
@@ -179,8 +190,12 @@ class Document(BaseModel):
     disable_notification: Optional[bool] = Field(None, title="disable notification")
     protect_content: Optional[bool] = Field(None, title="protect content")
     reply_to_message_id: Optional[int] = Field(None, title="reply to message id")
-    allow_sending_without_reply: Optional[bool] = Field(None, title="allow sending without reply")
-    reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = Field(None, title="reply markup")
+    allow_sending_without_reply: Optional[bool] = Field(
+        None, title="allow sending without reply"
+    )
+    reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = Field(
+        None, title="reply markup"
+    )
 
 
 class EditMessageMediaModel(BaseModel):
@@ -204,8 +219,12 @@ class Animation(BaseModel):
     disable_notification: Optional[bool] = Field(None, title="disable notification")
     protect_content: Optional[bool] = Field(None, title="protect content")
     reply_to_message_id: Optional[int] = Field(None, title="reply to message id")
-    allow_sending_without_reply: Optional[bool] = Field(None, title="allow sending without reply")
-    reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = Field(None, title="reply markup")
+    allow_sending_without_reply: Optional[bool] = Field(
+        None, title="allow sending without reply"
+    )
+    reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = Field(
+        None, title="reply markup"
+    )
 
 
 class Audio(BaseModel):
@@ -220,8 +239,12 @@ class Audio(BaseModel):
     disable_notification: Optional[bool] = Field(None, title="disable notification")
     protect_content: Optional[bool] = Field(None, title="protect content")
     reply_to_message_id: Optional[int] = Field(None, title="reply to message id")
-    allow_sending_without_reply: Optional[bool] = Field(None, title="allow sending without reply")
-    reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = Field(None, title="reply markup")
+    allow_sending_without_reply: Optional[bool] = Field(
+        None, title="allow sending without reply"
+    )
+    reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = Field(
+        None, title="reply markup"
+    )
 
 
 class Sticker(BaseModel):
@@ -230,5 +253,9 @@ class Sticker(BaseModel):
     disable_notification: Optional[bool] = Field(None, title="disable notification")
     protect_content: Optional[bool] = Field(None, title="protect content")
     reply_to_message_id: Optional[int] = Field(None, title="reply to message id")
-    allow_sending_without_reply: Optional[bool] = Field(None, title="allow sending without reply")
-    reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = Field(None, title="reply markup")
+    allow_sending_without_reply: Optional[bool] = Field(
+        None, title="allow sending without reply"
+    )
+    reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = Field(
+        None, title="reply markup"
+    )
