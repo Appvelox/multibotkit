@@ -698,6 +698,7 @@ def test_outgoing_models():
         "keyboard": [[keyboard_button_dict, keyboard_button_dict]],
         "resize_keyboard": False,
         "one_time_keyboard": False,
+        "is_persistent": None
     }
 
     reply_keyboard_markup = ReplyKeyboardMarkup.parse_obj(reply_keyboard_markup_dict)
