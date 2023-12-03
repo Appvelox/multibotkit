@@ -26,7 +26,7 @@ from multibotkit.schemas.telegram.outgoing import (
     WebhookInfo,
     MediaGroup,
     ReplyKeyboardRemove,
-    Sticker,
+    Sticker, Video,
 )
 
 
@@ -609,6 +609,199 @@ class TelegramHelper(BaseHelper):
         if "reply_markup" in data.keys():
             data["reply_markup"] = json.dumps(data["reply_markup"])
         files = {"image": photo}
+        r = await self._perform_async_request(url, data, use_json=False, files=files)
+        return r
+
+    def sync_send_video(
+        self,
+        chat_id: int,
+        video: Union[str, IO],
+        caption: Optional[str] = None,
+        parse_mode: str = "HTML",
+        disable_notification: Optional[bool] = None,
+        protect_content: Optional[bool] = None,
+        reply_to_message_id: Optional[int] = None,
+        allow_sending_without_reply: Optional[bool] = None,
+        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None,
+    ):
+        if type(video) == str:
+            if video.startswith("http://") or video.startswith("https://"):
+                video_obj = Video(
+                    chat_id=chat_id,
+                    video=video,
+                    caption=caption,
+                    parse_mode=parse_mode,
+                    disable_notification=disable_notification,
+                    protect_content=protect_content,
+                    reply_to_message_id=reply_to_message_id,
+                    allow_sending_without_reply=allow_sending_without_reply,
+                    reply_markup=reply_markup,
+                )
+
+                url = self.tg_base_url + "sendVideo"
+                data = video_obj.dict(exclude_none=True)
+
+                r = self._perform_sync_request(url, data)
+                return r
+
+            ends = [".mp4"]
+            for end in ends:
+                if video.endswith(end):
+                    opened_video = open(video, "rb")
+                    video_obj = Video(
+                        chat_id=chat_id,
+                        video=f"attach://{video}",
+                        caption=caption,
+                        parse_mode=parse_mode,
+                        disable_notification=disable_notification,
+                        protect_content=protect_content,
+                        reply_to_message_id=reply_to_message_id,
+                        allow_sending_without_reply=allow_sending_without_reply,
+                        reply_markup=reply_markup,
+                    )
+
+                    url = self.tg_base_url + "sendVideo"
+                    data = video_obj.dict(exclude_none=True)
+                    if "reply_markup" in data.keys():
+                        data["reply_markup"] = json.dumps(data["reply_markup"])
+                    files = {video: opened_video}
+
+                    r = self._perform_sync_request(
+                        url, data, use_json=False, files=files
+                    )
+                    return r
+
+            video_obj = Video(
+                chat_id=chat_id,
+                video=video,
+                caption=caption,
+                parse_mode=parse_mode,
+                disable_notification=disable_notification,
+                protect_content=protect_content,
+                reply_to_message_id=reply_to_message_id,
+                allow_sending_without_reply=allow_sending_without_reply,
+                reply_markup=reply_markup,
+            )
+
+            url = self.tg_base_url + "sendVideo"
+            data = video_obj.dict(exclude_none=True)
+
+            r = self._perform_sync_request(url, data)
+            return r
+
+        video_obj = Video(
+            chat_id=chat_id,
+            video="attach://video",
+            caption=caption,
+            parse_mode=parse_mode,
+            disable_notification=disable_notification,
+            protect_content=protect_content,
+            reply_to_message_id=reply_to_message_id,
+            allow_sending_without_reply=allow_sending_without_reply,
+            reply_markup=reply_markup,
+        )
+
+        url = self.tg_base_url + "sendVideo"
+        data = video_obj.dict(exclude_none=True)
+        if "reply_markup" in data.keys():
+            data["reply_markup"] = json.dumps(data["reply_markup"])
+        files = {"video": video}
+
+        r = self._perform_sync_request(url, data, use_json=False, files=files)
+        return r
+
+    async def async_send_video(
+        self,
+        chat_id: int,
+        video: Union[str, IO],
+        caption: Optional[str] = None,
+        parse_mode: str = "HTML",
+        disable_notification: Optional[bool] = None,
+        protect_content: Optional[bool] = None,
+        reply_to_message_id: Optional[int] = None,
+        allow_sending_without_reply: Optional[bool] = None,
+        reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None,
+    ):
+        if type(video) == str:
+            if video.startswith("http://") or video.startswith("https://"):
+                video_obj = Video(
+                    chat_id=chat_id,
+                    video=video,
+                    caption=caption,
+                    parse_mode=parse_mode,
+                    disable_notification=disable_notification,
+                    protect_content=protect_content,
+                    reply_to_message_id=reply_to_message_id,
+                    allow_sending_without_reply=allow_sending_without_reply,
+                    reply_markup=reply_markup,
+                )
+
+                url = self.tg_base_url + "sendVideo"
+                data = video_obj.dict(exclude_none=True)
+                r = await self._perform_async_request(url, data)
+                return r
+
+            ends = [".mp4"]
+            for end in ends:
+                if video.endswith(end):
+                    async with aiofiles.open(video, "rb") as opened_video:
+                        content = await opened_video.read()
+                    video_obj = Video(
+                        chat_id=chat_id,
+                        video=f"attach://{video}",
+                        caption=caption,
+                        parse_mode=parse_mode,
+                        disable_notification=disable_notification,
+                        protect_content=protect_content,
+                        reply_to_message_id=reply_to_message_id,
+                        allow_sending_without_reply=allow_sending_without_reply,
+                        reply_markup=reply_markup,
+                    )
+
+                    url = self.tg_base_url + "sendVideo"
+                    data = video_obj.dict(exclude_none=True)
+                    if "reply_markup" in data.keys():
+                        data["reply_markup"] = json.dumps(data["reply_markup"])
+                    files = {video: content}
+                    r = await self._perform_async_request(
+                        url, data, use_json=False, files=files
+                    )
+                    return r
+
+            video_obj = Video(
+                chat_id=chat_id,
+                video=video,
+                caption=caption,
+                parse_mode=parse_mode,
+                disable_notification=disable_notification,
+                protect_content=protect_content,
+                reply_to_message_id=reply_to_message_id,
+                allow_sending_without_reply=allow_sending_without_reply,
+                reply_markup=reply_markup,
+            )
+
+            url = self.tg_base_url + "sendVideo"
+            data = video_obj.dict(exclude_none=True)
+            r = await self._perform_async_request(url, data)
+            return r
+
+        video_obj = Video(
+            chat_id=chat_id,
+            video="attach://video",
+            caption=caption,
+            parse_mode=parse_mode,
+            disable_notification=disable_notification,
+            protect_content=protect_content,
+            reply_to_message_id=reply_to_message_id,
+            allow_sending_without_reply=allow_sending_without_reply,
+            reply_markup=reply_markup,
+        )
+
+        url = self.tg_base_url + "sendVideo"
+        data = video_obj.dict(exclude_none=True)
+        if "reply_markup" in data.keys():
+            data["reply_markup"] = json.dumps(data["reply_markup"])
+        files = {"video": video}
         r = await self._perform_async_request(url, data, use_json=False, files=files)
         return r
 
