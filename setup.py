@@ -19,7 +19,7 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    install_requires=["httpx>=0.23.0", "pydantic>=1.9", "tenacity>=8.0.1", "aiofiles>=22.1.0"],
+    install_requires=["httpx>=0.23.0", "pydantic<2", "tenacity>=8.0.1", "aiofiles>=22.1.0"],
     extras_require={
         "mongo": ["motor>=3.0.0"],
         "redis": ["aioredis>=2.0.1"]

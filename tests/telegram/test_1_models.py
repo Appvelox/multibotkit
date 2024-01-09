@@ -700,6 +700,7 @@ def test_outgoing_models():
         "keyboard": [[keyboard_button_dict, keyboard_button_dict]],
         "resize_keyboard": False,
         "one_time_keyboard": False,
+        "is_persistent": None
     }
 
     reply_keyboard_markup = ReplyKeyboardMarkup.parse_obj(reply_keyboard_markup_dict)
@@ -725,6 +726,8 @@ def test_outgoing_models():
         "text": "text",
         "disable_web_page_preview": False,
         "reply_markup": reply_keyboard_markup_dict,
+        "reply_to_message_id": None,
+        "allow_sending_without_reply": None
     }
 
     message = OutgoingMessage.parse_obj(message_dict)
