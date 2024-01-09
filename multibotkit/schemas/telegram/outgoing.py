@@ -84,6 +84,12 @@ Array of InlineKeyboardButton objects",
     )
 
 
+class WebAppInfo(BaseModel):
+    url: str = Field(
+        ..., title="HTTP url of WebApp to be started when button is pressed"
+    )
+
+
 class KeyboardButton(BaseModel):
     text: str = Field(..., title="Text of the button")
     request_contact: Optional[bool] = Field(
@@ -95,6 +101,9 @@ contact when the button is pressed",
         None,
         title="If True, the user's current location will be sent \
 when the button is pressed",
+    )
+    web_app: Optional[WebAppInfo] = Field(
+        None, title="Info about WebApp to be started when button is pressed"
     )
 
 

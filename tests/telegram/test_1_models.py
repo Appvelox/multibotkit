@@ -481,6 +481,7 @@ def test_incoming_models():
         "voice": voice_dict,
         "contact": contact_dict,
         "location": location_dict,
+        "web_app_data": None,
     }
 
     callback_query = CallbackQuery.parse_obj(callback_query_dict)
@@ -681,6 +682,7 @@ def test_outgoing_models():
         "text": "Button",
         "request_contact": False,
         "request_location": False,
+        "web_app": None,
     }
 
     keyboard_button = KeyboardButton.parse_obj(keyboard_button_dict)
