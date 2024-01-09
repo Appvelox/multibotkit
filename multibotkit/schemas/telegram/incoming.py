@@ -224,6 +224,18 @@ class User(BaseModel):
     )
 
 
+class WebAppData(BaseModel):
+    data: str = Field(
+        ...,
+        title="The data. Be aware that a bad client can send arbitrary data in this field.",
+    )
+    button_text: str = Field(
+        ...,
+        title="Text of the web_app keyboard button from which the Web App was opened. Be aware that a bad client can "
+              "send arbitrary data in this field.",
+    )
+
+
 class Message(BaseModel):
     message_id: int = Field(..., title="Unique message identifier inside this chat")
     date: int = Field(..., title="Date the message was sent in Unix time")
@@ -267,6 +279,9 @@ video message",
         None,
         title="Message is a shared location, information about \
 the location",
+    )
+    web_app_data: Optional[WebAppData] = Field(
+        None, title="Service message: data sent by a Web App"
     )
 
     class Config:
