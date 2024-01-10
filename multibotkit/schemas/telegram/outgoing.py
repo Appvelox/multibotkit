@@ -133,6 +133,15 @@ class ReplyKeyboardRemove(BaseModel):
     remove_keyboard: bool = Field(True, title="Remove reply keyboard")
 
 
+class Location(BaseModel):
+    chat_id: int = Field(..., title="Unique identifier for the chat")
+    latitude: float = Field(..., title="Latitude of the location")
+    longitude: float = Field(..., title="Longitude of the location")
+    reply_markup: Optional[
+        Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove]
+    ] = Field(None, title="Inline or Reply keyboard attached to the message")
+
+
 class Message(BaseModel):
     chat_id: int = Field(..., title="Unique identifier for the chat")
     text: str = Field(
