@@ -163,15 +163,31 @@ class TelegramHelper(BaseHelper):
         r = await self._perform_async_request(url, data)
         return r
 
-    def sync_answer_callback_query(self, callback_query_id: str):
+    def sync_answer_callback_query(
+        self,
+        callback_query_id: str,
+        text: Optional[str] = None,
+        show_alert: Optional[bool] = False,
+    ):
         url = self.tg_base_url + "answerCallbackQuery"
         data = {"callback_query_id": callback_query_id}
+        if show_alert and text is not None:
+            data["show_alert"] = show_alert
+            data["text"] = text
         r = self._perform_sync_request(url, data)
         return r
 
-    async def async_answer_callback_query(self, callback_query_id: str):
+    async def async_answer_callback_query(
+        self,
+        callback_query_id: str,
+        text: Optional[str] = None,
+        show_alert: Optional[bool] = False,
+    ):
         url = self.tg_base_url + "answerCallbackQuery"
         data = {"callback_query_id": callback_query_id}
+        if show_alert and text is not None:
+            data["show_alert"] = show_alert
+            data["text"] = text
         r = await self._perform_async_request(url, data)
         return r
 
