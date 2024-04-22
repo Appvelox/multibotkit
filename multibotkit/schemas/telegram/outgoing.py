@@ -32,6 +32,10 @@ updates may be received for a short period of time.",
     )
 
 
+class DeleteWebhookParams(BaseModel):
+    drop_pending_updates: Optional[bool] = Field(None, title="Pass True to drop all pending updates")
+
+
 class WebhookInfo(BaseModel):
     url: str = Field(..., title="Webhook URL, may be empty if webhook is not set up")
     has_custom_certificate: Optional[bool] = Field(

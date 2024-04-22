@@ -28,7 +28,7 @@ from multibotkit.schemas.telegram.outgoing import (
     ReplyKeyboardRemove,
     Sticker,
     Video,
-    Location,
+    Location, DeleteWebhookParams,
 )
 
 
@@ -65,6 +65,20 @@ class TelegramHelper(BaseHelper):
     async def async_set_webhook(self, webhook_url: str):
         url = self.tg_base_url + "setWebhook"
         params = SetWebhookParams(url=webhook_url)
+        data = params.dict(exclude_none=True)
+        r = await self._perform_async_request(url, data)
+        return r
+
+    def sync_delete_webhook(self, drop_pending_updates: Optional[bool] = False):
+        url = self.tg_base_url + "deleteWebhook"
+        params = DeleteWebhookParams(drop_pending_updates=drop_pending_updates)
+        data = params.dict(exclude_none=True)
+        r = self._perform_sync_request(url, data)
+        return r
+
+    async def async_delete_webhook(self, drop_pending_updates: Optional[bool] = False):
+        url = self.tg_base_url + "deleteWebhook"
+        params = DeleteWebhookParams(drop_pending_updates=drop_pending_updates)
         data = params.dict(exclude_none=True)
         r = await self._perform_async_request(url, data)
         return r
