@@ -1,7 +1,7 @@
 import json
 from typing import Optional
 
-import aioredis
+from redis import asyncio as aioredis
 
 from multibotkit.states.managers.base import BaseStateManager
 from multibotkit.states.state import State
