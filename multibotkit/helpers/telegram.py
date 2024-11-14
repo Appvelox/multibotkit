@@ -28,7 +28,7 @@ from multibotkit.schemas.telegram.outgoing import (
     ReplyKeyboardRemove,
     Sticker,
     Video,
-    Location, DeleteWebhookParams,
+    Location, DeleteWebhookParams, DeleteMessage,
 )
 
 
@@ -203,6 +203,28 @@ class TelegramHelper(BaseHelper):
             data["show_alert"] = show_alert
             data["text"] = text
         r = await self._perform_async_request(url, data)
+        return r
+
+    def sync_delete_message(
+        self,
+        chat_id: int,
+        message_id: int,
+    ):
+        url = self.tg_base_url + "deleteMessage"
+        delete_message = DeleteMessage(chat_id=chat_id, message_id=message_id)
+
+        r = self._perform_sync_request(url, delete_message.dict())
+        return r
+
+    async def async_delete_message(
+        self,
+        chat_id: int,
+        message_id: int,
+    ):
+        url = self.tg_base_url + "deleteMessage"
+        delete_message = DeleteMessage(chat_id=chat_id, message_id=message_id)
+
+        r = await self._perform_async_request(url, delete_message.dict())
         return r
 
     def sync_edit_message_text(

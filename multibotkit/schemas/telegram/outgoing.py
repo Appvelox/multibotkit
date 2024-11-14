@@ -33,7 +33,12 @@ updates may be received for a short period of time.",
 
 
 class DeleteWebhookParams(BaseModel):
-    drop_pending_updates: Optional[bool] = Field(None, title="Pass True to drop all pending updates")
+    drop_pending_updates: int = Field(None, title="Unique identifier for the target chat or username of the target channel (in the format @channelusername)")
+    message_id: int = Field(None, title="Identifier of the message to delete")
+
+
+class DeleteMessage(BaseModel):
+    chat_id: Optional[bool] = Field(None, title="Pass True to drop all pending updates")
 
 
 class WebhookInfo(BaseModel):
