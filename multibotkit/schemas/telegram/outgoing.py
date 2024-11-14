@@ -32,6 +32,10 @@ updates may be received for a short period of time.",
     )
 
 
+class DeleteWebhookParams(BaseModel):
+    drop_pending_updates: Optional[bool] = Field(None, title="Pass True to drop all pending updates")
+
+
 class WebhookInfo(BaseModel):
     url: str = Field(..., title="Webhook URL, may be empty if webhook is not set up")
     has_custom_certificate: Optional[bool] = Field(
@@ -131,6 +135,15 @@ it's been used",
 
 class ReplyKeyboardRemove(BaseModel):
     remove_keyboard: bool = Field(True, title="Remove reply keyboard")
+
+
+class Location(BaseModel):
+    chat_id: int = Field(..., title="Unique identifier for the chat")
+    latitude: float = Field(..., title="Latitude of the location")
+    longitude: float = Field(..., title="Longitude of the location")
+    reply_markup: Optional[
+        Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove]
+    ] = Field(None, title="Inline or Reply keyboard attached to the message")
 
 
 class Message(BaseModel):

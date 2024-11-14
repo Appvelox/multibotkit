@@ -26,7 +26,9 @@ from multibotkit.schemas.telegram.outgoing import (
     WebhookInfo,
     MediaGroup,
     ReplyKeyboardRemove,
-    Sticker, Video,
+    Sticker,
+    Video,
+    Location, DeleteWebhookParams,
 )
 
 
@@ -63,6 +65,60 @@ class TelegramHelper(BaseHelper):
     async def async_set_webhook(self, webhook_url: str):
         url = self.tg_base_url + "setWebhook"
         params = SetWebhookParams(url=webhook_url)
+        data = params.dict(exclude_none=True)
+        r = await self._perform_async_request(url, data)
+        return r
+
+    def sync_delete_webhook(self, drop_pending_updates: Optional[bool] = False):
+        url = self.tg_base_url + "deleteWebhook"
+        params = DeleteWebhookParams(drop_pending_updates=drop_pending_updates)
+        data = params.dict(exclude_none=True)
+        r = self._perform_sync_request(url, data)
+        return r
+
+    async def async_delete_webhook(self, drop_pending_updates: Optional[bool] = False):
+        url = self.tg_base_url + "deleteWebhook"
+        params = DeleteWebhookParams(drop_pending_updates=drop_pending_updates)
+        data = params.dict(exclude_none=True)
+        r = await self._perform_async_request(url, data)
+        return r
+
+    def sync_send_locations(
+        self,
+        chat_id: int,
+        latitude: float,
+        longitude: float,
+        reply_markup: Optional[
+            Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove]
+        ] = None,
+    ):
+        url = self.tg_base_url + "sendLocation"
+        params = Location(
+            chat_id=chat_id,
+            latitude=latitude,
+            longitude=longitude,
+            reply_markup=reply_markup,
+        )
+        data = params.dict(exclude_none=True)
+        r = self._perform_sync_request(url, data)
+        return r
+
+    async def async_send_locations(
+        self,
+        chat_id: int,
+        latitude: float,
+        longitude: float,
+        reply_markup: Optional[
+            Union[InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove]
+        ] = None,
+    ):
+        url = self.tg_base_url + "sendLocation"
+        params = Location(
+            chat_id=chat_id,
+            latitude=latitude,
+            longitude=longitude,
+            reply_markup=reply_markup,
+        )
         data = params.dict(exclude_none=True)
         r = await self._perform_async_request(url, data)
         return r
@@ -121,15 +177,31 @@ class TelegramHelper(BaseHelper):
         r = await self._perform_async_request(url, data)
         return r
 
-    def sync_answer_callback_query(self, callback_query_id: str):
+    def sync_answer_callback_query(
+        self,
+        callback_query_id: str,
+        text: Optional[str] = None,
+        show_alert: Optional[bool] = False,
+    ):
         url = self.tg_base_url + "answerCallbackQuery"
         data = {"callback_query_id": callback_query_id}
+        if show_alert and text is not None:
+            data["show_alert"] = show_alert
+            data["text"] = text
         r = self._perform_sync_request(url, data)
         return r
 
-    async def async_answer_callback_query(self, callback_query_id: str):
+    async def async_answer_callback_query(
+        self,
+        callback_query_id: str,
+        text: Optional[str] = None,
+        show_alert: Optional[bool] = False,
+    ):
         url = self.tg_base_url + "answerCallbackQuery"
         data = {"callback_query_id": callback_query_id}
+        if show_alert and text is not None:
+            data["show_alert"] = show_alert
+            data["text"] = text
         r = await self._perform_async_request(url, data)
         return r
 
