@@ -646,12 +646,13 @@ def test_outgoing_models():
         "text": "Button",
         "url": "https://url.com",
         "callback_data": "callback data",
+        "web_app": None
     }
 
     inline_keyboard_button = InlineKeyboardButton.parse_obj(inline_keyboard_button_dict)
 
     assert inline_keyboard_button == InlineKeyboardButton(
-        text="Button", url="https://url.com", callback_data="callback data"
+        text="Button", url="https://url.com", callback_data="callback data", web_app=None
     )
 
     inline_keyboard_markup = InlineKeyboardMarkup(
