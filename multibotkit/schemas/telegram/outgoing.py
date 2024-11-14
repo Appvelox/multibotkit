@@ -74,6 +74,12 @@ to the webhook for update delivery",
     )
 
 
+class WebAppInfo(BaseModel):
+    url: str = Field(
+        ..., title="HTTP url of WebApp to be started when button is pressed"
+    )
+
+
 class InlineKeyboardButton(BaseModel):
     text: str = Field(..., title="Label text on the button")
     url: Optional[str] = Field(
@@ -84,6 +90,9 @@ class InlineKeyboardButton(BaseModel):
         title=" Data to be sent in a callback query to the bot \
 when button is pressed, 1-64 bytes",
     )
+    web_app: Optional[WebAppInfo] = Field(
+        None, title="Info about WebApp to be started when button is pressed"
+    )
 
 
 class InlineKeyboardMarkup(BaseModel):
@@ -91,12 +100,6 @@ class InlineKeyboardMarkup(BaseModel):
         ...,
         title="Array of button rows, each represented by an \
 Array of InlineKeyboardButton objects",
-    )
-
-
-class WebAppInfo(BaseModel):
-    url: str = Field(
-        ..., title="HTTP url of WebApp to be started when button is pressed"
     )
 
 
