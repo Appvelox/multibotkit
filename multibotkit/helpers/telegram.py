@@ -133,15 +133,33 @@ class TelegramHelper(BaseHelper):
         r = await self._perform_async_request(url, data)
         return r
 
-    def sync_edit_message_text(self, chat_id: int, message_id: int, text: str):
+    def sync_edit_message_text(
+            self,
+            chat_id: int,
+            message_id: int,
+            text: str,
+            reply_markup: Optional[InlineKeyboardMarkup] = None,
+    ):
         url = self.tg_base_url + "editMessageText"
         data = {"chat_id": chat_id, "message_id": message_id, "text": text}
+        if reply_markup:
+            data["reply_markup"] = reply_markup.dict(exclude_none=True)
+
         r = self._perform_sync_request(url, data)
         return r
 
-    async def async_edit_message_text(self, chat_id: int, message_id: int, text: str):
+    async def async_edit_message_text(
+            self,
+            chat_id: int,
+            message_id: int,
+            text: str,
+            reply_markup: Optional[InlineKeyboardMarkup] = None,
+    ):
         url = self.tg_base_url + "editMessageText"
         data = {"chat_id": chat_id, "message_id": message_id, "text": text}
+        if reply_markup:
+            data["reply_markup"] = reply_markup.dict(exclude_none=True)
+
         r = await self._perform_async_request(url, data)
         return r
 
