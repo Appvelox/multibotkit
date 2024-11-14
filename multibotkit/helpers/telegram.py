@@ -206,11 +206,11 @@ class TelegramHelper(BaseHelper):
         return r
 
     def sync_edit_message_text(
-            self,
-            chat_id: int,
-            message_id: int,
-            text: str,
-            reply_markup: Optional[InlineKeyboardMarkup] = None,
+        self,
+        chat_id: int,
+        message_id: int,
+        text: str,
+        reply_markup: Optional[InlineKeyboardMarkup] = None,
     ):
         url = self.tg_base_url + "editMessageText"
         data = {"chat_id": chat_id, "message_id": message_id, "text": text}
@@ -221,11 +221,11 @@ class TelegramHelper(BaseHelper):
         return r
 
     async def async_edit_message_text(
-            self,
-            chat_id: int,
-            message_id: int,
-            text: str,
-            reply_markup: Optional[InlineKeyboardMarkup] = None,
+        self,
+        chat_id: int,
+        message_id: int,
+        text: str,
+        reply_markup: Optional[InlineKeyboardMarkup] = None,
     ):
         url = self.tg_base_url + "editMessageText"
         data = {"chat_id": chat_id, "message_id": message_id, "text": text}
