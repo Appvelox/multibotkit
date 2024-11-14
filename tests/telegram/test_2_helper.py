@@ -21,6 +21,7 @@ tg_helper = TelegramHelper(settings.TG_TOKEN)
 
 
 @pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
+@pytest.mark.httpx_mock(can_send_already_matched_responses=True)
 def test_sync_helper_get_webhook_info(httpx_mock: HTTPXMock):
     def webhook_info_response(request: httpx.Request):
         return httpx.Response(
@@ -63,6 +64,7 @@ def test_sync_helper_get_webhook_info(httpx_mock: HTTPXMock):
 
 
 @pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
+@pytest.mark.httpx_mock(can_send_already_matched_responses=True)
 def test_sync_helper_set_webhook(httpx_mock: HTTPXMock):
     def set_webhook_response(request: httpx.Request):
         return httpx.Response(
@@ -78,6 +80,7 @@ def test_sync_helper_set_webhook(httpx_mock: HTTPXMock):
 
 
 @pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
+@pytest.mark.httpx_mock(can_send_already_matched_responses=True)
 def test_sync_send_message(httpx_mock: HTTPXMock):
     def send_message_response(request: httpx.Request):
         content = json.loads(request.content.decode())
@@ -123,6 +126,7 @@ def test_sync_send_message(httpx_mock: HTTPXMock):
 
 
 @pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
+@pytest.mark.httpx_mock(can_send_already_matched_responses=True)
 def test_sync_helper_answer_callback_query(httpx_mock: HTTPXMock):
     def answer_callback_response(request: httpx.Request):
         return httpx.Response(status_code=200, json={"ok": True, "result": True})
@@ -135,6 +139,7 @@ def test_sync_helper_answer_callback_query(httpx_mock: HTTPXMock):
 
 
 @pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
+@pytest.mark.httpx_mock(can_send_already_matched_responses=True)
 def test_sync_helper_edit_message_text(httpx_mock: HTTPXMock):
     def edit_message_text_response(request: httpx.Request):
         return httpx.Response(status_code=200, json={"ok": True, "result": True})
@@ -147,6 +152,7 @@ def test_sync_helper_edit_message_text(httpx_mock: HTTPXMock):
 
 
 @pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
+@pytest.mark.httpx_mock(can_send_already_matched_responses=True)
 def test_sync_helper_edit_message_caption(httpx_mock: HTTPXMock):
     def edit_message_caption_response(request: httpx.Request):
         return httpx.Response(status_code=200, json={"ok": True, "result": True})
@@ -161,6 +167,7 @@ def test_sync_helper_edit_message_caption(httpx_mock: HTTPXMock):
 
 
 @pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
+@pytest.mark.httpx_mock(can_send_already_matched_responses=True)
 def test_sync_helper_edit_message_reply_markup(httpx_mock: HTTPXMock):
     def edit_message_reply_markup_response(request: httpx.Request):
         return httpx.Response(status_code=200, json={"ok": True, "result": True})
@@ -185,6 +192,7 @@ def test_sync_helper_edit_message_reply_markup(httpx_mock: HTTPXMock):
 
 
 @pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
+@pytest.mark.httpx_mock(can_send_already_matched_responses=True)
 def test_sync_helper_edit_message_media(httpx_mock: HTTPXMock):
     def edit_media_response(request: httpx.Request):
         return httpx.Response(status_code=200, json={"ok": True, "result": True})
@@ -229,6 +237,7 @@ def test_sync_helper_edit_message_media(httpx_mock: HTTPXMock):
 
 
 @pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
+@pytest.mark.httpx_mock(can_send_already_matched_responses=True)
 def test_sync_helper_send_photo(httpx_mock: HTTPXMock):
     def send_photo_response(request: httpx.Request):
         return httpx.Response(status_code=200, json={"ok": True, "result": True})
@@ -284,6 +293,7 @@ def test_sync_helper_send_photo(httpx_mock: HTTPXMock):
 
 
 @pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
+@pytest.mark.httpx_mock(can_send_already_matched_responses=True)
 def test_sync_helper_send_doc(httpx_mock: HTTPXMock):
     def send_doc_response(request: httpx.Request):
         return httpx.Response(status_code=200, json={"ok": True, "result": True})
@@ -339,6 +349,7 @@ def test_sync_helper_send_doc(httpx_mock: HTTPXMock):
 
 
 @pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
+@pytest.mark.httpx_mock(can_send_already_matched_responses=True)
 def test_sync_helper_send_animation(httpx_mock: HTTPXMock):
     def send_animation_response(request: httpx.Request):
         return httpx.Response(status_code=200, json={"ok": True, "result": True})
@@ -394,6 +405,7 @@ def test_sync_helper_send_animation(httpx_mock: HTTPXMock):
 
 
 @pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
+@pytest.mark.httpx_mock(can_send_already_matched_responses=True)
 def test_sync_helper_get_file(httpx_mock: HTTPXMock):
     def get_file_path_response(request: httpx.Request):
         return httpx.Response(
@@ -410,6 +422,7 @@ def test_sync_helper_get_file(httpx_mock: HTTPXMock):
 
 @pytest.mark.asyncio
 @pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
+@pytest.mark.httpx_mock(can_send_already_matched_responses=True)
 async def test_async_helper_async_get_webhook_info(httpx_mock: HTTPXMock):
     def webhook_info_response(request: httpx.Request):
         return httpx.Response(
@@ -453,6 +466,7 @@ async def test_async_helper_async_get_webhook_info(httpx_mock: HTTPXMock):
 
 @pytest.mark.asyncio
 @pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
+@pytest.mark.httpx_mock(can_send_already_matched_responses=True)
 async def test_async_helper_async_set_webhook(httpx_mock: HTTPXMock):
     def set_webhook_response(request: httpx.Request):
         return httpx.Response(
@@ -469,6 +483,7 @@ async def test_async_helper_async_set_webhook(httpx_mock: HTTPXMock):
 
 @pytest.mark.asyncio
 @pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
+@pytest.mark.httpx_mock(can_send_already_matched_responses=True)
 async def test_async_send_message(httpx_mock: HTTPXMock):
     def send_message_response(request: httpx.Request):
         content = json.loads(request.content.decode())
@@ -515,6 +530,7 @@ async def test_async_send_message(httpx_mock: HTTPXMock):
 
 @pytest.mark.asyncio
 @pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
+@pytest.mark.httpx_mock(can_send_already_matched_responses=True)
 async def test_async_helper_answer_callback_query(httpx_mock: HTTPXMock):
     def answer_callback_response(request: httpx.Request):
         return httpx.Response(status_code=200, json={"ok": True, "result": True})
@@ -530,6 +546,7 @@ async def test_async_helper_answer_callback_query(httpx_mock: HTTPXMock):
 
 @pytest.mark.asyncio
 @pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
+@pytest.mark.httpx_mock(can_send_already_matched_responses=True)
 async def test_async_helper_edit_message_text(httpx_mock: HTTPXMock):
     def edit_message_text_response(request: httpx.Request):
         return httpx.Response(status_code=200, json={"ok": True, "result": True})
@@ -545,6 +562,7 @@ async def test_async_helper_edit_message_text(httpx_mock: HTTPXMock):
 
 @pytest.mark.asyncio
 @pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
+@pytest.mark.httpx_mock(can_send_already_matched_responses=True)
 async def test_async_helper_edit_message_caption(httpx_mock: HTTPXMock):
     def edit_message_caption_response(request: httpx.Request):
         return httpx.Response(status_code=200, json={"ok": True, "result": True})
@@ -560,6 +578,7 @@ async def test_async_helper_edit_message_caption(httpx_mock: HTTPXMock):
 
 @pytest.mark.asyncio
 @pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
+@pytest.mark.httpx_mock(can_send_already_matched_responses=True)
 async def test_async_helper_edit_message_reply_markup(httpx_mock: HTTPXMock):
     def edit_message_reply_markup_response(request: httpx.Request):
         return httpx.Response(status_code=200, json={"ok": True, "result": True})
@@ -585,6 +604,7 @@ async def test_async_helper_edit_message_reply_markup(httpx_mock: HTTPXMock):
 
 @pytest.mark.asyncio
 @pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
+@pytest.mark.httpx_mock(can_send_already_matched_responses=True)
 async def test_async_helper_edit_message_media(httpx_mock: HTTPXMock):
     def edit_media_response(request: httpx.Request):
         return httpx.Response(status_code=200, json={"ok": True, "result": True})
@@ -630,6 +650,7 @@ async def test_async_helper_edit_message_media(httpx_mock: HTTPXMock):
 
 @pytest.mark.asyncio
 @pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
+@pytest.mark.httpx_mock(can_send_already_matched_responses=True)
 async def test_async_helper_send_photo(httpx_mock: HTTPXMock):
     def send_photo_response(request: httpx.Request):
         return httpx.Response(status_code=200, json={"ok": True, "result": True})
@@ -686,6 +707,7 @@ async def test_async_helper_send_photo(httpx_mock: HTTPXMock):
 
 @pytest.mark.asyncio
 @pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
+@pytest.mark.httpx_mock(can_send_already_matched_responses=True)
 async def test_async_helper_send_doc(httpx_mock: HTTPXMock):
     def send_doc_response(request: httpx.Request):
         return httpx.Response(status_code=200, json={"ok": True, "result": True})
@@ -742,6 +764,7 @@ async def test_async_helper_send_doc(httpx_mock: HTTPXMock):
 
 @pytest.mark.asyncio
 @pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
+@pytest.mark.httpx_mock(can_send_already_matched_responses=True)
 async def test_async_helper_send_animation(httpx_mock: HTTPXMock):
     def send_animation_response(request: httpx.Request):
         return httpx.Response(status_code=200, json={"ok": True, "result": True})
@@ -798,6 +821,7 @@ async def test_async_helper_send_animation(httpx_mock: HTTPXMock):
 
 @pytest.mark.asyncio
 @pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
+@pytest.mark.httpx_mock(can_send_already_matched_responses=True)
 async def test_async_helper_send_audio(httpx_mock: HTTPXMock):
     def send_audio_response(request: httpx.Request):
         return httpx.Response(status_code=200, json={"ok": True, "result": True})
@@ -854,6 +878,7 @@ async def test_async_helper_send_audio(httpx_mock: HTTPXMock):
 
 @pytest.mark.asyncio
 @pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
+@pytest.mark.httpx_mock(can_send_already_matched_responses=True)
 async def test_async_helper_get_file(httpx_mock: HTTPXMock):
     def get_file_path_response(request: httpx.Request):
         return httpx.Response(
