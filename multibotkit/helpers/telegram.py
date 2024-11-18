@@ -28,7 +28,9 @@ from multibotkit.schemas.telegram.outgoing import (
     ReplyKeyboardRemove,
     Sticker,
     Video,
-    Location, DeleteWebhookParams, DeleteMessage,
+    Location,
+    DeleteWebhookParams,
+    DeleteMessage,
 )
 
 
@@ -232,10 +234,16 @@ class TelegramHelper(BaseHelper):
         chat_id: int,
         message_id: int,
         text: str,
+        parse_mode: str = "HTML",
         reply_markup: Optional[InlineKeyboardMarkup] = None,
     ):
         url = self.tg_base_url + "editMessageText"
-        data = {"chat_id": chat_id, "message_id": message_id, "text": text}
+        data = {
+            "chat_id": chat_id,
+            "message_id": message_id,
+            "text": text,
+            "parse_mode": parse_mode,
+        }
         if reply_markup:
             data["reply_markup"] = reply_markup.dict(exclude_none=True)
 
@@ -247,10 +255,16 @@ class TelegramHelper(BaseHelper):
         chat_id: int,
         message_id: int,
         text: str,
+        parse_mode: str = "HTML",
         reply_markup: Optional[InlineKeyboardMarkup] = None,
     ):
         url = self.tg_base_url + "editMessageText"
-        data = {"chat_id": chat_id, "message_id": message_id, "text": text}
+        data = {
+            "chat_id": chat_id,
+            "message_id": message_id,
+            "text": text,
+            "parse_mode": parse_mode,
+        }
         if reply_markup:
             data["reply_markup"] = reply_markup.dict(exclude_none=True)
 
