@@ -235,6 +235,7 @@ class TelegramHelper(BaseHelper):
         message_id: int,
         text: str,
         parse_mode: str = "HTML",
+        disable_web_page_preview: Optional[bool] = True,
         reply_markup: Optional[InlineKeyboardMarkup] = None,
     ):
         url = self.tg_base_url + "editMessageText"
@@ -243,6 +244,7 @@ class TelegramHelper(BaseHelper):
             "message_id": message_id,
             "text": text,
             "parse_mode": parse_mode,
+            "link_preview_options": {"is_disabled": disable_web_page_preview}
         }
         if reply_markup:
             data["reply_markup"] = reply_markup.dict(exclude_none=True)
@@ -256,6 +258,7 @@ class TelegramHelper(BaseHelper):
         message_id: int,
         text: str,
         parse_mode: str = "HTML",
+        disable_web_page_preview: Optional[bool] = True,
         reply_markup: Optional[InlineKeyboardMarkup] = None,
     ):
         url = self.tg_base_url + "editMessageText"
@@ -264,6 +267,7 @@ class TelegramHelper(BaseHelper):
             "message_id": message_id,
             "text": text,
             "parse_mode": parse_mode,
+            "link_preview_options": {"is_disabled": disable_web_page_preview}
         }
         if reply_markup:
             data["reply_markup"] = reply_markup.dict(exclude_none=True)
