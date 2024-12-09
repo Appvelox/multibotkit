@@ -522,6 +522,9 @@ def test_incoming_models():
         "message": message_dict,
         "edited_message": message_dict,
         "callback_query": callback_query_dict,
+        "chat_join_request": None,
+        "chat_member": None,
+        "my_chat_member": None,
     }
 
     message_dict = {
@@ -646,13 +649,16 @@ def test_outgoing_models():
         "text": "Button",
         "url": "https://url.com",
         "callback_data": "callback data",
-        "web_app": None
+        "web_app": None,
     }
 
     inline_keyboard_button = InlineKeyboardButton.parse_obj(inline_keyboard_button_dict)
 
     assert inline_keyboard_button == InlineKeyboardButton(
-        text="Button", url="https://url.com", callback_data="callback data", web_app=None
+        text="Button",
+        url="https://url.com",
+        callback_data="callback data",
+        web_app=None,
     )
 
     inline_keyboard_markup = InlineKeyboardMarkup(
@@ -701,7 +707,7 @@ def test_outgoing_models():
         "keyboard": [[keyboard_button_dict, keyboard_button_dict]],
         "resize_keyboard": False,
         "one_time_keyboard": False,
-        "is_persistent": None
+        "is_persistent": None,
     }
 
     reply_keyboard_markup = ReplyKeyboardMarkup.parse_obj(reply_keyboard_markup_dict)
@@ -728,7 +734,7 @@ def test_outgoing_models():
         "disable_web_page_preview": False,
         "reply_markup": reply_keyboard_markup_dict,
         "reply_to_message_id": None,
-        "allow_sending_without_reply": None
+        "allow_sending_without_reply": None,
     }
 
     message = OutgoingMessage.parse_obj(message_dict)
