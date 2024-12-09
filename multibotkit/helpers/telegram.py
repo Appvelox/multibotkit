@@ -31,6 +31,7 @@ from multibotkit.schemas.telegram.outgoing import (
     Location,
     DeleteWebhookParams,
     DeleteMessage,
+    CopyMessage,
 )
 
 
@@ -229,6 +230,34 @@ class TelegramHelper(BaseHelper):
         r = await self._perform_async_request(url, delete_message.dict())
         return r
 
+    def sync_copy_message(
+        self,
+        chat_id: int,
+        from_chat_id: int,
+        message_id: int,
+    ):
+        url = self.tg_base_url + "copyMessage"
+        delete_message = CopyMessage(
+            chat_id=chat_id, message_id=message_id, from_chat_id=from_chat_id
+        )
+
+        r = self._perform_sync_request(url, delete_message.dict())
+        return r
+
+    async def async_copy_message(
+        self,
+        chat_id: int,
+        from_chat_id: int,
+        message_id: int,
+    ):
+        url = self.tg_base_url + "copyMessage"
+        delete_message = DeleteMessage(
+            chat_id=chat_id, message_id=message_id, from_chat_id=from_chat_id
+        )
+
+        r = await self._perform_async_request(url, delete_message.dict())
+        return r
+
     def sync_edit_message_text(
         self,
         chat_id: int,
@@ -244,7 +273,7 @@ class TelegramHelper(BaseHelper):
             "message_id": message_id,
             "text": text,
             "parse_mode": parse_mode,
-            "link_preview_options": {"is_disabled": disable_web_page_preview}
+            "link_preview_options": {"is_disabled": disable_web_page_preview},
         }
         if reply_markup:
             data["reply_markup"] = reply_markup.dict(exclude_none=True)
@@ -267,7 +296,7 @@ class TelegramHelper(BaseHelper):
             "message_id": message_id,
             "text": text,
             "parse_mode": parse_mode,
-            "link_preview_options": {"is_disabled": disable_web_page_preview}
+            "link_preview_options": {"is_disabled": disable_web_page_preview},
         }
         if reply_markup:
             data["reply_markup"] = reply_markup.dict(exclude_none=True)
