@@ -232,7 +232,7 @@ class WebAppData(BaseModel):
     button_text: str = Field(
         ...,
         title="Text of the web_app keyboard button from which the Web App was opened. Be aware that a bad client can "
-              "send arbitrary data in this field.",
+        "send arbitrary data in this field.",
     )
 
 
@@ -315,8 +315,126 @@ unique identifier for the game",
         fields = {"from_": "from"}
 
 
+class ChatMember(BaseModel):
+    status: str = Field(..., title="The member's status in the chat")
+    user: User = Field(..., title="Information about the user")
+
+
+class ChatInviteLink(BaseModel):
+    invite_link: str = Field(
+        ...,
+        title="The invite link. If the link was created by another chat administrator, "
+        "then the second part of the link will be replaced with “…”",
+    )
+    creator: User = Field(..., title="Creator of the link")
+    creates_join_request: bool = Field(
+        ...,
+        title="True, if users joining the chat via the link need to be approved by chat administrators",
+    )
+    is_primary: bool = Field(
+        ...,
+        title="True, if the link is primary",
+    )
+    is_revoked: bool = Field(
+        ...,
+        title="True, if the link is revoked",
+    )
+    name: Optional[str] = Field(
+        None,
+        title="Invite link name",
+    )
+    expire_date: Optional[int] = Field(
+        None,
+        title="Point in time (Unix timestamp) when the link will expire or has been expired",
+    )
+    member_limit: Optional[int] = Field(
+        None,
+        title="The maximum number of users that can be members of the chat simultaneously after joining "
+        "the chat via this invite link; 1-99999",
+    )
+    pending_join_request_count: Optional[int] = Field(
+        None,
+        title="Number of pending join requests created using this link",
+    )
+    subscription_period: Optional[int] = Field(
+        None,
+        title="The number of seconds the subscription will be active for before the next payment",
+    )
+    subscription_price: Optional[int] = Field(
+        None,
+        title="The amount of Telegram Stars a user must pay initially and after each subsequent "
+        "subscription period to be a member of the chat using the link",
+    )
+
+
+class ChatMemberUpdated(BaseModel):
+    date: int = Field(..., title="Date the change was done in Unix time")
+    from_: User = Field(
+        ..., title="Performer of the action, which resulted in the change"
+    )
+    chat: Chat = Field(..., title="Chat the user belongs to")
+    old_chat_member: ChatMember = Field(
+        ..., title="Previous information about the chat member"
+    )
+    new_chat_member: ChatMember = Field(
+        ..., title="New information about the chat member"
+    )
+    invite_link: Optional[ChatInviteLink] = Field(
+        None,
+        title="Chat invite link, which was used by the user to join the chat; for joining by invite link events only.",
+    )
+    via_join_request: Optional[bool] = Field(
+        None,
+        title="Optional. True, if the user joined the chat after sending a direct join "
+        "request without using an invite link and being approved by an administrator",
+    )
+    via_chat_folder_invite_link: Optional[bool] = Field(
+        None,
+        title="Optional. True, if the user joined the chat via a chat folder invite link",
+    )
+
+    class Config:
+        fields = {"from_": "from"}
+
+
+class ChatJoinRequest(BaseModel):
+    chat: Chat = Field(..., title="	Chat to which the request was sent")
+    from_: User = Field(..., title="User that sent the join request")
+    user_chat_id: int = Field(
+        ...,
+        title="Identifier of a private chat with the user who sent the join request.",
+    )
+    date: int = Field(..., title="Date the request was sent in Unix time")
+    bio: Optional[str] = Field(
+        None,
+        title="Bio of the user.",
+    )
+    invite_link: Optional[ChatInviteLink] = Field(
+        None,
+        title="Chat invite link that was used by the user to send the join request",
+    )
+
+    class Config:
+        fields = {"from_": "from"}
+
+
 class Update(BaseModel):
     update_id: int = Field(..., title="Id of incoming bot update")
     message: Optional[Message] = Field(None, title="Message data")
     edited_message: Optional[Message] = Field(None, title="Edited message data")
     callback_query: Optional[CallbackQuery] = Field(None, title="Callback query data")
+    my_chat_member: Optional[ChatMemberUpdated] = Field(
+        None,
+        title="The bot's chat member status was updated in a chat. For private chats, this update is received only "
+        "when the bot is blocked or unblocked by the user.",
+    )
+    chat_member: Optional[ChatMemberUpdated] = Field(
+        None,
+        title="A chat member's status was updated in a chat. The bot must be an administrator in the chat and must "
+        'explicitly specify "chat_member" in the list of allowed_updates to receive these updates.',
+    )
+    chat_join_request: Optional[ChatJoinRequest] = Field(
+        None,
+        title="A request to join the chat has been sent. The bot must have the can_invite_users administrator right "
+        "in the chat to receive these updates.",
+    )
