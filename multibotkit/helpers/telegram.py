@@ -318,6 +318,116 @@ class TelegramHelper(BaseHelper):
         r = self._perform_sync_request(url, data)
         return r
 
+    async def async_promote_chat_member(
+        self,
+        chat_id: int,
+        user_id: int,
+        is_anonymous: Optional[bool] = None,
+        can_manage_chat: Optional[bool] = None,
+        can_delete_messages: Optional[bool] = None,
+        can_manage_video_chats: Optional[bool] = None,
+        can_restrict_members: Optional[bool] = None,
+        can_promote_members: Optional[bool] = None,
+        can_change_info: Optional[bool] = None,
+        can_invite_users: Optional[bool] = None,
+        can_post_stories: Optional[bool] = None,
+        can_edit_stories: Optional[bool] = None,
+        can_delete_stories: Optional[bool] = None,
+        can_post_messages: Optional[bool] = None,
+        can_edit_messages: Optional[bool] = None,
+        can_pin_messages: Optional[bool] = None,
+        can_manage_topics: Optional[bool] = None,
+    ):
+        url = self.tg_base_url + "promoteChatMember"
+        data = {"chat_id": chat_id, "user_id": user_id}
+        if is_anonymous is not None:
+            data["is_anonymous"] = is_anonymous
+        if can_manage_chat is not None:
+            data["can_manage_chat"] = can_manage_chat
+        if can_delete_messages is not None:
+            data["can_delete_messages"] = can_delete_messages
+        if can_manage_video_chats is not None:
+            data["can_manage_video_chats"] = can_manage_video_chats
+        if can_restrict_members is not None:
+            data["can_restrict_members"] = can_restrict_members
+        if can_promote_members is not None:
+            data["can_promote_members"] = can_promote_members
+        if can_change_info is not None:
+            data["can_change_info"] = can_change_info
+        if can_invite_users is not None:
+            data["can_invite_users"] = can_invite_users
+        if can_post_stories is not None:
+            data["can_post_stories"] = can_post_stories
+        if can_edit_stories is not None:
+            data["can_edit_stories"] = can_edit_stories
+        if can_delete_stories is not None:
+            data["can_delete_stories"] = can_delete_stories
+        if can_post_messages is not None:
+            data["can_post_messages"] = can_post_messages
+        if can_edit_messages is not None:
+            data["can_edit_messages"] = can_edit_messages
+        if can_pin_messages is not None:
+            data["can_pin_messages"] = can_pin_messages
+        if can_manage_topics is not None:
+            data["can_manage_topics"] = can_manage_topics
+        r = await self._perform_async_request(url, data)
+        return r
+
+    def sync_promote_chat_member(
+        self,
+        chat_id: int,
+        user_id: int,
+        is_anonymous: Optional[bool] = None,
+        can_manage_chat: Optional[bool] = None,
+        can_delete_messages: Optional[bool] = None,
+        can_manage_video_chats: Optional[bool] = None,
+        can_restrict_members: Optional[bool] = None,
+        can_promote_members: Optional[bool] = None,
+        can_change_info: Optional[bool] = None,
+        can_invite_users: Optional[bool] = None,
+        can_post_stories: Optional[bool] = None,
+        can_edit_stories: Optional[bool] = None,
+        can_delete_stories: Optional[bool] = None,
+        can_post_messages: Optional[bool] = None,
+        can_edit_messages: Optional[bool] = None,
+        can_pin_messages: Optional[bool] = None,
+        can_manage_topics: Optional[bool] = None,
+    ):
+        url = self.tg_base_url + "promoteChatMember"
+        data = {"chat_id": chat_id, "user_id": user_id}
+        if is_anonymous is not None:
+            data["is_anonymous"] = is_anonymous
+        if can_manage_chat is not None:
+            data["can_manage_chat"] = can_manage_chat
+        if can_delete_messages is not None:
+            data["can_delete_messages"] = can_delete_messages
+        if can_manage_video_chats is not None:
+            data["can_manage_video_chats"] = can_manage_video_chats
+        if can_restrict_members is not None:
+            data["can_restrict_members"] = can_restrict_members
+        if can_promote_members is not None:
+            data["can_promote_members"] = can_promote_members
+        if can_change_info is not None:
+            data["can_change_info"] = can_change_info
+        if can_invite_users is not None:
+            data["can_invite_users"] = can_invite_users
+        if can_post_stories is not None:
+            data["can_post_stories"] = can_post_stories
+        if can_edit_stories is not None:
+            data["can_edit_stories"] = can_edit_stories
+        if can_delete_stories is not None:
+            data["can_delete_stories"] = can_delete_stories
+        if can_post_messages is not None:
+            data["can_post_messages"] = can_post_messages
+        if can_edit_messages is not None:
+            data["can_edit_messages"] = can_edit_messages
+        if can_pin_messages is not None:
+            data["can_pin_messages"] = can_pin_messages
+        if can_manage_topics is not None:
+            data["can_manage_topics"] = can_manage_topics
+        r = self._perform_sync_request(url, data)
+        return r
+
     async def async_set_chat_title(
         self,
         chat_id: int,
