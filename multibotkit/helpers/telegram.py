@@ -228,6 +228,26 @@ class TelegramHelper(BaseHelper):
         r = await self._perform_async_request(url, data)
         return r
 
+    def sync_revoke_chat_invite_link(
+        self,
+        chat_id: int,
+        invite_link: str,
+    ):
+        url = self.tg_base_url + "revokeChatInviteLink"
+        data = {"chat_id": chat_id, "invite_link": invite_link}
+        r = self._perform_sync_request(url, data)
+        return r
+
+    async def async_revoke_chat_invite_link(
+        self,
+        chat_id: int,
+        invite_link: str,
+    ):
+        url = self.tg_base_url + "revokeChatInviteLink"
+        data = {"chat_id": chat_id, "invite_link": invite_link}
+        r = await self._perform_async_request(url, data)
+        return r
+
     def sync_approve_chat_join_request(
         self,
         chat_id: int,
@@ -255,6 +275,86 @@ class TelegramHelper(BaseHelper):
     ):
         url = self.tg_base_url + "declineChatJoinRequest"
         data = {"chat_id": chat_id, "user_id": user_id}
+        r = self._perform_sync_request(url, data)
+        return r
+
+    async def async_unban_chat_member(
+        self,
+        chat_id: int,
+        user_id: int,
+    ):
+        url = self.tg_base_url + "unbanChatMember"
+        data = {"chat_id": chat_id, "user_id": user_id}
+        r = await self._perform_async_request(url, data)
+        return r
+
+    def sync_unban_chat_member(
+        self,
+        chat_id: int,
+        user_id: int,
+    ):
+        url = self.tg_base_url + "unbanChatMember"
+        data = {"chat_id": chat_id, "user_id": user_id}
+        r = self._perform_sync_request(url, data)
+        return r
+
+    async def async_get_chat_member(
+        self,
+        chat_id: int,
+        user_id: int,
+    ):
+        url = self.tg_base_url + "getChatMember"
+        data = {"chat_id": chat_id, "user_id": user_id}
+        r = await self._perform_async_request(url, data)
+        return r
+
+    def sync_get_chat_member(
+        self,
+        chat_id: int,
+        user_id: int,
+    ):
+        url = self.tg_base_url + "getChatMember"
+        data = {"chat_id": chat_id, "user_id": user_id}
+        r = self._perform_sync_request(url, data)
+        return r
+
+    async def async_set_chat_title(
+        self,
+        chat_id: int,
+        title: str,
+    ):
+        url = self.tg_base_url + "setChatTitle"
+        data = {"chat_id": chat_id, "title": title}
+        r = await self._perform_async_request(url, data)
+        return r
+
+    def sync_set_chat_title(
+        self,
+        chat_id: int,
+        title: str,
+    ):
+        url = self.tg_base_url + "setChatTitle"
+        data = {"chat_id": chat_id, "title": title}
+        r = self._perform_sync_request(url, data)
+        return r
+
+    async def async_set_chat_description(
+        self,
+        chat_id: int,
+        description: str,
+    ):
+        url = self.tg_base_url + "setChatDescription"
+        data = {"chat_id": chat_id, "description": description}
+        r = await self._perform_async_request(url, data)
+        return r
+
+    def sync_set_chat_description(
+        self,
+        chat_id: int,
+        description: str,
+    ):
+        url = self.tg_base_url + "setChatDescription"
+        data = {"chat_id": chat_id, "description": description}
         r = self._perform_sync_request(url, data)
         return r
 
