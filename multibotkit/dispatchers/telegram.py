@@ -11,9 +11,17 @@ class TelegramDispatcher(BaseDispatcher):
     ):
         if event.message is not None:
             sender_id = event.message.from_.id
-        if event.callback_query is not None:
+        elif event.callback_query is not None:
             sender_id = event.callback_query.from_.id
-        
+        elif event.chat_member is not None:
+            sender_id = event.chat_member.from_.id
+        elif event.chat_join_request is not None:
+            sender_id = event.chat_join_request.from_.id
+        elif event.my_chat_member is not None:
+            sender_id = event.my_chat_member.from_.id
+        else:
+            sender_id = None
+
         state_id = f"telegram_{sender_id}"
         state_object = await self.state_manager.get_state(state_id)
 
