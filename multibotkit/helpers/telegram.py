@@ -268,16 +268,6 @@ class TelegramHelper(BaseHelper):
         r = await self._perform_async_request(url, data)
         return r
 
-    def sync_decline_chat_join_request(
-        self,
-        chat_id: int,
-        user_id: int,
-    ):
-        url = self.tg_base_url + "declineChatJoinRequest"
-        data = {"chat_id": chat_id, "user_id": user_id}
-        r = self._perform_sync_request(url, data)
-        return r
-
     async def async_unban_chat_member(
         self,
         chat_id: int,
@@ -465,6 +455,34 @@ class TelegramHelper(BaseHelper):
     ):
         url = self.tg_base_url + "setChatDescription"
         data = {"chat_id": chat_id, "description": description}
+        r = self._perform_sync_request(url, data)
+        return r
+
+    async def async_get_chat(
+        self,
+        chat_id: int,
+    ):
+        url = self.tg_base_url + "getChat"
+        data = {"chat_id": chat_id}
+        r = await self._perform_async_request(url, data)
+        return r
+
+    def sync_get_chat(
+        self,
+        chat_id: int,
+    ):
+        url = self.tg_base_url + "getChat"
+        data = {"chat_id": chat_id}
+        r = self._perform_sync_request(url, data)
+        return r
+
+    def sync_decline_chat_join_request(
+        self,
+        chat_id: int,
+        user_id: int,
+    ):
+        url = self.tg_base_url + "declineChatJoinRequest"
+        data = {"chat_id": chat_id, "user_id": user_id}
         r = self._perform_sync_request(url, data)
         return r
 
