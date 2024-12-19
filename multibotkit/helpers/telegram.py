@@ -208,6 +208,66 @@ class TelegramHelper(BaseHelper):
         r = await self._perform_async_request(url, data)
         return r
 
+    def sync_create_chat_invite_link(
+        self,
+        chat_id: int,
+        creates_join_request: Optional[bool] = False,
+    ):
+        url = self.tg_base_url + "createChatInviteLink"
+        data = {"chat_id": chat_id, "creates_join_request": creates_join_request}
+        r = self._perform_sync_request(url, data)
+        return r
+
+    async def async_create_chat_invite_link(
+        self,
+        chat_id: int,
+        creates_join_request: Optional[bool] = False,
+    ):
+        url = self.tg_base_url + "createChatInviteLink"
+        data = {"chat_id": chat_id, "creates_join_request": creates_join_request}
+        r = await self._perform_async_request(url, data)
+        return r
+
+    def sync_approve_chat_join_request(
+        self,
+        chat_id: int,
+        user_id: int,
+    ):
+        url = self.tg_base_url + "approveChatJoinRequest"
+        data = {"chat_id": chat_id, "user_id": user_id}
+        r = self._perform_sync_request(url, data)
+        return r
+
+    async def async_approve_chat_join_request(
+        self,
+        chat_id: int,
+        user_id: int,
+    ):
+        url = self.tg_base_url + "approveChatJoinRequest"
+        data = {"chat_id": chat_id, "user_id": user_id}
+        r = await self._perform_async_request(url, data)
+        return r
+
+    def sync_decline_chat_join_request(
+        self,
+        chat_id: int,
+        user_id: int,
+    ):
+        url = self.tg_base_url + "declineChatJoinRequest"
+        data = {"chat_id": chat_id, "user_id": user_id}
+        r = self._perform_sync_request(url, data)
+        return r
+
+    async def async_decline_chat_join_request(
+        self,
+        chat_id: int,
+        user_id: int,
+    ):
+        url = self.tg_base_url + "declineChatJoinRequest"
+        data = {"chat_id": chat_id, "user_id": user_id}
+        r = await self._perform_async_request(url, data)
+        return r
+
     def sync_delete_message(
         self,
         chat_id: int,
@@ -237,11 +297,11 @@ class TelegramHelper(BaseHelper):
         message_id: int,
     ):
         url = self.tg_base_url + "copyMessage"
-        delete_message = CopyMessage(
+        copy_message = CopyMessage(
             chat_id=chat_id, message_id=message_id, from_chat_id=from_chat_id
         )
 
-        r = self._perform_sync_request(url, delete_message.dict())
+        r = self._perform_sync_request(url, copy_message.dict())
         return r
 
     async def async_copy_message(
@@ -251,11 +311,11 @@ class TelegramHelper(BaseHelper):
         message_id: int,
     ):
         url = self.tg_base_url + "copyMessage"
-        delete_message = DeleteMessage(
+        copy_message = CopyMessage(
             chat_id=chat_id, message_id=message_id, from_chat_id=from_chat_id
         )
 
-        r = await self._perform_async_request(url, delete_message.dict())
+        r = await self._perform_async_request(url, copy_message.dict())
         return r
 
     def sync_edit_message_text(

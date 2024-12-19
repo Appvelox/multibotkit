@@ -40,26 +40,26 @@ class DeleteWebhookParams(BaseModel):
 
 class DeleteMessage(BaseModel):
     chat_id: int = Field(
-        None,
+        ...,
         title="Unique identifier for the target chat or username of the"
         " target channel (in the format @channelusername)",
     )
-    message_id: int = Field(None, title="Identifier of the message to delete")
+    message_id: int = Field(..., title="Identifier of the message to delete")
 
 
 class CopyMessage(BaseModel):
     chat_id: int = Field(
-        None,
+        ...,
         title="Unique identifier for the target chat or username of the target channel "
               "(in the format @channelusername)",
     )
     from_chat_id: int = Field(
-        None,
+        ...,
         title="Unique identifier for the chat where the original message was sent (or channel username in "
               "the format @channelusername)",
     )
     message_id: int = Field(
-        None, title="Message identifier in the chat specified in from_chat_id"
+        ..., title="Message identifier in the chat specified in from_chat_id"
     )
 
 
