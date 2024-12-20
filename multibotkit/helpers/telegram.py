@@ -476,6 +476,24 @@ class TelegramHelper(BaseHelper):
         r = self._perform_sync_request(url, data)
         return r
 
+    async def async_get_chat_administrators(
+        self,
+        chat_id: int,
+    ):
+        url = self.tg_base_url + "getChatAdministrators"
+        data = {"chat_id": chat_id}
+        r = await self._perform_async_request(url, data)
+        return r
+
+    def sync_get_chat_administrators(
+        self,
+        chat_id: int,
+    ):
+        url = self.tg_base_url + "getChatAdministrators"
+        data = {"chat_id": chat_id}
+        r = self._perform_sync_request(url, data)
+        return r
+
     def sync_decline_chat_join_request(
         self,
         chat_id: int,
