@@ -51,12 +51,12 @@ class CopyMessage(BaseModel):
     chat_id: int = Field(
         ...,
         title="Unique identifier for the target chat or username of the target channel "
-              "(in the format @channelusername)",
+        "(in the format @channelusername)",
     )
     from_chat_id: int = Field(
         ...,
         title="Unique identifier for the chat where the original message was sent (or channel username in "
-              "the format @channelusername)",
+        "the format @channelusername)",
     )
     message_id: int = Field(
         ..., title="Message identifier in the chat specified in from_chat_id"
@@ -327,4 +327,21 @@ class Sticker(BaseModel):
     )
     reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = Field(
         None, title="reply markup"
+    )
+
+
+class BotCommand(BaseModel):
+    command: str = Field(
+        ...,
+        title="Text of the command; 1-32 characters. "
+        "Can contain only lowercase English letters, digits and underscores.",
+    )
+    description: str = Field(..., title="Description of the command; 1-256 characters.")
+
+
+class SetMyCommands(BaseModel):
+    commands: List[BotCommand] = Field(
+        ...,
+        title="A JSON-serialized list of bot commands to be set as the list of the bot's commands. "
+        "At most 100 commands can be specified.",
     )

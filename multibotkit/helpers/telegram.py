@@ -1,6 +1,6 @@
 from io import BytesIO
 import json
-from typing import IO, Optional, Union, List
+from typing import IO, Optional, Union, List, Tuple
 
 import aiofiles
 import httpx
@@ -31,7 +31,7 @@ from multibotkit.schemas.telegram.outgoing import (
     Location,
     DeleteWebhookParams,
     DeleteMessage,
-    CopyMessage,
+    CopyMessage, BotCommand, SetMyCommands,
 )
 
 
@@ -1811,4 +1811,40 @@ class TelegramHelper(BaseHelper):
         url = self.tg_base_url + "getStickerSet"
         data = {"name": sticker_set}
         r = await self._perform_async_request(url, data)
+        return r
+
+    def sync_set_my_commands(
+        self,
+        commands: List[Tuple[str, str]]
+    ):
+        url = self.tg_base_url + "setMyCommands"
+        commands_list = []
+        for command, description in commands:
+            commands_list.append(
+                BotCommand(command=command, description=description)
+            )
+
+        set_my_commands = SetMyCommands(
+            commands=commands_list
+        )
+
+        r = self._perform_sync_request(url, set_my_commands.dict())
+        return r
+
+    async def async_set_my_commands(
+        self,
+        commands: List[Tuple[str, str]]
+    ):
+        url = self.tg_base_url + "setMyCommands"
+        commands_list = []
+        for command, description in commands:
+            commands_list.append(
+                BotCommand(command=command, description=description)
+            )
+
+        set_my_commands = SetMyCommands(
+            commands=commands_list
+        )
+
+        r = await self._perform_async_request(url, set_my_commands.dict())
         return r
