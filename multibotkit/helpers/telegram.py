@@ -31,7 +31,9 @@ from multibotkit.schemas.telegram.outgoing import (
     Location,
     DeleteWebhookParams,
     DeleteMessage,
-    CopyMessage, BotCommand, SetMyCommands,
+    CopyMessage,
+    BotCommand,
+    SetMyCommands,
 )
 
 
@@ -58,16 +60,20 @@ class TelegramHelper(BaseHelper):
             return WebhookInfo(**r["result"])
         return None
 
-    def sync_set_webhook(self, webhook_url: str):
+    def sync_set_webhook(
+        self, webhook_url: str, allowed_updates: Optional[List[str]] = None
+    ):
         url = self.tg_base_url + "setWebhook"
-        params = SetWebhookParams(url=webhook_url)
+        params = SetWebhookParams(url=webhook_url, allowed_updates=allowed_updates)
         data = params.dict(exclude_none=True)
         r = self._perform_sync_request(url, data)
         return r
 
-    async def async_set_webhook(self, webhook_url: str):
+    async def async_set_webhook(
+        self, webhook_url: str, allowed_updates: Optional[List[str]] = None
+    ):
         url = self.tg_base_url + "setWebhook"
-        params = SetWebhookParams(url=webhook_url)
+        params = SetWebhookParams(url=webhook_url, allowed_updates=allowed_updates)
         data = params.dict(exclude_none=True)
         r = await self._perform_async_request(url, data)
         return r
@@ -1813,38 +1819,24 @@ class TelegramHelper(BaseHelper):
         r = await self._perform_async_request(url, data)
         return r
 
-    def sync_set_my_commands(
-        self,
-        commands: List[Tuple[str, str]]
-    ):
+    def sync_set_my_commands(self, commands: List[Tuple[str, str]]):
         url = self.tg_base_url + "setMyCommands"
         commands_list = []
         for command, description in commands:
-            commands_list.append(
-                BotCommand(command=command, description=description)
-            )
+            commands_list.append(BotCommand(command=command, description=description))
 
-        set_my_commands = SetMyCommands(
-            commands=commands_list
-        )
+        set_my_commands = SetMyCommands(commands=commands_list)
 
         r = self._perform_sync_request(url, set_my_commands.dict())
         return r
 
-    async def async_set_my_commands(
-        self,
-        commands: List[Tuple[str, str]]
-    ):
+    async def async_set_my_commands(self, commands: List[Tuple[str, str]]):
         url = self.tg_base_url + "setMyCommands"
         commands_list = []
         for command, description in commands:
-            commands_list.append(
-                BotCommand(command=command, description=description)
-            )
+            commands_list.append(BotCommand(command=command, description=description))
 
-        set_my_commands = SetMyCommands(
-            commands=commands_list
-        )
+        set_my_commands = SetMyCommands(commands=commands_list)
 
         r = await self._perform_async_request(url, set_my_commands.dict())
         return r
