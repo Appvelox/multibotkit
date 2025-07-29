@@ -61,19 +61,29 @@ class TelegramHelper(BaseHelper):
         return None
 
     def sync_set_webhook(
-        self, webhook_url: str, allowed_updates: Optional[List[str]] = None
+        self,
+        webhook_url: str,
+        allowed_updates: Optional[List[str]] = None,
+        secret_token: Optional[str] = False,
     ):
         url = self.tg_base_url + "setWebhook"
-        params = SetWebhookParams(url=webhook_url, allowed_updates=allowed_updates)
+        params = SetWebhookParams(
+            url=webhook_url, allowed_updates=allowed_updates, secret_token=secret_token
+        )
         data = params.dict(exclude_none=True)
         r = self._perform_sync_request(url, data)
         return r
 
     async def async_set_webhook(
-        self, webhook_url: str, allowed_updates: Optional[List[str]] = None
+        self,
+        webhook_url: str,
+        allowed_updates: Optional[List[str]] = None,
+        secret_token: Optional[str] = False,
     ):
         url = self.tg_base_url + "setWebhook"
-        params = SetWebhookParams(url=webhook_url, allowed_updates=allowed_updates)
+        params = SetWebhookParams(
+            url=webhook_url, allowed_updates=allowed_updates, secret_token=secret_token
+        )
         data = params.dict(exclude_none=True)
         r = await self._perform_async_request(url, data)
         return r

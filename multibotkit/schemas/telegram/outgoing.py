@@ -30,6 +30,12 @@ Please note that this parameter doesn't affect updates \
 created before the call to the setWebhook, so unwanted \
 updates may be received for a short period of time.",
     )
+    secret_token: Optional[str] = Field(
+        None,
+        title="A secret token to be sent in a header “X-Telegram-Bot-Api-Secret-Token” in every webhook request, 1-256"
+              " characters. Only characters A-Z, a-z, 0-9, _ and - are allowed. The header is useful to ensure that the"
+              " request comes from a webhook set by you.",
+    )
 
 
 class DeleteWebhookParams(BaseModel):
