@@ -589,6 +589,7 @@ def test_outgoing_models():
         "ip_address": "111.111.111.111",
         "max_connections": 10,
         "allowed_updates": ["message", "edited_channel_post", "callback_query"],
+        "secret_token": None
     }
 
     set_webhook_params = SetWebhookParams.parse_obj(set_webhook_params_dict)
