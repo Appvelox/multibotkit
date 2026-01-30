@@ -151,7 +151,7 @@ def test_sync_send_message(httpx_mock: HTTPXMock):
 
     contact = Contact(name="name", phone_number="89999999999")
 
-    location = Location(lat=0, lon=0)
+    location = Location(lat="0", lon="0")
 
     r = viber_helper.sync_send_message(
         type="text",

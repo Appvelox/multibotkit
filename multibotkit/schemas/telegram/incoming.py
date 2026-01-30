@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Optional, List
 
-from pydantic import Field
+from pydantic import ConfigDict, Field
 from pydantic.main import BaseModel
 
 
@@ -237,10 +237,12 @@ class WebAppData(BaseModel):
 
 
 class Message(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
     message_id: int = Field(..., title="Unique message identifier inside this chat")
     date: int = Field(..., title="Date the message was sent in Unix time")
     from_: Optional[User] = Field(
-        None, title="Sender, empty for messages sent to channels"
+        None, title="Sender, empty for messages sent to channels", alias="from"
     )
     chat: Optional[Chat] = Field(None, title="Conversation the message belongs to")
     text: Optional[str] = Field(None, title="The actual UTF-8 text of the message")
@@ -284,13 +286,12 @@ the location",
         None, title="Service message: data sent by a Web App"
     )
 
-    class Config:
-        fields = {"from_": "from"}
-
 
 class CallbackQuery(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
     id: str = Field(..., title="Unique identifier for this query")
-    from_: Optional[User] = Field(None, title="Sender data")
+    from_: Optional[User] = Field(None, title="Sender data", alias="from")
     message: Optional[Message] = Field(
         None, title="Message with the callback button that originated the query"
     )
@@ -310,9 +311,6 @@ which the message with the callback button was sent",
         title="Short name of a Game to be returned, serves as the \
 unique identifier for the game",
     )
-
-    class Config:
-        fields = {"from_": "from"}
 
 
 class ChatMember(BaseModel):
@@ -368,9 +366,11 @@ class ChatInviteLink(BaseModel):
 
 
 class ChatMemberUpdated(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
     date: int = Field(..., title="Date the change was done in Unix time")
     from_: User = Field(
-        ..., title="Performer of the action, which resulted in the change"
+        ..., title="Performer of the action, which resulted in the change", alias="from"
     )
     chat: Chat = Field(..., title="Chat the user belongs to")
     old_chat_member: ChatMember = Field(
@@ -393,13 +393,12 @@ class ChatMemberUpdated(BaseModel):
         title="Optional. True, if the user joined the chat via a chat folder invite link",
     )
 
-    class Config:
-        fields = {"from_": "from"}
-
 
 class ChatJoinRequest(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
     chat: Chat = Field(..., title="	Chat to which the request was sent")
-    from_: User = Field(..., title="User that sent the join request")
+    from_: User = Field(..., title="User that sent the join request", alias="from")
     user_chat_id: int = Field(
         ...,
         title="Identifier of a private chat with the user who sent the join request.",
@@ -413,9 +412,6 @@ class ChatJoinRequest(BaseModel):
         None,
         title="Chat invite link that was used by the user to send the join request",
     )
-
-    class Config:
-        fields = {"from_": "from"}
 
 
 class Update(BaseModel):

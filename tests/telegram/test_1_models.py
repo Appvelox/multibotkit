@@ -149,7 +149,7 @@ def test_incoming_models():
     mask_position_json = mask_position.json()
     mask_position_dict = json.loads(mask_position_json)
 
-    assert mask_position == {
+    assert mask_position_dict == {
         "point": "eyes",
         "x_shift": 55.55,
         "y_shift": 55.55,

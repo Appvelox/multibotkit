@@ -64,7 +64,7 @@ class TelegramHelper(BaseHelper):
         self,
         webhook_url: str,
         allowed_updates: Optional[List[str]] = None,
-        secret_token: Optional[str] = False,
+        secret_token: Optional[str] = None,
     ):
         url = self.tg_base_url + "setWebhook"
         params = SetWebhookParams(
@@ -78,7 +78,7 @@ class TelegramHelper(BaseHelper):
         self,
         webhook_url: str,
         allowed_updates: Optional[List[str]] = None,
-        secret_token: Optional[str] = False,
+        secret_token: Optional[str] = None,
     ):
         url = self.tg_base_url + "setWebhook"
         params = SetWebhookParams(
