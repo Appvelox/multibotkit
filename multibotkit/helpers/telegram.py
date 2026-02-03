@@ -1106,7 +1106,7 @@ class TelegramHelper(BaseHelper):
         allow_sending_without_reply: Optional[bool] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None,
     ):
-        if type(video) == str:
+        if type(video) is str:
             if video.startswith("http://") or video.startswith("https://"):
                 video_obj = Video(
                     chat_id=chat_id,
@@ -1204,7 +1204,7 @@ class TelegramHelper(BaseHelper):
         allow_sending_without_reply: Optional[bool] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None,
     ):
-        if type(video) == str:
+        if type(video) is str:
             if video.startswith("http://") or video.startswith("https://"):
                 video_obj = Video(
                     chat_id=chat_id,
@@ -1303,7 +1303,7 @@ class TelegramHelper(BaseHelper):
         files = {}
         document_str = None
 
-        if type(document) == str:
+        if type(document) is str:
             if not (document.startswith("http://") or document.startswith("https://")):
                 ends = [".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx"]
                 for end in ends:
@@ -1359,7 +1359,7 @@ class TelegramHelper(BaseHelper):
         files = {}
         document_str = None
 
-        if type(document) == str:
+        if type(document) is str:
             if not (document.startswith("http://") or document.startswith("https://")):
                 ends = [".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx"]
                 for end in ends:
@@ -1453,7 +1453,7 @@ class TelegramHelper(BaseHelper):
         files = {}
         photos_list = []
 
-        if type(photos[-1]) == str:
+        if type(photos[-1]) is str:
             if photos[-1].startswith("http://") or photos[-1].startswith("https://"):
                 for photo in photos:
                     photos_list.append(InputMediaPhoto(media=photo))
@@ -1507,7 +1507,7 @@ class TelegramHelper(BaseHelper):
         files = {}
         photos_list = []
 
-        if type(photos[-1]) == str:
+        if type(photos[-1]) is str:
             if photos[-1].startswith("http://") or photos[-1].startswith("https://"):
                 for photo in photos:
                     photos_list.append(InputMediaPhoto(media=photo))
@@ -1576,7 +1576,7 @@ class TelegramHelper(BaseHelper):
         files = {}
         animation_str = None
 
-        if type(animation) == str:
+        if type(animation) is str:
             if not (
                 animation.startswith("http://") or animation.startswith("https://")
             ):
@@ -1642,7 +1642,7 @@ class TelegramHelper(BaseHelper):
         files = {}
         animation_str = None
 
-        if type(animation) == str:
+        if type(animation) is str:
             if not (
                 animation.startswith("http://") or animation.startswith("https://")
             ):
@@ -1710,7 +1710,7 @@ class TelegramHelper(BaseHelper):
         files = {}
         audio_str = None
 
-        if type(audio) == str:
+        if type(audio) is str:
             if not (audio.startswith("http://") or audio.startswith("https://")):
                 ends = [".mp3"]
                 for end in ends:
