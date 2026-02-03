@@ -54,7 +54,7 @@ def test_sync_send_message(httpx_mock: HTTPXMock):
         "image_url": "image url",
     }
 
-    quick_reply = QuickReply.parse_obj(quick_reply_dict)
+    quick_reply = QuickReply.model_validate(quick_reply_dict)
 
     message_data_attachment_payload_dict = {
         "template_type": "template type",
@@ -68,7 +68,7 @@ def test_sync_send_message(httpx_mock: HTTPXMock):
         "payload": message_data_attachment_payload_dict,
     }
 
-    message_data_attachment = MessageDataAttachment.parse_obj(
+    message_data_attachment = MessageDataAttachment.model_validate(
         message_data_attachment_dict
     )
 
@@ -141,7 +141,7 @@ def test_sync_send_persistent_menu(httpx_mock: HTTPXMock):
 
     persistent_menu_dict = {"persistent_menu": [persistent_menu_element_dict]}
 
-    persistent_menu = PersistentMenu.parse_obj(persistent_menu_dict)
+    persistent_menu = PersistentMenu.model_validate(persistent_menu_dict)
 
     r = fb_helper.sync_send_persistent_menu(persistent_menu)
 
@@ -183,7 +183,7 @@ async def test_async_send_message(httpx_mock: HTTPXMock):
         "image_url": "image url",
     }
 
-    quick_reply = QuickReply.parse_obj(quick_reply_dict)
+    quick_reply = QuickReply.model_validate(quick_reply_dict)
 
     message_data_attachment_payload_dict = {
         "template_type": "template type",
@@ -197,7 +197,7 @@ async def test_async_send_message(httpx_mock: HTTPXMock):
         "payload": message_data_attachment_payload_dict,
     }
 
-    message_data_attachment = MessageDataAttachment.parse_obj(
+    message_data_attachment = MessageDataAttachment.model_validate(
         message_data_attachment_dict
     )
 
@@ -265,7 +265,7 @@ async def test_async_send_persistent_menu(httpx_mock: HTTPXMock):
 
     persistent_menu_dict = {"persistent_menu": [persistent_menu_element_dict]}
 
-    persistent_menu = PersistentMenu.parse_obj(persistent_menu_dict)
+    persistent_menu = PersistentMenu.model_validate(persistent_menu_dict)
 
     r = await fb_helper.async_send_persistent_menu(persistent_menu)
 

@@ -67,7 +67,7 @@ class VKHelper(BaseHelper):
             template=template,
         )
 
-        data = message.dict(exclude_none=True)
+        data = message.model_dump(exclude_none=True)
         if data.get("keyboard"):
             data["keyboard"] = json.dumps(data["keyboard"], ensure_ascii=False)
         if data.get("template"):
@@ -101,7 +101,7 @@ but not both"
             attachment=attachment,
             template=template,
         )
-        data = message.dict(exclude_none=True)
+        data = message.model_dump(exclude_none=True)
         if data.get("keyboard"):
             data["keyboard"] = json.dumps(data["keyboard"], ensure_ascii=False)
         if data.get("template"):

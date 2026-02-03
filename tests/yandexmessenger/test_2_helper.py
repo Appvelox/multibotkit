@@ -12,7 +12,6 @@ from multibotkit.schemas.yandexmessenger.outgoing import (
 )
 from tests.config import settings
 
-
 ym_helper = YandexMessengerHelper(settings.YANDEX_MESSENGER_TOKEN)
 
 
@@ -50,7 +49,7 @@ def test_sync_helper_send_text_with_keyboard(httpx_mock: HTTPXMock):
 
     button1 = InlineKeyboardButton(text="Button 1", callback_data={"action": "1"})
     button2 = InlineKeyboardButton(text="Button 2", callback_data={"action": "2"})
-    keyboard = InlineKeyboard(buttons=[[button1, button2]])
+    keyboard = InlineKeyboard(buttons=[button1, button2])
 
     r = ym_helper.sync_send_text(
         text="Choose option", chat_id="group_123", inline_keyboard=keyboard

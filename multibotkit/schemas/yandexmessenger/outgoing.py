@@ -1,6 +1,6 @@
 from typing import List, Optional, Union
 
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 from multibotkit.schemas.yandexmessenger.incoming import Update
 
@@ -20,12 +20,13 @@ class InlineKeyboard(BaseModel):
     Структура: массив рядов, каждый ряд - массив кнопок.
     """
 
-    buttons: List[List[InlineKeyboardButton]] = Field(..., title="Массив рядов кнопок")
+    buttons: List[InlineKeyboardButton] = Field(..., title="Массив кнопок")
 
-    @validator("buttons")
-    def validate_button_count(cls, v):
+    @field_validator("buttons")
+    @classmethod
+    def validate_button_count(cls, v: list) -> list:
         """Проверка лимита в 100 кнопок"""
-        total_buttons = sum(len(row) for row in v)
+        total_buttons = len(v)
         if total_buttons > 100:
             raise ValueError("Максимум 100 кнопок в клавиатуре")
         return v
@@ -36,9 +37,7 @@ class SendTextParams(BaseModel):
 
     text: str = Field(..., title="Текст сообщения", max_length=6000)
     chat_id: Optional[str] = Field(None, title="ID чата (для групповых чатов)")
-    login: Optional[str] = Field(
-        None, title="Login пользователя (для приватных чатов)"
-    )
+    login: Optional[str] = Field(None, title="Login пользователя (для приватных чатов)")
     payload_id: Optional[str] = Field(
         None, title="Уникальный ID для дедупликации (рекомендуется для webhook)"
     )
@@ -51,13 +50,12 @@ class SendTextParams(BaseModel):
     thread_id: Optional[int] = Field(None, title="ID треда для ответа в треде")
     inline_keyboard: Optional[InlineKeyboard] = Field(None, title="Inline клавиатура")
 
-    @validator("login", always=True)
-    def validate_chat_or_login(cls, v, values):
+    @model_validator(mode="after")
+    def validate_chat_or_login(self):
         """Проверка что указан либо chat_id либо login"""
-        chat_id = values.get("chat_id")
-        if not chat_id and not v:
+        if not self.chat_id and not self.login:
             raise ValueError("Необходимо указать либо chat_id либо login")
-        return v
+        return self
 
 
 class SendImageParams(BaseModel):
@@ -67,17 +65,14 @@ class SendImageParams(BaseModel):
     """
 
     chat_id: Optional[str] = Field(None, title="ID чата (для групповых чатов)")
-    login: Optional[str] = Field(
-        None, title="Login пользователя (для приватных чатов)"
-    )
+    login: Optional[str] = Field(None, title="Login пользователя (для приватных чатов)")
     thread_id: Optional[int] = Field(None, title="ID треда")
 
-    @validator("login", always=True)
-    def validate_chat_or_login(cls, v, values):
-        chat_id = values.get("chat_id")
-        if not chat_id and not v:
+    @model_validator(mode="after")
+    def validate_chat_or_login(self):
+        if not self.chat_id and not self.login:
             raise ValueError("Необходимо указать либо chat_id либо login")
-        return v
+        return self
 
 
 class SendFileParams(BaseModel):
@@ -87,17 +82,14 @@ class SendFileParams(BaseModel):
     """
 
     chat_id: Optional[str] = Field(None, title="ID чата (для групповых чатов)")
-    login: Optional[str] = Field(
-        None, title="Login пользователя (для приватных чатов)"
-    )
+    login: Optional[str] = Field(None, title="Login пользователя (для приватных чатов)")
     thread_id: Optional[int] = Field(None, title="ID треда")
 
-    @validator("login", always=True)
-    def validate_chat_or_login(cls, v, values):
-        chat_id = values.get("chat_id")
-        if not chat_id and not v:
+    @model_validator(mode="after")
+    def validate_chat_or_login(self):
+        if not self.chat_id and not self.login:
             raise ValueError("Необходимо указать либо chat_id либо login")
-        return v
+        return self
 
 
 class GetUpdatesParams(BaseModel):

@@ -55,7 +55,7 @@ async def test_vk_dispatcher():
         "object": event_object_dict,
     }
 
-    incoming_event = IncomingEvent.parse_obj(incoming_event_dict)
+    incoming_event = IncomingEvent.model_validate(incoming_event_dict)
 
     @dp.handler(
         func=lambda event: event.object.message.text.startswith("text"),

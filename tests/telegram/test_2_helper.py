@@ -49,7 +49,7 @@ def test_sync_helper_get_webhook_info(httpx_mock: HTTPXMock):
 
     r = tg_helper.sync_get_webhook_info()
 
-    assert r == WebhookInfo.parse_obj(
+    assert r == WebhookInfo.model_validate(
         {
             "url": "https://test_url/api/bot/telegram",
             "has_custom_certificate": False,
@@ -97,7 +97,7 @@ def test_sync_send_message(httpx_mock: HTTPXMock):
         "request_location": False,
     }
 
-    keyboard_button = KeyboardButton.parse_obj(keyboard_button_dict)
+    keyboard_button = KeyboardButton.model_validate(keyboard_button_dict)
 
     reply_keyboard_markup = ReplyKeyboardMarkup(
         keyboard=[[keyboard_button, keyboard_button]],
@@ -112,7 +112,7 @@ def test_sync_send_message(httpx_mock: HTTPXMock):
         reply_markup=reply_keyboard_markup,
     )
 
-    message_dict = message.dict(exclude_none=True)
+    message_dict = message.model_dump(exclude_none=True)
     message_dict.update({"parse_mode": "HTML"})
 
     r = tg_helper.sync_send_message(
@@ -205,7 +205,7 @@ def test_sync_helper_edit_message_media(httpx_mock: HTTPXMock):
         "callback_data": "some_data"
     }
 
-    keyboard_button = InlineKeyboardButton.parse_obj(keyboard_button_dict)
+    keyboard_button = InlineKeyboardButton.model_validate(keyboard_button_dict)
 
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[[keyboard_button, keyboard_button]],
@@ -251,7 +251,7 @@ def test_sync_helper_send_photo(httpx_mock: HTTPXMock):
         "request_location": False,
     }
 
-    keyboard_button = KeyboardButton.parse_obj(keyboard_button_dict)
+    keyboard_button = KeyboardButton.model_validate(keyboard_button_dict)
 
     reply_keyboard_markup = ReplyKeyboardMarkup(
         keyboard=[[keyboard_button, keyboard_button]],
@@ -307,7 +307,7 @@ def test_sync_helper_send_doc(httpx_mock: HTTPXMock):
         "request_location": False,
     }
 
-    keyboard_button = KeyboardButton.parse_obj(keyboard_button_dict)
+    keyboard_button = KeyboardButton.model_validate(keyboard_button_dict)
 
     reply_keyboard_markup = ReplyKeyboardMarkup(
         keyboard=[[keyboard_button, keyboard_button]],
@@ -363,7 +363,7 @@ def test_sync_helper_send_animation(httpx_mock: HTTPXMock):
         "request_location": False,
     }
 
-    keyboard_button = KeyboardButton.parse_obj(keyboard_button_dict)
+    keyboard_button = KeyboardButton.model_validate(keyboard_button_dict)
 
     reply_keyboard_markup = ReplyKeyboardMarkup(
         keyboard=[[keyboard_button, keyboard_button]],
@@ -450,7 +450,7 @@ async def test_async_helper_async_get_webhook_info(httpx_mock: HTTPXMock):
 
     r = await tg_helper.async_get_webhook_info()
 
-    assert r == WebhookInfo.parse_obj(
+    assert r == WebhookInfo.model_validate(
         {
             "url": "https://test_url/api/bot/telegram",
             "has_custom_certificate": False,
@@ -500,7 +500,7 @@ async def test_async_send_message(httpx_mock: HTTPXMock):
         "request_location": False,
     }
 
-    keyboard_button = KeyboardButton.parse_obj(keyboard_button_dict)
+    keyboard_button = KeyboardButton.model_validate(keyboard_button_dict)
 
     reply_keyboard_markup = ReplyKeyboardMarkup(
         keyboard=[[keyboard_button, keyboard_button]],
@@ -515,7 +515,7 @@ async def test_async_send_message(httpx_mock: HTTPXMock):
         reply_markup=reply_keyboard_markup,
     )
 
-    message_dict = message.dict(exclude_none=True)
+    message_dict = message.model_dump(exclude_none=True)
     message_dict.update({"parse_mode": "HTML"})
 
     r = await tg_helper.async_send_message(
@@ -617,7 +617,7 @@ async def test_async_helper_edit_message_media(httpx_mock: HTTPXMock):
         "callback_data": "some_data"
     }
 
-    keyboard_button = InlineKeyboardButton.parse_obj(keyboard_button_dict)
+    keyboard_button = InlineKeyboardButton.model_validate(keyboard_button_dict)
 
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[[keyboard_button, keyboard_button]],
@@ -664,7 +664,7 @@ async def test_async_helper_send_photo(httpx_mock: HTTPXMock):
         "request_location": False,
     }
 
-    keyboard_button = KeyboardButton.parse_obj(keyboard_button_dict)
+    keyboard_button = KeyboardButton.model_validate(keyboard_button_dict)
 
     reply_keyboard_markup = ReplyKeyboardMarkup(
         keyboard=[[keyboard_button, keyboard_button]],
@@ -721,7 +721,7 @@ async def test_async_helper_send_doc(httpx_mock: HTTPXMock):
         "request_location": False,
     }
 
-    keyboard_button = KeyboardButton.parse_obj(keyboard_button_dict)
+    keyboard_button = KeyboardButton.model_validate(keyboard_button_dict)
 
     reply_keyboard_markup = ReplyKeyboardMarkup(
         keyboard=[[keyboard_button, keyboard_button]],
@@ -778,7 +778,7 @@ async def test_async_helper_send_animation(httpx_mock: HTTPXMock):
         "request_location": False,
     }
 
-    keyboard_button = KeyboardButton.parse_obj(keyboard_button_dict)
+    keyboard_button = KeyboardButton.model_validate(keyboard_button_dict)
 
     reply_keyboard_markup = ReplyKeyboardMarkup(
         keyboard=[[keyboard_button, keyboard_button]],
@@ -835,7 +835,7 @@ async def test_async_helper_send_audio(httpx_mock: HTTPXMock):
         "request_location": False,
     }
 
-    keyboard_button = KeyboardButton.parse_obj(keyboard_button_dict)
+    keyboard_button = KeyboardButton.model_validate(keyboard_button_dict)
 
     reply_keyboard_markup = ReplyKeyboardMarkup(
         keyboard=[[keyboard_button, keyboard_button]],

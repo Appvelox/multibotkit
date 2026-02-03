@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import List, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class ChatType(str, Enum):
@@ -45,9 +45,7 @@ class Image(BaseModel):
     size: Optional[int] = Field(
         None, title="Размер файла в байтах (опционально для оригиналов)"
     )
-    name: Optional[str] = Field(
-        None, title="Имя файла (опционально для оригиналов)"
-    )
+    name: Optional[str] = Field(None, title="Имя файла (опционально для оригиналов)")
 
 
 class File(BaseModel):
@@ -70,10 +68,10 @@ class Update(BaseModel):
     from_: Sender = Field(..., title="Отправитель сообщения", alias="from")
     chat: Chat = Field(..., title="Информация о чате")
     text: Optional[str] = Field(None, title="Текст сообщения (до 6000 символов)")
-    images: Optional[List[Image]] = Field(
-        None, title="Массив изображений (если есть)"
+    callback_data: Optional[dict] = Field(
+        None, title="Данные переданные по нажатию кнопки"
     )
+    images: Optional[List[Image]] = Field(None, title="Массив изображений (если есть)")
     file: Optional[File] = Field(None, title="Прикрепленный файл")
 
-    class Config:
-        populate_by_name = True
+    model_config = ConfigDict(populate_by_name=True)

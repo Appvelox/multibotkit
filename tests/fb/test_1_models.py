@@ -32,23 +32,23 @@ def test_fb_incoming_models():
     event_entry_message_recipient = EventEntryMessageRecipient(id="id")
 
     event_entry_message_recipient_dict = json.loads(
-        event_entry_message_recipient.json()
+        event_entry_message_recipient.model_dump_json()
     )
 
     assert event_entry_message_recipient_dict == {"id": "id"}
 
-    event_entry_message_recipient = EventEntryMessageRecipient.parse_obj(
+    event_entry_message_recipient = EventEntryMessageRecipient.model_validate(
         event_entry_message_recipient_dict
     )
     assert event_entry_message_recipient == EventEntryMessageRecipient(id="id")
 
     event_entry_message_sender = EventEntryMessageSender(id="id")
 
-    event_entry_message_sender_dict = json.loads(event_entry_message_sender.json())
+    event_entry_message_sender_dict = json.loads(event_entry_message_sender.model_dump_json())
 
     assert event_entry_message_sender_dict == {"id": "id"}
 
-    event_entry_message_sender = EventEntryMessageSender.parse_obj(
+    event_entry_message_sender = EventEntryMessageSender.model_validate(
         event_entry_message_sender_dict
     )
 
@@ -56,11 +56,11 @@ def test_fb_incoming_models():
 
     message_attachment_payload = MessageAttachmentPayload(url="url")
 
-    message_attachment_payload_dict = json.loads(message_attachment_payload.json())
+    message_attachment_payload_dict = json.loads(message_attachment_payload.model_dump_json())
 
     assert message_attachment_payload_dict == {"url": "url"}
 
-    message_attachment_payload = MessageAttachmentPayload.parse_obj(
+    message_attachment_payload = MessageAttachmentPayload.model_validate(
         message_attachment_payload_dict
     )
 
@@ -70,14 +70,14 @@ def test_fb_incoming_models():
         type="type", payload=message_attachment_payload
     )
 
-    message_attachment_dict = json.loads(message_attachment.json())
+    message_attachment_dict = json.loads(message_attachment.model_dump_json())
 
     assert message_attachment_dict == {
         "type": "type",
         "payload": message_attachment_payload_dict,
     }
 
-    message_attachment = MessageAttachment.parse_obj(message_attachment_dict)
+    message_attachment = MessageAttachment.model_validate(message_attachment_dict)
 
     assert message_attachment == MessageAttachment(
         type="type", payload=message_attachment_payload
@@ -85,11 +85,11 @@ def test_fb_incoming_models():
 
     referral_data = ReferralData(ref="ref", source="source", type="type")
 
-    referral_data_dict = json.loads(referral_data.json())
+    referral_data_dict = json.loads(referral_data.model_dump_json())
 
     assert referral_data_dict == {"ref": "ref", "source": "source", "type": "type"}
 
-    referral_data = ReferralData.parse_obj(referral_data_dict)
+    referral_data = ReferralData.model_validate(referral_data_dict)
 
     assert referral_data == ReferralData(ref="ref", source="source", type="type")
 
@@ -97,7 +97,7 @@ def test_fb_incoming_models():
         title="title", payload="payload", referral=referral_data
     )
 
-    message_postback_dict = json.loads(message_postback.json())
+    message_postback_dict = json.loads(message_postback.model_dump_json())
 
     assert message_postback_dict == {
         "title": "title",
@@ -105,7 +105,7 @@ def test_fb_incoming_models():
         "referral": referral_data_dict,
     }
 
-    message_postback = MessagePostback.parse_obj(message_postback_dict)
+    message_postback = MessagePostback.model_validate(message_postback_dict)
 
     assert message_postback == MessagePostback(
         title="title", payload="payload", referral=referral_data
@@ -115,7 +115,7 @@ def test_fb_incoming_models():
         mid="mid", text="text", attachments=[message_attachment]
     )
 
-    event_entry_message_data_dict = json.loads(event_entry_message_data.json())
+    event_entry_message_data_dict = json.loads(event_entry_message_data.model_dump_json())
 
     assert event_entry_message_data_dict == {
         "mid": "mid",
@@ -123,7 +123,7 @@ def test_fb_incoming_models():
         "attachments": [message_attachment_dict],
     }
 
-    event_entry_message_data = EventEntryMessageData.parse_obj(
+    event_entry_message_data = EventEntryMessageData.model_validate(
         event_entry_message_data_dict
     )
 
@@ -140,7 +140,7 @@ def test_fb_incoming_models():
         referral=referral_data,
     )
 
-    event_entry_message_dict = json.loads(event_entry_message.json())
+    event_entry_message_dict = json.loads(event_entry_message.model_dump_json())
 
     assert event_entry_message_dict == {
         "sender": event_entry_message_sender_dict,
@@ -151,7 +151,7 @@ def test_fb_incoming_models():
         "referral": referral_data_dict,
     }
 
-    event_entry_message = EventEntryMessage.parse_obj(event_entry_message_dict)
+    event_entry_message = EventEntryMessage.model_validate(event_entry_message_dict)
 
     assert event_entry_message == EventEntryMessage(
         sender=event_entry_message_sender,
@@ -164,7 +164,7 @@ def test_fb_incoming_models():
 
     event_entry = EventEntry(id="id", time=60000, messaging=[event_entry_message])
 
-    event_entry_dict = json.loads(event_entry.json())
+    event_entry_dict = json.loads(event_entry.model_dump_json())
 
     assert event_entry_dict == {
         "id": "id",
@@ -172,7 +172,7 @@ def test_fb_incoming_models():
         "messaging": [event_entry_message_dict],
     }
 
-    event_entry = EventEntry.parse_obj(event_entry_dict)
+    event_entry = EventEntry.model_validate(event_entry_dict)
 
     assert event_entry == EventEntry(
         id="id", time=60000, messaging=[event_entry_message]
@@ -180,11 +180,11 @@ def test_fb_incoming_models():
 
     incoming_event = IncomingEvent(object="object", entry=[event_entry])
 
-    incoming_event_dict = json.loads(incoming_event.json())
+    incoming_event_dict = json.loads(incoming_event.model_dump_json())
 
     assert incoming_event_dict == {"object": "object", "entry": [event_entry_dict]}
 
-    incoming_event = IncomingEvent.parse_obj(incoming_event_dict)
+    incoming_event = IncomingEvent.model_validate(incoming_event_dict)
 
     assert incoming_event == IncomingEvent(object="object", entry=[event_entry])
 
@@ -195,7 +195,7 @@ def test_outgoing_models():
         type="type", title="title", payload="payload", url="url"
     )
 
-    generic_template_button_dict = json.loads(generic_template_button.json())
+    generic_template_button_dict = json.loads(generic_template_button.model_dump_json())
 
     assert generic_template_button_dict == {
         "type": "type",
@@ -204,7 +204,7 @@ def test_outgoing_models():
         "url": "url",
     }
 
-    generic_template_button = GenericTemplateButton.parse_obj(
+    generic_template_button = GenericTemplateButton.model_validate(
         generic_template_button_dict
     )
 
@@ -219,7 +219,7 @@ def test_outgoing_models():
         buttons=[generic_template_button],
     )
 
-    generic_template_element_dict = json.loads(generic_template_element.json())
+    generic_template_element_dict = json.loads(generic_template_element.model_dump_json())
 
     assert generic_template_element_dict == {
         "title": "title",
@@ -228,7 +228,7 @@ def test_outgoing_models():
         "buttons": [generic_template_button_dict],
     }
 
-    generic_template_element = GenericTemplateElement.parse_obj(
+    generic_template_element = GenericTemplateElement.model_validate(
         generic_template_element_dict
     )
 
@@ -246,7 +246,7 @@ def test_outgoing_models():
         image_url="image url",
     )
 
-    quick_reply_dict = json.loads(quick_reply.json())
+    quick_reply_dict = json.loads(quick_reply.model_dump_json())
 
     assert quick_reply_dict == {
         "content_type": "content type",
@@ -255,7 +255,7 @@ def test_outgoing_models():
         "image_url": "image url",
     }
 
-    quick_reply = QuickReply.parse_obj(quick_reply_dict)
+    quick_reply = QuickReply.model_validate(quick_reply_dict)
 
     assert quick_reply == QuickReply(
         content_type="content type",
@@ -272,7 +272,7 @@ def test_outgoing_models():
     )
 
     message_data_attachment_payload_dict = json.loads(
-        message_data_attachment_payload.json()
+        message_data_attachment_payload.model_dump_json()
     )
 
     assert message_data_attachment_payload_dict == {
@@ -282,7 +282,7 @@ def test_outgoing_models():
         "elements": [generic_template_element_dict],
     }
 
-    message_data_attachment_payload = MessageDataAttachmentPayload.parse_obj(
+    message_data_attachment_payload = MessageDataAttachmentPayload.model_validate(
         message_data_attachment_payload_dict
     )
 
@@ -297,14 +297,14 @@ def test_outgoing_models():
         type="type", payload=message_data_attachment_payload
     )
 
-    message_data_attachment_dict = json.loads(message_data_attachment.json())
+    message_data_attachment_dict = json.loads(message_data_attachment.model_dump_json())
 
     assert message_data_attachment_dict == {
         "type": "type",
         "payload": message_data_attachment_payload_dict,
     }
 
-    message_data_attachment = MessageDataAttachment.parse_obj(
+    message_data_attachment = MessageDataAttachment.model_validate(
         message_data_attachment_dict
     )
 
@@ -316,7 +316,7 @@ def test_outgoing_models():
         text="text", attachment=message_data_attachment, quick_replies=[quick_reply]
     )
 
-    message_data_dict = json.loads(message_data.json())
+    message_data_dict = json.loads(message_data.model_dump_json())
 
     assert message_data_dict == {
         "text": "text",
@@ -324,7 +324,7 @@ def test_outgoing_models():
         "quick_replies": [quick_reply_dict],
     }
 
-    message_data = MessageData.parse_obj(message_data_dict)
+    message_data = MessageData.model_validate(message_data_dict)
 
     assert message_data == MessageData(
         text="text", attachment=message_data_attachment, quick_replies=[quick_reply]
@@ -332,11 +332,11 @@ def test_outgoing_models():
 
     message_recipient = MessageRecipient(id="id", email="e-mail")
 
-    message_recipient_dict = json.loads(message_recipient.json())
+    message_recipient_dict = json.loads(message_recipient.model_dump_json())
 
     assert message_recipient_dict == {"id": "id", "email": "e-mail"}
 
-    message_recipient = MessageRecipient.parse_obj(message_recipient_dict)
+    message_recipient = MessageRecipient.model_validate(message_recipient_dict)
 
     assert message_recipient == MessageRecipient(id="id", email="e-mail")
 
@@ -346,7 +346,7 @@ def test_outgoing_models():
         message=message_data,
     )
 
-    message_dict = json.loads(message.json())
+    message_dict = json.loads(message.model_dump_json())
 
     assert message_dict == {
         "recipient": message_recipient_dict,
@@ -354,7 +354,7 @@ def test_outgoing_models():
         "message": message_data_dict,
     }
 
-    message = Message.parse_obj(message_dict)
+    message = Message.model_validate(message_dict)
 
     assert message == Message(
         recipient=message_recipient,
@@ -373,7 +373,7 @@ def test_outgoing_models():
         webview_share_button="webview share button",
     )
 
-    menu_item_dict = json.loads(menu_item.json())
+    menu_item_dict = json.loads(menu_item.model_dump_json())
 
     assert menu_item_dict == {
         "type": "type",
@@ -386,7 +386,7 @@ def test_outgoing_models():
         "webview_share_button": "webview share button",
     }
 
-    menu_item = MenuItem.parse_obj(menu_item_dict)
+    menu_item = MenuItem.model_validate(menu_item_dict)
 
     assert menu_item == MenuItem(
         type="type",
@@ -406,7 +406,7 @@ def test_outgoing_models():
         call_to_actions=[menu_item],
     )
 
-    persistent_menu_element_dict = json.loads(persistent_menu_element.json())
+    persistent_menu_element_dict = json.loads(persistent_menu_element.model_dump_json())
 
     assert persistent_menu_element_dict == {
         "locale": "locale",
@@ -415,7 +415,7 @@ def test_outgoing_models():
         "call_to_actions": [menu_item_dict],
     }
 
-    persistent_menu_element = PersistentMenuElement.parse_obj(
+    persistent_menu_element = PersistentMenuElement.model_validate(
         persistent_menu_element_dict
     )
 
@@ -428,10 +428,10 @@ def test_outgoing_models():
 
     persistent_menu = PersistentMenu(persistent_menu=[persistent_menu_element])
 
-    persistent_menu_dict = json.loads(persistent_menu.json())
+    persistent_menu_dict = json.loads(persistent_menu.model_dump_json())
 
     assert persistent_menu_dict == {"persistent_menu": [persistent_menu_element_dict]}
 
-    persistent_menu = PersistentMenu.parse_obj(persistent_menu_dict)
+    persistent_menu = PersistentMenu.model_validate(persistent_menu_dict)
 
     assert persistent_menu == PersistentMenu(persistent_menu=[persistent_menu_element])

@@ -42,7 +42,7 @@ async def test_telegram_dispatcher():
         "caption": "Caption",
     }
 
-    update = Update(update_id=1234, message=Message.parse_obj(message_dict))
+    update = Update(update_id=1234, message=Message.model_validate(message_dict))
 
     @dp.handler(
         func=lambda update: update.message.text.startswith("text"),

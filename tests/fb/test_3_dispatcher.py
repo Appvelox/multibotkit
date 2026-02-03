@@ -62,7 +62,7 @@ async def test_fb_dispatcher():
 
     incoming_event_dict = {"object": "object", "entry": [event_entry_dict]}
 
-    update = IncomingEvent.parse_obj(incoming_event_dict)
+    update = IncomingEvent.model_validate(incoming_event_dict)
 
     @dp.handler(
         func=lambda update: update.entry[0]

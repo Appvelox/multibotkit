@@ -42,7 +42,7 @@ def test_incoming_models():
         proximity_alert_radius=10,
     )
 
-    location_json = location.json()
+    location_json = location.model_dump_json()
     location_dict = json.loads(location_json)
 
     assert location_dict == {
@@ -54,7 +54,7 @@ def test_incoming_models():
         "proximity_alert_radius": 10,
     }
 
-    location = Location.parse_obj(location_dict)
+    location = Location.model_validate(location_dict)
 
     assert location.longitude == 59.769595
     assert location.latitude == 30.796399
@@ -71,7 +71,7 @@ def test_incoming_models():
         vcard="vcard",
     )
 
-    contact_json = contact.json()
+    contact_json = contact.model_dump_json()
     contact_dict = json.loads(contact_json)
 
     assert contact_dict == {
@@ -82,7 +82,7 @@ def test_incoming_models():
         "vcard": "vcard",
     }
 
-    contact = Contact.parse_obj(contact_dict)
+    contact = Contact.model_validate(contact_dict)
 
     assert contact.phone_number == "89999999999"
     assert contact.first_name == "Name"
@@ -98,7 +98,7 @@ def test_incoming_models():
         mime_type="MIME type",
     )
 
-    voice_json = voice.json()
+    voice_json = voice.model_dump_json()
     voice_dict = json.loads(voice_json)
 
     assert voice_dict == {
@@ -109,7 +109,7 @@ def test_incoming_models():
         "mime_type": "MIME type",
     }
 
-    voice = Voice.parse_obj(voice_dict)
+    voice = Voice.model_validate(voice_dict)
 
     assert voice.file_id == "file id"
     assert voice.file_unique_id == "file unique id"
@@ -125,7 +125,7 @@ def test_incoming_models():
         height=256,
     )
 
-    photo_json = photo.json()
+    photo_json = photo.model_dump_json()
     photo_dict = json.loads(photo_json)
 
     assert photo_dict == {
@@ -136,7 +136,7 @@ def test_incoming_models():
         "height": 256,
     }
 
-    photo = Photo.parse_obj(photo_dict)
+    photo = Photo.model_validate(photo_dict)
 
     assert photo.file_id == "file id"
     assert photo.file_unique_id == "file unique id"
@@ -146,7 +146,7 @@ def test_incoming_models():
 
     mask_position = MaskPosition(point="eyes", x_shift=55.55, y_shift=55.55, scale=1.2)
 
-    mask_position_json = mask_position.json()
+    mask_position_json = mask_position.model_dump_json()
     mask_position_dict = json.loads(mask_position_json)
 
     assert mask_position_dict == {
@@ -156,7 +156,7 @@ def test_incoming_models():
         "scale": 1.2,
     }
 
-    mask_position = MaskPosition.parse_obj(mask_position_dict)
+    mask_position = MaskPosition.model_validate(mask_position_dict)
 
     assert mask_position.point == "eyes"
     assert mask_position.x_shift == 55.55
@@ -176,7 +176,7 @@ def test_incoming_models():
         mask_position=mask_position,
     )
 
-    sticker_json = sticker.json()
+    sticker_json = sticker.model_dump_json()
     sticker_dict = json.loads(sticker_json)
 
     assert sticker_dict == {
@@ -192,7 +192,7 @@ def test_incoming_models():
         "mask_position": mask_position_dict,
     }
 
-    sticker = Sticker.parse_obj(sticker_dict)
+    sticker = Sticker.model_validate(sticker_dict)
 
     assert sticker.file_id == "file id"
     assert sticker.file_unique_id == "file unique id"
@@ -214,7 +214,7 @@ def test_incoming_models():
         thumb=photo,
     )
 
-    video_note_json = video_note.json()
+    video_note_json = video_note.model_dump_json()
     video_note_dict = json.loads(video_note_json)
 
     assert video_note_dict == {
@@ -226,7 +226,7 @@ def test_incoming_models():
         "thumb": photo_dict,
     }
 
-    video_note = VideoNote.parse_obj(video_note_dict)
+    video_note = VideoNote.model_validate(video_note_dict)
 
     assert video_note.file_id == "file id"
     assert video_note.file_unique_id == "file unique id"
@@ -247,7 +247,7 @@ def test_incoming_models():
         mime_type="MIME type",
     )
 
-    video_json = video.json()
+    video_json = video.model_dump_json()
     video_dict = json.loads(video_json)
 
     assert video_dict == {
@@ -262,7 +262,7 @@ def test_incoming_models():
         "mime_type": "MIME type",
     }
 
-    video = Video.parse_obj(video_dict)
+    video = Video.model_validate(video_dict)
 
     assert video.file_id == "file id"
     assert video.file_unique_id == "file unique id"
@@ -283,7 +283,7 @@ def test_incoming_models():
         mime_type="MIME type",
     )
 
-    document_json = document.json()
+    document_json = document.model_dump_json()
     document_dict = json.loads(document_json)
 
     assert document_dict == {
@@ -295,7 +295,7 @@ def test_incoming_models():
         "mime_type": "MIME type",
     }
 
-    document = Document.parse_obj(document_dict)
+    document = Document.model_validate(document_dict)
 
     assert document.file_id == "file id"
     assert document.file_unique_id == "file unique id"
@@ -316,7 +316,7 @@ def test_incoming_models():
         thumb=photo,
     )
 
-    audio_json = audio.json()
+    audio_json = audio.model_dump_json()
     audio_dict = json.loads(audio_json)
 
     assert audio_dict == {
@@ -331,7 +331,7 @@ def test_incoming_models():
         "thumb": photo_dict,
     }
 
-    audio = Audio.parse_obj(audio_dict)
+    audio = Audio.model_validate(audio_dict)
 
     assert audio.file_id == "file id"
     assert audio.file_unique_id == "file unique id"
@@ -352,7 +352,7 @@ def test_incoming_models():
         username="username",
     )
 
-    chat_json = chat.json()
+    chat_json = chat.model_dump_json()
     chat_dict = json.loads(chat_json)
 
     assert chat_dict == {
@@ -364,7 +364,7 @@ def test_incoming_models():
         "username": "username",
     }
 
-    chat = Chat.parse_obj(chat_dict)
+    chat = Chat.model_validate(chat_dict)
 
     assert chat == Chat(
         id=1234,
@@ -387,7 +387,7 @@ def test_incoming_models():
         supports_inline_queries=True,
     )
 
-    user_json = user.json()
+    user_json = user.model_dump_json()
     user_dict = json.loads(user_json)
 
     assert user_dict == {
@@ -402,7 +402,7 @@ def test_incoming_models():
         "supports_inline_queries": True,
     }
 
-    user = User.parse_obj(user_dict)
+    user = User.model_validate(user_dict)
 
     assert user == User(
         id=1234,
@@ -444,7 +444,7 @@ def test_incoming_models():
         "game_short_name": "game short name",
     }
 
-    message = IncomingMessage.parse_obj(message_dict)
+    message = IncomingMessage.model_validate(message_dict)
 
     assert message.message_id == 1234
     assert message.date == 1656425873
@@ -462,7 +462,7 @@ def test_incoming_models():
     assert message.contact == contact
     assert message.location == location
 
-    message_json = message.json()
+    message_json = message.model_dump_json()
     message_dict = json.loads(message_json)
 
     assert message_dict == {
@@ -484,7 +484,7 @@ def test_incoming_models():
         "web_app_data": None,
     }
 
-    callback_query = CallbackQuery.parse_obj(callback_query_dict)
+    callback_query = CallbackQuery.model_validate(callback_query_dict)
 
     assert callback_query.id == "callback query id"
     assert callback_query.from_ == user
@@ -494,7 +494,7 @@ def test_incoming_models():
     assert callback_query.data == "data"
     assert callback_query.game_short_name == "game short name"
 
-    callback_query_json = callback_query.json()
+    callback_query_json = callback_query.model_dump_json()
     callback_query_dict = json.loads(callback_query_json)
 
     assert callback_query_dict == {
@@ -514,7 +514,7 @@ def test_incoming_models():
         callback_query=callback_query,
     )
 
-    update_json = update.json()
+    update_json = update.model_dump_json()
     update_dict = json.loads(update_json)
 
     assert update_dict == {
@@ -562,7 +562,7 @@ def test_incoming_models():
         "callback_query": callback_query_dict,
     }
 
-    update = Update.parse_obj(update_dict)
+    update = Update.model_validate(update_dict)
 
     assert update == Update(
         update_id=1234,
@@ -581,7 +581,7 @@ def test_outgoing_models():
         allowed_updates=["message", "edited_channel_post", "callback_query"],
     )
 
-    set_webhook_params_json = set_webhook_params.json()
+    set_webhook_params_json = set_webhook_params.model_dump_json()
     set_webhook_params_dict = json.loads(set_webhook_params_json)
 
     assert set_webhook_params_dict == {
@@ -592,7 +592,7 @@ def test_outgoing_models():
         "secret_token": None
     }
 
-    set_webhook_params = SetWebhookParams.parse_obj(set_webhook_params_dict)
+    set_webhook_params = SetWebhookParams.model_validate(set_webhook_params_dict)
 
     assert set_webhook_params == SetWebhookParams(
         url="https://url.com",
@@ -612,7 +612,7 @@ def test_outgoing_models():
         allowed_updates=["message", "edited_channel_post", "callback_query"],
     )
 
-    webhook_info_json = webhook_info.json()
+    webhook_info_json = webhook_info.model_dump_json()
     webhook_info_dict = json.loads(webhook_info_json)
 
     assert webhook_info_dict == {
@@ -626,7 +626,7 @@ def test_outgoing_models():
         "allowed_updates": ["message", "edited_channel_post", "callback_query"],
     }
 
-    webhook_info = WebhookInfo.parse_obj(webhook_info_dict)
+    webhook_info = WebhookInfo.model_validate(webhook_info_dict)
 
     assert webhook_info == WebhookInfo(
         url="https://url.com",
@@ -643,7 +643,7 @@ def test_outgoing_models():
         text="Button", url="https://url.com", callback_data="callback data"
     )
 
-    inline_keyboard_button_json = inline_keyboard_button.json()
+    inline_keyboard_button_json = inline_keyboard_button.model_dump_json()
     inline_keyboard_button_dict = json.loads(inline_keyboard_button_json)
 
     assert inline_keyboard_button_dict == {
@@ -653,7 +653,7 @@ def test_outgoing_models():
         "web_app": None,
     }
 
-    inline_keyboard_button = InlineKeyboardButton.parse_obj(inline_keyboard_button_dict)
+    inline_keyboard_button = InlineKeyboardButton.model_validate(inline_keyboard_button_dict)
 
     assert inline_keyboard_button == InlineKeyboardButton(
         text="Button",
@@ -666,14 +666,14 @@ def test_outgoing_models():
         inline_keyboard=[[inline_keyboard_button, inline_keyboard_button]]
     )
 
-    inline_keyboard_markup_json = inline_keyboard_markup.json()
+    inline_keyboard_markup_json = inline_keyboard_markup.model_dump_json()
     inline_keyboard_markup_dict = json.loads(inline_keyboard_markup_json)
 
     assert inline_keyboard_markup_dict == {
         "inline_keyboard": [[inline_keyboard_button_dict, inline_keyboard_button_dict]]
     }
 
-    inline_keyboard_markup = InlineKeyboardMarkup.parse_obj(inline_keyboard_markup_dict)
+    inline_keyboard_markup = InlineKeyboardMarkup.model_validate(inline_keyboard_markup_dict)
 
     assert inline_keyboard_markup == InlineKeyboardMarkup(
         inline_keyboard=[[inline_keyboard_button, inline_keyboard_button]]
@@ -683,7 +683,7 @@ def test_outgoing_models():
         text="Button", request_contact=False, request_location=False
     )
 
-    keyboard_button_json = keyboard_button.json()
+    keyboard_button_json = keyboard_button.model_dump_json()
     keyboard_button_dict = json.loads(keyboard_button_json)
 
     assert keyboard_button_dict == {
@@ -693,7 +693,7 @@ def test_outgoing_models():
         "web_app": None,
     }
 
-    keyboard_button = KeyboardButton.parse_obj(keyboard_button_dict)
+    keyboard_button = KeyboardButton.model_validate(keyboard_button_dict)
 
     reply_keyboard_markup = ReplyKeyboardMarkup(
         keyboard=[[keyboard_button, keyboard_button]],
@@ -701,7 +701,7 @@ def test_outgoing_models():
         one_time_keyboard=False,
     )
 
-    reply_keyboard_markup_json = reply_keyboard_markup.json()
+    reply_keyboard_markup_json = reply_keyboard_markup.model_dump_json()
     reply_keyboard_markup_dict = json.loads(reply_keyboard_markup_json)
 
     assert reply_keyboard_markup_dict == {
@@ -711,7 +711,7 @@ def test_outgoing_models():
         "is_persistent": None,
     }
 
-    reply_keyboard_markup = ReplyKeyboardMarkup.parse_obj(reply_keyboard_markup_dict)
+    reply_keyboard_markup = ReplyKeyboardMarkup.model_validate(reply_keyboard_markup_dict)
 
     assert reply_keyboard_markup == ReplyKeyboardMarkup(
         keyboard=[[keyboard_button, keyboard_button]],
@@ -726,7 +726,7 @@ def test_outgoing_models():
         reply_markup=reply_keyboard_markup,
     )
 
-    message_json = message.json()
+    message_json = message.model_dump_json()
     message_dict = json.loads(message_json)
 
     assert message_dict == {
@@ -738,7 +738,7 @@ def test_outgoing_models():
         "allow_sending_without_reply": None,
     }
 
-    message = OutgoingMessage.parse_obj(message_dict)
+    message = OutgoingMessage.model_validate(message_dict)
 
     assert message == OutgoingMessage(
         chat_id=1234,
@@ -751,7 +751,7 @@ def test_outgoing_models():
         type="photo", media="media", caption="caption", parse_mode="parse mode"
     )
 
-    input_media_photo_json = input_media_photo.json()
+    input_media_photo_json = input_media_photo.model_dump_json()
     input_media_photo_dict = json.loads(input_media_photo_json)
 
     assert input_media_photo_dict == {
@@ -761,7 +761,7 @@ def test_outgoing_models():
         "parse_mode": "parse mode",
     }
 
-    input_media_photo = InputMediaPhoto.parse_obj(input_media_photo_dict)
+    input_media_photo = InputMediaPhoto.model_validate(input_media_photo_dict)
 
     assert input_media_photo == InputMediaPhoto(
         type="photo", media="media", caption="caption", parse_mode="parse mode"
@@ -774,7 +774,7 @@ def test_outgoing_models():
         parse_mode="parse mode",
     )
 
-    input_media_document_json = input_media_document.json()
+    input_media_document_json = input_media_document.model_dump_json()
     input_media_document_dict = json.loads(input_media_document_json)
 
     assert input_media_document_dict == {
@@ -784,7 +784,7 @@ def test_outgoing_models():
         "parse_mode": "parse mode",
     }
 
-    input_media_document = InputMediaDocument.parse_obj(input_media_document_dict)
+    input_media_document = InputMediaDocument.model_validate(input_media_document_dict)
 
     assert input_media_document == InputMediaDocument(
         type="photo",
@@ -795,7 +795,7 @@ def test_outgoing_models():
 
     media_group = MediaGroup(chat_id=1234, media=[input_media_photo, input_media_photo])
 
-    media_group_json = media_group.json()
+    media_group_json = media_group.model_dump_json()
     media_group_dict = json.loads(media_group_json)
 
     assert media_group_dict == {
@@ -803,7 +803,7 @@ def test_outgoing_models():
         "media": [input_media_photo_dict, input_media_photo_dict],
     }
 
-    media_group = MediaGroup.parse_obj(media_group_dict)
+    media_group = MediaGroup.model_validate(media_group_dict)
 
     assert media_group == MediaGroup(
         chat_id=1234, media=[input_media_photo, input_media_photo]

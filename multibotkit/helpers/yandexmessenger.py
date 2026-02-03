@@ -75,7 +75,9 @@ class YandexMessengerHelper(BaseHelper):
             if use_json:
                 r = await client.post(url=url, json=data, headers=self.headers)
             else:
-                r = await client.post(url=url, data=data, files=files, headers=self.headers)
+                r = await client.post(
+                    url=url, data=data, files=files, headers=self.headers
+                )
         return r.json()
 
     def sync_send_text(
@@ -122,11 +124,13 @@ class YandexMessengerHelper(BaseHelper):
             thread_id=thread_id,
             inline_keyboard=inline_keyboard,
         )
-        data = params.dict(exclude_none=True)
+        data = params.model_dump(exclude_none=True)
 
         # Сериализация inline_keyboard если есть
         if inline_keyboard:
-            data["inline_keyboard"] = inline_keyboard.dict(exclude_none=True)
+            data["inline_keyboard"] = inline_keyboard.model_dump(exclude_none=True)[
+                "buttons"
+            ]
 
         return self._perform_sync_request(url, data)
 
@@ -157,10 +161,10 @@ class YandexMessengerHelper(BaseHelper):
             thread_id=thread_id,
             inline_keyboard=inline_keyboard,
         )
-        data = params.dict(exclude_none=True)
+        data = params.model_dump(exclude_none=True)
 
         if inline_keyboard:
-            data["inline_keyboard"] = inline_keyboard.dict(exclude_none=True)
+            data["inline_keyboard"] = inline_keyboard.model_dump(exclude_none=True)
 
         return await self._perform_async_request(url, data)
 
@@ -189,7 +193,7 @@ class YandexMessengerHelper(BaseHelper):
             login=login,
             thread_id=thread_id,
         )
-        data = params.dict(exclude_none=True)
+        data = params.model_dump(exclude_none=True)
 
         # Обработка различных типов image
         if isinstance(image, str):
@@ -197,7 +201,9 @@ class YandexMessengerHelper(BaseHelper):
             if image.endswith((".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp")):
                 with open(image, "rb") as f:
                     files = {"image": f}
-                    return self._perform_sync_request(url, data, use_json=False, files=files)
+                    return self._perform_sync_request(
+                        url, data, use_json=False, files=files
+                    )
             else:
                 # Если это file_id - отправляем как JSON
                 data["image"] = image
@@ -221,20 +227,24 @@ class YandexMessengerHelper(BaseHelper):
             login=login,
             thread_id=thread_id,
         )
-        data = params.dict(exclude_none=True)
+        data = params.model_dump(exclude_none=True)
 
         if isinstance(image, str):
             if image.endswith((".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp")):
                 with open(image, "rb") as f:
                     content = f.read()
                 files = {"image": content}
-                return await self._perform_async_request(url, data, use_json=False, files=files)
+                return await self._perform_async_request(
+                    url, data, use_json=False, files=files
+                )
             else:
                 data["image"] = image
                 return await self._perform_async_request(url, data)
         else:
             files = {"image": image}
-            return await self._perform_async_request(url, data, use_json=False, files=files)
+            return await self._perform_async_request(
+                url, data, use_json=False, files=files
+            )
 
     def sync_send_file(
         self,
@@ -263,7 +273,7 @@ class YandexMessengerHelper(BaseHelper):
             login=login,
             thread_id=thread_id,
         )
-        data = params.dict(exclude_none=True)
+        data = params.model_dump(exclude_none=True)
 
         if isinstance(document, str):
             # Если это путь к файлу
@@ -272,7 +282,9 @@ class YandexMessengerHelper(BaseHelper):
                 fname = filename or document.split("/")[-1]
                 with open(document, "rb") as f:
                     files = {"document": (fname, f)}
-                    return self._perform_sync_request(url, data, use_json=False, files=files)
+                    return self._perform_sync_request(
+                        url, data, use_json=False, files=files
+                    )
             else:
                 # file_id или URL
                 data["document"] = document
@@ -298,7 +310,7 @@ class YandexMessengerHelper(BaseHelper):
             login=login,
             thread_id=thread_id,
         )
-        data = params.dict(exclude_none=True)
+        data = params.model_dump(exclude_none=True)
 
         if isinstance(document, str):
             if not document.startswith(("http://", "https://")):
@@ -306,14 +318,18 @@ class YandexMessengerHelper(BaseHelper):
                 with open(document, "rb") as f:
                     content = f.read()
                 files = {"document": (fname, content)}
-                return await self._perform_async_request(url, data, use_json=False, files=files)
+                return await self._perform_async_request(
+                    url, data, use_json=False, files=files
+                )
             else:
                 data["document"] = document
                 return await self._perform_async_request(url, data)
         else:
             fname = filename or "file"
             files = {"document": (fname, document)}
-            return await self._perform_async_request(url, data, use_json=False, files=files)
+            return await self._perform_async_request(
+                url, data, use_json=False, files=files
+            )
 
     def sync_get_updates(
         self,
@@ -332,7 +348,7 @@ class YandexMessengerHelper(BaseHelper):
         """
         url = self.base_url + "messages/getUpdates/"
         params = GetUpdatesParams(limit=limit, offset=offset)
-        data = params.dict(exclude_none=True)
+        data = params.model_dump(exclude_none=True)
 
         return self._perform_sync_request(url, data)
 
@@ -344,7 +360,7 @@ class YandexMessengerHelper(BaseHelper):
         """Асинхронная версия sync_get_updates"""
         url = self.base_url + "messages/getUpdates/"
         params = GetUpdatesParams(limit=limit, offset=offset)
-        data = params.dict(exclude_none=True)
+        data = params.model_dump(exclude_none=True)
 
         return await self._perform_async_request(url, data)
 
@@ -363,7 +379,7 @@ class YandexMessengerHelper(BaseHelper):
         """
         url = self.base_url + "self/update/"
         params = SetWebhookParams(webhook_url=webhook_url)
-        data = params.dict(exclude_none=True)
+        data = params.model_dump(exclude_none=True)
 
         return self._perform_sync_request(url, data)
 
@@ -374,7 +390,7 @@ class YandexMessengerHelper(BaseHelper):
         """Асинхронная версия sync_set_webhook"""
         url = self.base_url + "self/update/"
         params = SetWebhookParams(webhook_url=webhook_url)
-        data = params.dict(exclude_none=True)
+        data = params.model_dump(exclude_none=True)
 
         return await self._perform_async_request(url, data)
 
@@ -389,5 +405,5 @@ class YandexMessengerHelper(BaseHelper):
             List[Update]
         """
         if response.get("ok") and "updates" in response:
-            return [Update.parse_obj(update) for update in response["updates"]]
+            return [Update.model_validate(update) for update in response["updates"]]
         return []

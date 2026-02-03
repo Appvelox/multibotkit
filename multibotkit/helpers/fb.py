@@ -62,7 +62,7 @@ a list of quick replies"
             quick_replies=quick_replies,
         )
 
-        data = message.json(exclude_none=True)
+        data = message.model_dump_json(exclude_none=True)
         r = self._perform_sync_request(url=self.MESSAGES_URL, data=data)
         return r
 
@@ -88,7 +88,7 @@ a list of quick replies"
             quick_replies=quick_replies,
         )
 
-        data = message.json(exclude_none=True)
+        data = message.model_dump_json(exclude_none=True)
         r = await self._perform_async_request(url=self.MESSAGES_URL, data=data)
         return r
 
@@ -113,11 +113,11 @@ a list of quick replies"
         return r
 
     def sync_send_persistent_menu(self, persistent_menu: PersistentMenu):
-        data = persistent_menu.dict(exclude_none=True)
+        data = persistent_menu.model_dump(exclude_none=True)
         r = self._perform_sync_request(self.PROFILE_URL, data=data)
         return r
 
     async def async_send_persistent_menu(self, persistent_menu: PersistentMenu):
-        data = persistent_menu.dict(exclude_none=True)
+        data = persistent_menu.model_dump(exclude_none=True)
         r = await self._perform_async_request(self.PROFILE_URL, data=data)
         return r

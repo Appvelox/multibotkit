@@ -51,7 +51,7 @@ async def test_viber_dispatcher():
         "message_token": 1234,
     }
 
-    event = Callback.parse_obj(callback_dict)
+    event = Callback.model_validate(callback_dict)
 
     @dp.handler(
         func=lambda update: update.message.text.startswith("text"),

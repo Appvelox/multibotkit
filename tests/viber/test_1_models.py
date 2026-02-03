@@ -35,17 +35,17 @@ def test_viber_incoming_models():
 
     location = IncomingLocation(lat="+90°", lon="-180°")
 
-    location_dict = json.loads(location.json())
+    location_dict = json.loads(location.model_dump_json())
 
     assert location_dict == {"lat": "+90°", "lon": "-180°"}
 
-    location = IncomingLocation.parse_obj(location_dict)
+    location = IncomingLocation.model_validate(location_dict)
 
     assert location == IncomingLocation(lat="+90°", lon="-180°")
 
     contact = IncomingContact(name="Name", phone_number="89999999999", avatar="avatar")
 
-    contact_dict = json.loads(contact.json())
+    contact_dict = json.loads(contact.model_dump_json())
 
     assert contact_dict == {
         "name": "Name",
@@ -53,7 +53,7 @@ def test_viber_incoming_models():
         "avatar": "avatar",
     }
 
-    contact = IncomingContact.parse_obj(contact_dict)
+    contact = IncomingContact.model_validate(contact_dict)
 
     assert contact == IncomingContact(
         name="Name", phone_number="89999999999", avatar="avatar"
@@ -72,7 +72,7 @@ def test_viber_incoming_models():
         sticker_id=1234,
     )
 
-    message_dict = json.loads(message.json())
+    message_dict = json.loads(message.model_dump_json())
 
     assert message_dict == {
         "type": "text",
@@ -87,7 +87,7 @@ def test_viber_incoming_models():
         "sticker_id": 1234,
     }
 
-    message = Message.parse_obj(message_dict)
+    message = Message.model_validate(message_dict)
 
     assert message == Message(
         type="text",
@@ -111,7 +111,7 @@ def test_viber_incoming_models():
         api_version=1111,
     )
 
-    user_dict = json.loads(user.json())
+    user_dict = json.loads(user.model_dump_json())
 
     assert user_dict == {
         "id": "user id",
@@ -122,7 +122,7 @@ def test_viber_incoming_models():
         "api_version": 1111,
     }
 
-    user = User.parse_obj(user_dict)
+    user = User.model_validate(user_dict)
 
     assert user == User(
         id="user id",
@@ -135,14 +135,14 @@ def test_viber_incoming_models():
 
     receiving_message_callback = ReceivingMessageCallback(sender=user, message=message)
 
-    receiving_message_callback_dict = json.loads(receiving_message_callback.json())
+    receiving_message_callback_dict = json.loads(receiving_message_callback.model_dump_json())
 
     assert receiving_message_callback_dict == {
         "sender": user_dict,
         "message": message_dict,
     }
 
-    receiving_message_callback = ReceivingMessageCallback.parse_obj(
+    receiving_message_callback = ReceivingMessageCallback.model_validate(
         receiving_message_callback_dict
     )
 
@@ -152,21 +152,21 @@ def test_viber_incoming_models():
 
     subscription_callback = SubscriptionCallback(user=user)
 
-    subscription_callback_dict = json.loads(subscription_callback.json())
+    subscription_callback_dict = json.loads(subscription_callback.model_dump_json())
 
     assert subscription_callback_dict == {"user": user_dict}
 
-    subscription_callback = SubscriptionCallback.parse_obj(subscription_callback_dict)
+    subscription_callback = SubscriptionCallback.model_validate(subscription_callback_dict)
 
     assert subscription_callback == SubscriptionCallback(user=user)
 
     unsubscribe_callback = UnsubscribeCallback(user_id="user id")
 
-    unsubscribe_callback_dict = json.loads(unsubscribe_callback.json())
+    unsubscribe_callback_dict = json.loads(unsubscribe_callback.model_dump_json())
 
     assert unsubscribe_callback_dict == {"user_id": "user id"}
 
-    unsubscribe_callback = UnsubscribeCallback.parse_obj(unsubscribe_callback_dict)
+    unsubscribe_callback = UnsubscribeCallback.model_validate(unsubscribe_callback_dict)
 
     assert unsubscribe_callback == UnsubscribeCallback(user_id="user id")
 
@@ -175,7 +175,7 @@ def test_viber_incoming_models():
     )
 
     conversation_started_callback_dict = json.loads(
-        conversation_started_callback.json()
+        conversation_started_callback.model_dump_json()
     )
 
     assert conversation_started_callback_dict == {
@@ -185,7 +185,7 @@ def test_viber_incoming_models():
         "subscribed": False,
     }
 
-    conversation_started_callback = ConversationStartedCallback.parse_obj(
+    conversation_started_callback = ConversationStartedCallback.model_validate(
         conversation_started_callback_dict
     )
 
@@ -195,11 +195,11 @@ def test_viber_incoming_models():
 
     failed_callback = FailedCallback(user_id="user id", desc="desc")
 
-    failed_callback_dict = json.loads(failed_callback.json())
+    failed_callback_dict = json.loads(failed_callback.model_dump_json())
 
     assert failed_callback_dict == {"user_id": "user id", "desc": "desc"}
 
-    failed_callback = FailedCallback.parse_obj(failed_callback_dict)
+    failed_callback = FailedCallback.model_validate(failed_callback_dict)
 
     assert failed_callback == FailedCallback(user_id="user id", desc="desc")
 
@@ -217,7 +217,7 @@ def test_viber_incoming_models():
         message_token=1234,
     )
 
-    callback_dict = json.loads(callback.json())
+    callback_dict = json.loads(callback.model_dump_json())
 
     assert callback_dict == {
         "user_id": "user id",
@@ -233,7 +233,7 @@ def test_viber_incoming_models():
         "message_token": 1234,
     }
 
-    callback = Callback.parse_obj(callback_dict)
+    callback = Callback.model_validate(callback_dict)
 
     assert callback == Callback(
         user_id="user id",
@@ -265,7 +265,7 @@ def test_viber_outgoing_models():
         Image="image",
     )
 
-    button_dict = json.loads(button.json())
+    button_dict = json.loads(button.model_dump_json())
 
     assert button_dict == {
         "Columns": 1,
@@ -280,7 +280,7 @@ def test_viber_outgoing_models():
         "Image": "image",
     }
 
-    button = Button.parse_obj(button_dict)
+    button = Button.model_validate(button_dict)
 
     assert button == Button(
         Columns=1,
@@ -299,7 +299,7 @@ def test_viber_outgoing_models():
         Type="type", DefaultHeight=True, BgColor="bg color", Buttons=[button]
     )
 
-    keyboard_dict = json.loads(keyboard.json())
+    keyboard_dict = json.loads(keyboard.model_dump_json())
 
     assert keyboard_dict == {
         "Type": "type",
@@ -308,7 +308,7 @@ def test_viber_outgoing_models():
         "Buttons": [button_dict],
     }
 
-    keyboard = Keyboard.parse_obj(keyboard_dict)
+    keyboard = Keyboard.model_validate(keyboard_dict)
 
     assert keyboard == Keyboard(
         Type="type", DefaultHeight=True, BgColor="bg color", Buttons=[button]
@@ -318,7 +318,7 @@ def test_viber_outgoing_models():
         url="url", event_types=["event_type"], send_name=True, send_photo=False
     )
 
-    set_webhook_dict = json.loads(set_webhook.json())
+    set_webhook_dict = json.loads(set_webhook.model_dump_json())
 
     assert set_webhook_dict == {
         "url": "url",
@@ -327,7 +327,7 @@ def test_viber_outgoing_models():
         "send_photo": False,
     }
 
-    set_webhook = SetWebhook.parse_obj(set_webhook_dict)
+    set_webhook = SetWebhook.model_validate(set_webhook_dict)
 
     assert set_webhook == SetWebhook(
         url="url", event_types=["event_type"], send_name=True, send_photo=False
@@ -335,31 +335,31 @@ def test_viber_outgoing_models():
 
     sender = Sender(name="name", avatar="avatar")
 
-    sender_dict = json.loads(sender.json())
+    sender_dict = json.loads(sender.model_dump_json())
 
     assert sender_dict == {"name": "name", "avatar": "avatar"}
 
-    sender = Sender.parse_obj(sender_dict)
+    sender = Sender.model_validate(sender_dict)
 
     assert sender == Sender(name="name", avatar="avatar")
 
     contact = OutgoingContact(name="Name", phone_number="89999999999")
 
-    contact_dict = json.loads(contact.json())
+    contact_dict = json.loads(contact.model_dump_json())
 
     assert contact_dict == {"name": "Name", "phone_number": "89999999999"}
 
-    contact = OutgoingContact.parse_obj(contact_dict)
+    contact = OutgoingContact.model_validate(contact_dict)
 
     assert contact == OutgoingContact(name="Name", phone_number="89999999999")
 
     location = OutgoingLocation(lat="+90°", lon="-180°")
 
-    location_dict = json.loads(location.json())
+    location_dict = json.loads(location.model_dump_json())
 
     assert location_dict == {"lat": "+90°", "lon": "-180°"}
 
-    location = OutgoingLocation.parse_obj(location_dict)
+    location = OutgoingLocation.model_validate(location_dict)
 
     assert location == OutgoingLocation(lat="+90°", lon="-180°")
 
@@ -371,7 +371,7 @@ def test_viber_outgoing_models():
         keyboard=keyboard,
     )
 
-    base_message_dict = json.loads(base_message.json())
+    base_message_dict = json.loads(base_message.model_dump_json())
 
     assert base_message_dict == {
         "receiver": "reciever",
@@ -381,7 +381,7 @@ def test_viber_outgoing_models():
         "keyboard": keyboard_dict,
     }
 
-    base_message = BaseMessage.parse_obj(base_message_dict)
+    base_message = BaseMessage.model_validate(base_message_dict)
 
     assert base_message == BaseMessage(
         receiver="reciever",
@@ -401,7 +401,7 @@ def test_viber_outgoing_models():
         text="text",
     )
 
-    text_message_dict = json.loads(text_message.json())
+    text_message_dict = json.loads(text_message.model_dump_json())
 
     assert text_message_dict == {
         "receiver": "reciever",
@@ -413,7 +413,7 @@ def test_viber_outgoing_models():
         "text": "text",
     }
 
-    text_message = TextMessage.parse_obj(text_message_dict)
+    text_message = TextMessage.model_validate(text_message_dict)
 
     assert text_message == TextMessage(
         receiver="reciever",
@@ -437,7 +437,7 @@ def test_viber_outgoing_models():
         thumbnail="thumbnail",
     )
 
-    picture_message_dict = json.loads(picture_message.json())
+    picture_message_dict = json.loads(picture_message.model_dump_json())
 
     assert picture_message_dict == {
         "receiver": "reciever",
@@ -451,7 +451,7 @@ def test_viber_outgoing_models():
         "thumbnail": "thumbnail",
     }
 
-    picture_message = PictureMessage.parse_obj(picture_message_dict)
+    picture_message = PictureMessage.model_validate(picture_message_dict)
 
     assert picture_message == PictureMessage(
         receiver="reciever",
@@ -478,7 +478,7 @@ def test_viber_outgoing_models():
         duration=60,
     )
 
-    video_message_dict = json.loads(video_message.json())
+    video_message_dict = json.loads(video_message.model_dump_json())
 
     assert video_message_dict == {
         "receiver": "reciever",
@@ -493,7 +493,7 @@ def test_viber_outgoing_models():
         "duration": 60,
     }
 
-    video_message = VideoMessage.parse_obj(video_message_dict)
+    video_message = VideoMessage.model_validate(video_message_dict)
 
     assert video_message == VideoMessage(
         receiver="reciever",
@@ -520,7 +520,7 @@ def test_viber_outgoing_models():
         file_name="file name",
     )
 
-    file_message_dict = json.loads(file_message.json())
+    file_message_dict = json.loads(file_message.model_dump_json())
 
     assert file_message_dict == {
         "receiver": "reciever",
@@ -534,7 +534,7 @@ def test_viber_outgoing_models():
         "file_name": "file name",
     }
 
-    file_message = FileMessage.parse_obj(file_message_dict)
+    file_message = FileMessage.model_validate(file_message_dict)
 
     assert file_message == FileMessage(
         receiver="reciever",
@@ -558,7 +558,7 @@ def test_viber_outgoing_models():
         contact=contact,
     )
 
-    contact_message_dict = json.loads(contact_message.json())
+    contact_message_dict = json.loads(contact_message.model_dump_json())
 
     assert contact_message_dict == {
         "receiver": "reciever",
@@ -570,7 +570,7 @@ def test_viber_outgoing_models():
         "contact": contact_dict,
     }
 
-    contact_message = ContactMessage.parse_obj(contact_message_dict)
+    contact_message = ContactMessage.model_validate(contact_message_dict)
 
     assert contact_message == ContactMessage(
         receiver="reciever",
@@ -592,7 +592,7 @@ def test_viber_outgoing_models():
         location=location,
     )
 
-    location_message_dict = json.loads(location_message.json())
+    location_message_dict = json.loads(location_message.model_dump_json())
 
     assert location_message_dict == {
         "receiver": "reciever",
@@ -604,7 +604,7 @@ def test_viber_outgoing_models():
         "location": location_dict,
     }
 
-    location_message = LocationMessage.parse_obj(location_message_dict)
+    location_message = LocationMessage.model_validate(location_message_dict)
 
     assert location_message == LocationMessage(
         receiver="reciever",
@@ -626,7 +626,7 @@ def test_viber_outgoing_models():
         media="media",
     )
 
-    url_message_dict = json.loads(url_message.json())
+    url_message_dict = json.loads(url_message.model_dump_json())
 
     assert url_message_dict == {
         "receiver": "reciever",
@@ -648,7 +648,7 @@ def test_viber_outgoing_models():
         sticker_id=1234,
     )
 
-    sticker_message_dict = json.loads(sticker_message.json())
+    sticker_message_dict = json.loads(sticker_message.model_dump_json())
 
     assert sticker_message_dict == {
         "receiver": "reciever",
@@ -660,7 +660,7 @@ def test_viber_outgoing_models():
         "sticker_id": 1234,
     }
 
-    sticker_message = StickerMessage.parse_obj(sticker_message_dict)
+    sticker_message = StickerMessage.model_validate(sticker_message_dict)
 
     assert sticker_message == StickerMessage(
         receiver="reciever",
