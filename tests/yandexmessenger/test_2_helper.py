@@ -25,7 +25,7 @@ def test_sync_helper_send_text(httpx_mock: HTTPXMock):
         assert "Authorization" in request.headers
         assert request.headers["Authorization"].startswith("OAuth ")
 
-        content = json.loads(request.content.decode())
+        _ = json.loads(request.content.decode())
 
         return httpx.Response(status_code=200, json={"ok": True, "message_id": 12345})
 
@@ -33,7 +33,7 @@ def test_sync_helper_send_text(httpx_mock: HTTPXMock):
 
     r = ym_helper.sync_send_text(text="Test message", login="test_user")
 
-    assert r["ok"] == True
+    assert r["ok"] is True
     assert r["message_id"] == 12345
 
 
@@ -55,7 +55,7 @@ def test_sync_helper_send_text_with_keyboard(httpx_mock: HTTPXMock):
         text="Choose option", chat_id="group_123", inline_keyboard=keyboard
     )
 
-    assert r["ok"] == True
+    assert r["ok"] is True
     assert r["message_id"] == 12345
 
 
@@ -73,7 +73,7 @@ def test_sync_helper_send_image_io(httpx_mock: HTTPXMock):
 
     r = ym_helper.sync_send_image(image=image_io, login="test_user")
 
-    assert r["ok"] == True
+    assert r["ok"] is True
     assert r["message_id"] == 12346
 
 
@@ -93,7 +93,7 @@ def test_sync_helper_send_file(httpx_mock: HTTPXMock):
         document=doc_io, filename="test_document.pdf", login="test_user"
     )
 
-    assert r["ok"] == True
+    assert r["ok"] is True
     assert r["message_id"] == 12347
 
 
@@ -132,7 +132,7 @@ def test_sync_helper_get_updates(httpx_mock: HTTPXMock):
 
     r = ym_helper.sync_get_updates(limit=100, offset=0)
 
-    assert r["ok"] == True
+    assert r["ok"] is True
     assert len(r["updates"]) == 2
     assert r["updates"][0]["text"] == "Message 1"
     assert r["updates"][1]["text"] == "Message 2"
@@ -150,7 +150,7 @@ def test_sync_helper_set_webhook(httpx_mock: HTTPXMock):
 
     r = ym_helper.sync_set_webhook(webhook_url="https://example.com/webhook")
 
-    assert r["ok"] == True
+    assert r["ok"] is True
 
 
 @pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
@@ -165,7 +165,7 @@ def test_sync_helper_delete_webhook(httpx_mock: HTTPXMock):
 
     r = ym_helper.sync_set_webhook(webhook_url=None)
 
-    assert r["ok"] == True
+    assert r["ok"] is True
 
 
 # === ASYNC TESTS ===
@@ -184,7 +184,7 @@ async def test_async_helper_send_text(httpx_mock: HTTPXMock):
 
     r = await ym_helper.async_send_text(text="Async test message", login="test_user")
 
-    assert r["ok"] == True
+    assert r["ok"] is True
     assert r["message_id"] == 12345
 
 
@@ -203,7 +203,7 @@ async def test_async_helper_send_image(httpx_mock: HTTPXMock):
 
     r = await ym_helper.async_send_image(image=image_io, login="test_user")
 
-    assert r["ok"] == True
+    assert r["ok"] is True
     assert r["message_id"] == 12346
 
 
@@ -235,7 +235,7 @@ async def test_async_helper_get_updates(httpx_mock: HTTPXMock):
 
     r = await ym_helper.async_get_updates()
 
-    assert r["ok"] == True
+    assert r["ok"] is True
     assert len(r["updates"]) == 1
     assert r["updates"][0]["text"] == "Async message"
 

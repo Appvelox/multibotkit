@@ -1,6 +1,6 @@
-from io import BytesIO
 import json
-from typing import IO, Optional, Union, List, Tuple
+from io import BytesIO
+from typing import IO, List, Optional, Tuple, Union
 
 import aiofiles
 import httpx
@@ -10,30 +10,31 @@ from tenacity import (
     stop_after_attempt,
     wait_exponential,
 )
+
 from multibotkit.helpers.base_helper import BaseHelper
 from multibotkit.schemas.telegram.outgoing import (
     Animation,
     Audio,
+    BotCommand,
+    CopyMessage,
+    DeleteMessage,
+    DeleteWebhookParams,
     Document,
     EditMessageMediaModel,
     InlineKeyboardMarkup,
     InputMedia,
     InputMediaPhoto,
+    Location,
+    MediaGroup,
     Message,
     Photo,
     ReplyKeyboardMarkup,
-    SetWebhookParams,
-    WebhookInfo,
-    MediaGroup,
     ReplyKeyboardRemove,
+    SetMyCommands,
+    SetWebhookParams,
     Sticker,
     Video,
-    Location,
-    DeleteWebhookParams,
-    DeleteMessage,
-    CopyMessage,
-    BotCommand,
-    SetMyCommands,
+    WebhookInfo,
 )
 
 
@@ -707,7 +708,7 @@ class TelegramHelper(BaseHelper):
         inline_message_id: Optional[Union[int, str]] = None,
         parse_mode: Optional[str] = "HTML",
     ):
-        if type(media) == str:
+        if type(media) is str:
             if media.startswith("http://") or media.startswith("https://"):
                 media_obj = InputMedia(
                     type=media_type, media=media, caption=caption, parse_mode=parse_mode
@@ -809,7 +810,7 @@ class TelegramHelper(BaseHelper):
         inline_message_id: Optional[Union[int, str]] = None,
         parse_mode: Optional[str] = "HTML",
     ):
-        if type(media) == str:
+        if type(media) is str:
             if media.startswith("http://") or media.startswith("https://"):
                 media_obj = InputMedia(
                     type=media_type, media=media, caption=caption, parse_mode=parse_mode
@@ -912,7 +913,7 @@ class TelegramHelper(BaseHelper):
         allow_sending_without_reply: Optional[bool] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None,
     ):
-        if type(photo) == str:
+        if type(photo) is str:
             if photo.startswith("http://") or photo.startswith("https://"):
                 photo_obj = Photo(
                     chat_id=chat_id,
@@ -1010,7 +1011,7 @@ class TelegramHelper(BaseHelper):
         allow_sending_without_reply: Optional[bool] = None,
         reply_markup: Optional[Union[InlineKeyboardMarkup, ReplyKeyboardMarkup]] = None,
     ):
-        if type(photo) == str:
+        if type(photo) is str:
             if photo.startswith("http://") or photo.startswith("https://"):
                 photo_obj = Photo(
                     chat_id=chat_id,

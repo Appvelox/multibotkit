@@ -18,7 +18,6 @@ from multibotkit.schemas.yandexmessenger.outgoing import (
     SendFileParams,
     SendImageParams,
     SendTextParams,
-    SetWebhookParams,
     UpdatesResponse,
 )
 
@@ -41,7 +40,7 @@ def test_incoming_models_sender():
     parsed_sender = Sender.model_validate(sender_dict)
     assert parsed_sender.login == "test_user"
     assert parsed_sender.display_name == "Test User"
-    assert parsed_sender.robot == False
+    assert parsed_sender.robot is False
 
     # Sender с id (бот/канал)
     bot_sender = Sender(id="bot_12345", display_name="Bot Name", robot=True)
@@ -50,7 +49,7 @@ def test_incoming_models_sender():
     bot_dict = json.loads(bot_json)
 
     assert bot_dict["id"] == "bot_12345"
-    assert bot_dict["robot"] == True
+    assert bot_dict["robot"] is True
     assert bot_dict["login"] is None
 
 
@@ -202,8 +201,8 @@ def test_outgoing_models_send_text():
 
     assert params_dict["text"] == "Test message"
     assert params_dict["login"] == "test_user"
-    assert params_dict["disable_notification"] == True
-    assert params_dict["important"] == False
+    assert params_dict["disable_notification"] is True
+    assert params_dict["important"] is False
 
     # Тест с chat_id вместо login
     group_params = SendTextParams(text="Group message", chat_id="group_123")
@@ -276,6 +275,6 @@ def test_outgoing_models_responses():
         ok=True, updates=[Update.model_validate(update_dict)]
     )
 
-    assert updates_response.ok == True
+    assert updates_response.ok is True
     assert len(updates_response.updates) == 1
     assert updates_response.updates[0].text == "test"

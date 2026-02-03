@@ -1,4 +1,3 @@
-import json
 from json import JSONDecodeError
 from typing import IO, List, Optional, Union
 
