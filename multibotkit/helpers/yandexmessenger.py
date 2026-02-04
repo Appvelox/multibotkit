@@ -163,7 +163,9 @@ class YandexMessengerHelper(BaseHelper):
         data = params.model_dump(exclude_none=True)
 
         if inline_keyboard:
-            data["inline_keyboard"] = inline_keyboard.model_dump(exclude_none=True)
+            data["inline_keyboard"] = inline_keyboard.model_dump(exclude_none=True)[
+                "buttons"
+            ]
 
         return await self._perform_async_request(url, data)
 
