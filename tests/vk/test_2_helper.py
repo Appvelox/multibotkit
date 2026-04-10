@@ -11,6 +11,7 @@ from tests.config import settings
 vk_helper = VKHelper(
     access_token=settings.VK_TOKEN, api_version=settings.VK_API_VERSION
 )
+PROXY_URL = "socks5://user:password@127.0.0.1:1080"
 
 
 def test_button_code_and_command():
@@ -313,3 +314,58 @@ async def test_async_get_photo_attachment(httpx_mock: HTTPXMock):
     r = await vk_helper.async_get_photo_attachment(photo=image, file_name="photo.img")
 
     assert r == "photoowner_id_id_access_key"
+
+
+def test_sync_upload_photo_uses_proxy(monkeypatch):
+    captured = {}
+
+    def fake_post(*args, **kwargs):
+        captured["proxy"] = kwargs.get("proxy")
+        return httpx.Response(status_code=200, json={"ok": True})
+
+    monkeypatch.setattr("multibotkit.helpers.base_helper.httpx.post", fake_post)
+
+    helper = VKHelper(
+        access_token=settings.VK_TOKEN,
+        api_version=settings.VK_API_VERSION,
+        proxy=PROXY_URL,
+    )
+
+    assert helper.sync_upload_photo(
+        photo=BytesIO(), file_name="photo.img", server_url="https://server_url"
+    ) == {"ok": True}
+    assert captured["proxy"] == PROXY_URL
+
+
+@pytest.mark.asyncio
+async def test_async_upload_photo_uses_proxy(monkeypatch):
+    client_proxies = []
+
+    class FakeAsyncClient:
+        def __init__(self, **kwargs):
+            self.proxy = kwargs.get("proxy")
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, *args, **kwargs):
+            client_proxies.append(self.proxy)
+            return httpx.Response(status_code=200, json={"ok": True})
+
+    monkeypatch.setattr(
+        "multibotkit.helpers.base_helper.httpx.AsyncClient", FakeAsyncClient
+    )
+
+    helper = VKHelper(
+        access_token=settings.VK_TOKEN,
+        api_version=settings.VK_API_VERSION,
+        proxy=PROXY_URL,
+    )
+
+    assert await helper.async_upload_photo(
+        photo=BytesIO(), file_name="photo.img", server_url="https://server_url"
+    ) == {"ok": True}
+    assert client_proxies == [PROXY_URL]

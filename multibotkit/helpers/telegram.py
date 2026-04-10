@@ -43,7 +43,8 @@ class TelegramHelper(BaseHelper):
     Sync and async functions for Telegram Bot API
     """
 
-    def __init__(self, token):
+    def __init__(self, token, proxy: Optional[str] = None):
+        super().__init__(proxy=proxy)
         self.token = token
         self.tg_base_url = f"https://api.telegram.org/bot{self.token}/"
 
@@ -1418,7 +1419,7 @@ class TelegramHelper(BaseHelper):
         download_url = f"https://api.telegram.org/file/bot{self.token}/{file_path}"
 
         io_object = BytesIO()
-        with httpx.stream(method="GET", url=download_url) as result:
+        with self._sync_stream(method="GET", url=download_url) as result:
             for data in result.iter_bytes():
                 io_object.write(data)
         io_object.seek(0)
@@ -1439,12 +1440,11 @@ class TelegramHelper(BaseHelper):
 
         file_path = r["result"]["file_path"]
         download_url = f"https://api.telegram.org/file/bot{self.token}/{file_path}"
-        client = httpx.AsyncClient()
-
         io_object = BytesIO()
-        async with client.stream(method="GET", url=download_url) as result:
-            async for data in result.aiter_bytes():
-                io_object.write(data)
+        async with self._get_async_client() as client:
+            async with client.stream(method="GET", url=download_url) as result:
+                async for data in result.aiter_bytes():
+                    io_object.write(data)
         io_object.seek(0)
 
         return io_object

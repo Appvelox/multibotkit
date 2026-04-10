@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="multibotkit",
-    version="0.2.1",
+    version="0.2.2",
     author="Appvelox LLC",
     author_email="team@appvelox.ru",
     description="Functional library for developing multiplatform chatbots",
@@ -20,7 +20,7 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     install_requires=[
-        "httpx>=0.28.1",
+        "httpx[socks]>=0.28.1",
         "pydantic<3",
         "tenacity>=9.1.2",
         "aiofiles>=22.1.0",

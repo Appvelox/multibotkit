@@ -26,7 +26,8 @@ class ViberHelper(BaseHelper):
     class _SendMessageArgumentsError(Exception):
         pass
 
-    def __init__(self, token):
+    def __init__(self, token, proxy: Optional[str] = None):
+        super().__init__(proxy=proxy)
         self.token = token
 
     def __build_message(

@@ -27,7 +27,10 @@ class VKHelper(BaseHelper):
     class _SendMessageArgumentsError(Exception):
         pass
 
-    def __init__(self, access_token: str, api_version: str):
+    def __init__(
+        self, access_token: str, api_version: str, proxy: Optional[str] = None
+    ):
+        super().__init__(proxy=proxy)
         self.access_token = access_token
         self.api_version = api_version
 
@@ -119,7 +122,7 @@ but not both"
     )
     def sync_upload_photo(self, photo: BytesIO, file_name: str, server_url: str):
         files = {"photo": (f"{file_name}", photo)}
-        r = httpx.post(server_url, files=files)
+        r = self._sync_post(url=server_url, use_json=False, files=files)
         return r.json()
 
     @retry(
@@ -131,8 +134,7 @@ but not both"
     )
     async def async_upload_photo(self, photo: BytesIO, file_name: str, server_url: str):
         files = {"photo": (f"{file_name}", photo)}
-        async with httpx.AsyncClient() as client:
-            r = await client.post(server_url, files=files)
+        r = await self._async_post(url=server_url, use_json=False, files=files)
         return r.json()
 
     def sync_save_photo(self, uploaded_photo: dict):

@@ -19,7 +19,9 @@ class FBHelper(BaseHelper):
         token: str,
         messages_endpoint: str = "https://graph.facebook.com/v14.0/me/messages?access_token=",
         profile_endpoint: str = "https://graph.facebook.com/v14.0/me/messenger_profile?access_token=",
+        proxy: Optional[str] = None,
     ):
+        super().__init__(proxy=proxy)
         self.MESSAGES_URL = messages_endpoint + token
         self.PROFILE_URL = profile_endpoint + token
 

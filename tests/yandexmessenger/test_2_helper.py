@@ -13,6 +13,7 @@ from multibotkit.schemas.yandexmessenger.outgoing import (
 from tests.config import settings
 
 ym_helper = YandexMessengerHelper(settings.YANDEX_MESSENGER_TOKEN)
+PROXY_URL = "socks5://user:password@127.0.0.1:1080"
 
 
 @pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
@@ -238,6 +239,53 @@ async def test_async_helper_get_updates(httpx_mock: HTTPXMock):
     assert r["ok"] is True
     assert len(r["updates"]) == 1
     assert r["updates"][0]["text"] == "Async message"
+
+
+def test_sync_helper_uses_proxy_and_oauth_header(monkeypatch):
+    captured = {}
+
+    def fake_post(*args, **kwargs):
+        captured["proxy"] = kwargs.get("proxy")
+        captured["headers"] = kwargs.get("headers")
+        return httpx.Response(status_code=200, json={"ok": True, "message_id": 1})
+
+    monkeypatch.setattr("multibotkit.helpers.base_helper.httpx.post", fake_post)
+
+    helper = YandexMessengerHelper(settings.YANDEX_MESSENGER_TOKEN, proxy=PROXY_URL)
+    result = helper.sync_send_text(text="Test message", login="test_user")
+
+    assert result == {"ok": True, "message_id": 1}
+    assert captured["proxy"] == PROXY_URL
+    assert captured["headers"]["Authorization"].startswith("OAuth ")
+
+
+@pytest.mark.asyncio
+async def test_async_helper_uses_proxy_and_oauth_header(monkeypatch):
+    client_kwargs = {}
+
+    class FakeAsyncClient:
+        def __init__(self, **kwargs):
+            client_kwargs.update(kwargs)
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, *args, **kwargs):
+            return httpx.Response(status_code=200, json={"ok": True, "message_id": 1})
+
+    monkeypatch.setattr(
+        "multibotkit.helpers.base_helper.httpx.AsyncClient", FakeAsyncClient
+    )
+
+    helper = YandexMessengerHelper(settings.YANDEX_MESSENGER_TOKEN, proxy=PROXY_URL)
+    result = await helper.async_send_text(text="Test message", login="test_user")
+
+    assert result == {"ok": True, "message_id": 1}
+    assert client_kwargs["proxy"] == PROXY_URL
+    assert client_kwargs["headers"]["Authorization"].startswith("OAuth ")
 
 
 def test_parse_updates():

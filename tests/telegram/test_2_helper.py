@@ -18,6 +18,7 @@ from tests.config import settings
 
 
 tg_helper = TelegramHelper(settings.TG_TOKEN)
+PROXY_URL = "socks5://user:password@127.0.0.1:1080"
 
 
 @pytest.mark.httpx_mock(assert_all_requests_were_expected=False)
@@ -418,6 +419,61 @@ def test_sync_helper_get_file(httpx_mock: HTTPXMock):
 
     doc = tg_helper.sync_get_file(file_id="file_id")
     assert doc.readline() == b"part 1part 2"
+
+
+def test_sync_helper_uses_proxy_for_requests(monkeypatch):
+    captured = {}
+
+    def fake_post(*args, **kwargs):
+        captured["proxy"] = kwargs.get("proxy")
+        return httpx.Response(status_code=200, json={"ok": True, "result": True})
+
+    monkeypatch.setattr("multibotkit.helpers.base_helper.httpx.post", fake_post)
+
+    helper = TelegramHelper(settings.TG_TOKEN, proxy=PROXY_URL)
+
+    assert helper.sync_set_webhook(webhook_url="https://test_url/api/bot") == {
+        "ok": True,
+        "result": True,
+    }
+    assert captured["proxy"] == PROXY_URL
+
+
+def test_sync_helper_uses_proxy_for_file_stream(monkeypatch):
+    post_calls = []
+    stream_calls = []
+
+    def fake_post(*args, **kwargs):
+        post_calls.append(kwargs.get("proxy"))
+        return httpx.Response(
+            status_code=200,
+            json={"ok": True, "result": {"file_path": "file_path"}},
+        )
+
+    class FakeStreamResponse:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def iter_bytes(self):
+            yield b"part 1"
+            yield b"part 2"
+
+    def fake_stream(*args, **kwargs):
+        stream_calls.append(kwargs.get("proxy"))
+        return FakeStreamResponse()
+
+    monkeypatch.setattr("multibotkit.helpers.base_helper.httpx.post", fake_post)
+    monkeypatch.setattr("multibotkit.helpers.base_helper.httpx.stream", fake_stream)
+
+    helper = TelegramHelper(settings.TG_TOKEN, proxy=PROXY_URL)
+    doc = helper.sync_get_file(file_id="file_id")
+
+    assert doc.readline() == b"part 1part 2"
+    assert post_calls == [PROXY_URL]
+    assert stream_calls == [PROXY_URL]
 
 
 @pytest.mark.asyncio
@@ -891,3 +947,80 @@ async def test_async_helper_get_file(httpx_mock: HTTPXMock):
 
     doc = await tg_helper.async_get_file(file_id="file_id")
     assert doc.readline() == b"part 1part 2"
+
+
+@pytest.mark.asyncio
+async def test_async_helper_uses_proxy_for_requests(monkeypatch):
+    class FakeAsyncClient:
+        def __init__(self, **kwargs):
+            self.proxy = kwargs.get("proxy")
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, *args, **kwargs):
+            return httpx.Response(status_code=200, json={"ok": True, "result": True})
+
+    monkeypatch.setattr(
+        "multibotkit.helpers.base_helper.httpx.AsyncClient", FakeAsyncClient
+    )
+
+    helper = TelegramHelper(settings.TG_TOKEN, proxy=PROXY_URL)
+
+    assert await helper.async_set_webhook(webhook_url="https://test_url/api/bot") == {
+        "ok": True,
+        "result": True,
+    }
+    assert helper.proxy == PROXY_URL
+
+
+@pytest.mark.asyncio
+async def test_async_helper_uses_proxy_for_file_stream(monkeypatch):
+    post_client_proxies = []
+    stream_client_proxies = []
+
+    class FakeAsyncStreamResponse:
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def aiter_bytes(self):
+            for chunk in (b"part 1", b"part 2"):
+                yield chunk
+
+    class FakeAsyncClient:
+        def __init__(self, **kwargs):
+            self.proxy = kwargs.get("proxy")
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, *args, **kwargs):
+            post_client_proxies.append(self.proxy)
+            return httpx.Response(
+                status_code=200,
+                json={"ok": True, "result": {"file_path": "file_path"}},
+            )
+
+        def stream(self, *args, **kwargs):
+            stream_client_proxies.append(self.proxy)
+            return FakeAsyncStreamResponse()
+
+    monkeypatch.setattr(
+        "multibotkit.helpers.base_helper.httpx.AsyncClient", FakeAsyncClient
+    )
+
+    helper = TelegramHelper(settings.TG_TOKEN, proxy=PROXY_URL)
+    doc = await helper.async_get_file(file_id="file_id")
+
+    assert doc.readline() == b"part 1part 2"
+    assert post_client_proxies == [PROXY_URL]
+    assert stream_client_proxies == [PROXY_URL]

@@ -1,13 +1,4 @@
-from json import JSONDecodeError
 from typing import IO, List, Optional, Union
-
-import httpx
-from tenacity import (
-    retry,
-    retry_if_exception_type,
-    stop_after_attempt,
-    wait_exponential,
-)
 
 from multibotkit.helpers.base_helper import BaseHelper
 from multibotkit.schemas.yandexmessenger.incoming import Update
@@ -29,55 +20,14 @@ class YandexMessengerHelper(BaseHelper):
     Авторизация: Authorization: OAuth <token>
     """
 
-    def __init__(self, token: str):
+    def __init__(self, token: str, proxy: Optional[str] = None):
+        super().__init__(proxy=proxy)
         self.token = token
         self.base_url = "https://botapi.messenger.yandex.net/bot/v1/"
         self.headers = {"Authorization": f"OAuth {self.token}"}
 
-    @retry(
-        retry=retry_if_exception_type(httpx.HTTPError)
-        | retry_if_exception_type(JSONDecodeError),
-        reraise=True,
-        stop=stop_after_attempt(5),
-        wait=wait_exponential(multiplier=1, min=4, max=10),
-    )
-    def _perform_sync_request(
-        self,
-        url: str,
-        data: Optional[dict] = None,
-        use_json: bool = True,
-        files: Optional[dict] = None,
-    ):
-        """Переопределение для добавления OAuth заголовка"""
-        if use_json:
-            r = httpx.post(url=url, json=data, headers=self.headers)
-        else:
-            r = httpx.post(url=url, data=data, files=files, headers=self.headers)
-        return r.json()
-
-    @retry(
-        retry=retry_if_exception_type(httpx.HTTPError)
-        | retry_if_exception_type(JSONDecodeError),
-        reraise=True,
-        stop=stop_after_attempt(5),
-        wait=wait_exponential(multiplier=1, min=4, max=10),
-    )
-    async def _perform_async_request(
-        self,
-        url: str,
-        data: Optional[dict] = None,
-        use_json: bool = True,
-        files: Optional[dict] = None,
-    ):
-        """Переопределение для добавления OAuth заголовка"""
-        async with httpx.AsyncClient() as client:
-            if use_json:
-                r = await client.post(url=url, json=data, headers=self.headers)
-            else:
-                r = await client.post(
-                    url=url, data=data, files=files, headers=self.headers
-                )
-        return r.json()
+    def _get_request_headers(self):
+        return self.headers
 
     def sync_send_text(
         self,
